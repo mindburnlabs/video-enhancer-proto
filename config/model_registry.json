@@ -19,6 +19,24 @@
       "local_path": "models/weights/SeedVR2-7B",
       "enabled": false,
       "notes": "Ultra quality backbone; enable when latency allows"
+    },
+    {
+      "id": "vsrm",
+      "name": "VSRM",
+      "repo": "https://huggingface.co/your-org/VSRM-weights",
+      "license": "apache-2.0",
+      "local_path": "models/weights/VSRM",
+      "enabled": false,
+      "notes": "Mamba-based VSR weights (set enabled when available)"
+    },
+    {
+      "id": "fast_mamba_vsr",
+      "name": "FastMambaVSR",
+      "repo": "https://huggingface.co/your-org/FastMambaVSR-weights",
+      "license": "apache-2.0",
+      "local_path": "models/weights/FastMambaVSR",
+      "enabled": false,
+      "notes": "Fast Mamba VSR weights (set enabled when available)"
     }
   ],
   "experts": [

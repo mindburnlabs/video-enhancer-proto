@@ -276,11 +276,12 @@ class FastMambaVSRHandler:
             efficient_attention=True
         ).to(self.device)
         
-        # Load pretrained weights
-        if model_path and Path(model_path).exists():
-            self._load_model(model_path)
+        # Resolve and load weights
+        resolved_model_path = self._resolve_model_path(model_path)
+        if resolved_model_path and Path(resolved_model_path).exists():
+            self._load_model(resolved_model_path)
         else:
-            logger.warning("No model weights provided, using random initialization")
+            logger.warning("No Fast Mamba VSR model weights found, using random initialization")
         
         # Optimize model
         self.model.eval()
@@ -289,6 +290,42 @@ class FastMambaVSRHandler:
         self.video_utils = VideoUtils()
         
         logger.info("✅ Fast Mamba VSR Handler initialized")
+    
+    def _resolve_model_path(self, model_path: Optional[str]) -> Optional[str]:
+        if model_path:
+            return str(model_path)
+        import os, json
+        d = os.getenv('FAST_MAMBA_VSR_DIR')
+        if d and Path(d).exists():
+            candidate = self._find_weight_file_in_dir(d)
+            if candidate:
+                logger.info(f"🔎 Resolved Fast Mamba VSR weights via FAST_MAMBA_VSR_DIR: {candidate}")
+                return candidate
+        registry_path = Path(__file__).resolve().parents[3] / "config" / "model_registry.json"
+        if registry_path.exists():
+            try:
+                data = json.loads(registry_path.read_text())
+                for m in data.get("models", []):
+                    if m.get("id") in ["fast_mamba_vsr"] and m.get("enabled", False):
+                        local_path = m.get("local_path")
+                        if local_path and Path(local_path).exists():
+                            candidate = self._find_weight_file_in_dir(local_path)
+                            if candidate:
+                                logger.info(f"🔎 Resolved Fast Mamba VSR weights via registry: {candidate}")
+                                return candidate
+            except Exception as e:
+                logger.warning(f"Could not parse model_registry.json: {e}")
+        return None
+
+    def _find_weight_file_in_dir(self, d: str) -> Optional[str]:
+        p = Path(d)
+        patterns = ["*.safetensors", "*.pt", "*.pth"]
+        for pat in patterns:
+            matches = list(p.rglob(pat))
+            matches_sorted = sorted(matches, key=lambda x: (x.suffix != ".safetensors", len(str(x))))
+            if matches_sorted:
+                return str(matches_sorted[0])
+        return None
     
     def _load_model(self, model_path: str):
         """Load pretrained Fast Mamba VSR weights."""
