@@ -153,22 +153,30 @@ class DeformableCrossMamba(nn.Module):
         return output
     
     def _apply_deformable_alignment(self, x, offsets):
-        """Apply deformable alignment based on predicted offsets."""
-        # Simplified deformable alignment
-        # In practice, this would use more sophisticated warping
+        """Apply deformable alignment using grid_sample with predicted offsets.
+        x: (B, C, T, H, W), offsets: (B, 2, T, H, W) with dx, dy in pixels
+        """
         B, C, T, H, W = x.shape
-        
-        # For demo, apply small spatial shifts based on offsets
+        device = x.device
+        dtype = x.dtype
+        # Normalize offsets to [-1,1]
+        off = offsets.to(device=device, dtype=dtype)
+        norm_off_x = off[:, 0] / max(W - 1, 1)
+        norm_off_y = off[:, 1] / max(H - 1, 1)
+        ys, xs = torch.meshgrid(
+            torch.linspace(-1, 1, H, device=device, dtype=dtype),
+            torch.linspace(-1, 1, W, device=device, dtype=dtype), indexing='ij')
+        base_grid = torch.stack((xs, ys), dim=-1)  # (H, W, 2)
         aligned_frames = []
         for t in range(T):
-            frame = x[:, :, t, :, :]  # (B, C, H, W)
-            offset = offsets[:, :, t, :, :].mean(dim=(2, 3)) * 0.1  # Small offset
-            
-            # Simple grid sampling (would be more sophisticated in practice)
-            aligned_frame = frame  # Placeholder
-            aligned_frames.append(aligned_frame)
-        
-        return torch.stack(aligned_frames, dim=2)
+            grid = base_grid.unsqueeze(0).repeat(B, 1, 1, 1)
+            grid_x = grid[..., 0] + 2.0 * norm_off_x[:, t]
+            grid_y = grid[..., 1] + 2.0 * norm_off_y[:, t]
+            grid_t = torch.stack((grid_x, grid_y), dim=-1)
+            frame = x[:, :, t]
+            aligned = F.grid_sample(frame, grid_t, mode='bilinear', padding_mode='border', align_corners=True)
+            aligned_frames.append(aligned.unsqueeze(2))
+        return torch.cat(aligned_frames, dim=2)
 
 class VSRMHandler:
     """VSRM Video Super-Resolution Handler with Mamba backbone."""

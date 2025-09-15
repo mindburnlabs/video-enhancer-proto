@@ -81,12 +81,24 @@ class DegradationRouter:
             
         return available
         
-    def analyze_and_route(self, video_path: str) -> Dict:
+    def analyze_and_route(self, video_path: str,
+                           latency_class: str = 'standard',
+                           allow_diffusion: bool = True,
+                           allow_zero_shot: bool = True,
+                           license_mode: str = 'permissive_only',
+                           enable_face_expert: bool = False,
+                           enable_hfr: bool = False) -> Dict:
         """
         Analyze video degradations and create expert routing plan
         
         Args:
             video_path: Path to input video file
+            latency_class: strict | standard | flexible
+            allow_diffusion: Whether to allow diffusion models
+            allow_zero_shot: Whether to allow zero-shot transformer
+            license_mode: permissive_only | allow_all
+            enable_face_expert: Toggle face restoration expert
+            enable_hfr: Toggle high frame rate interpolation
             
         Returns:
             Dict containing degradation analysis, content analysis, and expert routing plan
@@ -110,7 +122,15 @@ class DegradationRouter:
         
         # Create routing plan
         logger.info("🗺️ Creating expert routing plan...")
-        routing_plan = self._create_routing_plan(degradations, content_analysis)
+        routing_plan = self._create_routing_plan(
+            degradations, content_analysis,
+            latency_class=latency_class,
+            allow_diffusion=allow_diffusion,
+            allow_zero_shot=allow_zero_shot,
+            license_mode=license_mode,
+            enable_face_expert=enable_face_expert,
+            enable_hfr=enable_hfr
+        )
         
         # Determine optimal processing order
         processing_order = self._determine_processing_order(routing_plan)
@@ -126,10 +146,6 @@ class DegradationRouter:
         self._log_routing_decision(result)
         
         return result
-    
-    def _detect_degradations(self, frames: List[np.ndarray]) -> Dict[str, float]:
-        """Detect specific degradation types in video frames"""
-        degradations = {
             'compression_artifacts': 0.0,
             'motion_blur': 0.0,
             'low_light': 0.0,

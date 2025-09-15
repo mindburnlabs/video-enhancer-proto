@@ -158,9 +158,34 @@ class TemporalConsistencyModule(nn.Module):
         return output
     
     def _warp_with_flow(self, frames, flows):
-        """Warp frames using optical flow (simplified)."""
-        # Simplified warping - in practice would use proper grid sampling
-        return frames  # Placeholder
+        """Warp frames using optical flow via grid_sample.
+        frames: (B, C, T, H, W), flows: (B, 2, T, H, W) with dx, dy in pixels.
+        """
+        B, C, T, H, W = frames.shape
+        device = frames.device
+        dtype = frames.dtype
+        # Normalize flow to [-1, 1]
+        # flow_x normalized by (W-1), flow_y by (H-1)
+        flow = flows.to(device=device, dtype=dtype)
+        norm_flow_x = flow[:, 0] / max(W - 1, 1)
+        norm_flow_y = flow[:, 1] / max(H - 1, 1)
+        # Build base grid
+        ys, xs = torch.meshgrid(
+            torch.linspace(-1, 1, H, device=device, dtype=dtype),
+            torch.linspace(-1, 1, W, device=device, dtype=dtype), indexing='ij')
+        base_grid = torch.stack((xs, ys), dim=-1)  # (H, W, 2)
+        warped = []
+        for t in range(T):
+            # Grid per batch: (B, H, W, 2)
+            grid = base_grid.unsqueeze(0).repeat(B, 1, 1, 1)
+            # Add normalized flow offsets
+            grid_x = grid[..., 0] + 2.0 * norm_flow_x[:, t]
+            grid_y = grid[..., 1] + 2.0 * norm_flow_y[:, t]
+            grid_t = torch.stack((grid_x, grid_y), dim=-1)
+            frame = frames[:, :, t]  # (B, C, H, W)
+            warped_t = F.grid_sample(frame, grid_t, mode='bilinear', padding_mode='border', align_corners=True)
+            warped.append(warped_t.unsqueeze(2))
+        return torch.cat(warped, dim=2)
 
 class LightweightFlowNet(nn.Module):
     """Lightweight optical flow estimation."""
