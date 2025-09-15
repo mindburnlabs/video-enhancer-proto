@@ -1,0 +1,38 @@
+{
+  "registry_version": 1,
+  "license_mode": "permissive_only",
+  "models": [
+    {
+      "id": "seedvr2_3b",
+      "name": "SeedVR2-3B",
+      "repo": "https://huggingface.co/ByteDance-Seed/SeedVR2-3B",
+      "license": "apache-2.0",
+      "local_path": "models/weights/SeedVR2-3B",
+      "enabled": true,
+      "notes": "Primary restoration backbone (quality)"
+    },
+    {
+      "id": "seedvr2_7b",
+      "name": "SeedVR2-7B",
+      "repo": "https://huggingface.co/ByteDance-Seed/SeedVR2-7B",
+      "license": "apache-2.0",
+      "local_path": "models/weights/SeedVR2-7B",
+      "enabled": false,
+      "notes": "Ultra quality backbone; enable when latency allows"
+    }
+  ],
+  "experts": [
+    {
+      "id": "face_restoration",
+      "enabled": false,
+      "license": "n/a",
+      "notes": "Disabled by default until a permissive weights source is confirmed"
+    },
+    {
+      "id": "hfr_interpolation",
+      "enabled": false,
+      "license": "n/a",
+      "notes": "Disabled by default until a permissive interpolation weights source is confirmed"
+    }
+  ]
+}

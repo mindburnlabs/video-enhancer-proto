@@ -83,6 +83,13 @@ class ProductionConfig:
         self.monitoring = MonitoringConfig()
         self.storage = StorageConfig()
         
+        # Feature toggles and license gating
+        self.license_mode: str = os.getenv('LICENSE_MODE', 'permissive_only')  # permissive_only | allow_all
+        self.enable_face_expert: bool = os.getenv('ENABLE_FACE_EXPERT', '0') in ['1', 'true', 'True']
+        self.enable_hfr: bool = os.getenv('ENABLE_HFR', '0') in ['1', 'true', 'True']
+        self.seedvr2_3b_dir: Optional[str] = os.getenv('SEEDVR2_3B_DIR')
+        self.seedvr2_7b_dir: Optional[str] = os.getenv('SEEDVR2_7B_DIR')
+        
         # Apply environment-specific overrides
         self._apply_environment_config()
         
@@ -93,6 +100,7 @@ class ProductionConfig:
         self._validate_config()
         
         logger.info(f"🔧 Configuration loaded for environment: {self.environment}")
+        logger.info(f"License mode: {self.license_mode}, Face expert: {self.enable_face_expert}, HFR: {self.enable_hfr}")
     
     def _detect_environment(self) -> str:
         """Detect environment from various sources."""
@@ -237,6 +245,18 @@ class ProductionConfig:
             self.storage.temp_dir = os.getenv('TEMP_DIR')
         if os.getenv('MODELS_DIR'):
             self.storage.models_dir = os.getenv('MODELS_DIR')
+        
+        # Feature toggles and model paths
+        if os.getenv('LICENSE_MODE'):
+            self.license_mode = os.getenv('LICENSE_MODE')
+        if os.getenv('ENABLE_FACE_EXPERT'):
+            self.enable_face_expert = os.getenv('ENABLE_FACE_EXPERT') in ['1', 'true', 'True']
+        if os.getenv('ENABLE_HFR'):
+            self.enable_hfr = os.getenv('ENABLE_HFR') in ['1', 'true', 'True']
+        if os.getenv('SEEDVR2_3B_DIR'):
+            self.seedvr2_3b_dir = os.getenv('SEEDVR2_3B_DIR')
+        if os.getenv('SEEDVR2_7B_DIR'):
+            self.seedvr2_7b_dir = os.getenv('SEEDVR2_7B_DIR')
     
     def _validate_config(self):
         """Validate final configuration values."""

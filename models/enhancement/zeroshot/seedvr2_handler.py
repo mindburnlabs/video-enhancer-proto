@@ -238,16 +238,70 @@ class SeedVR2Handler:
             num_heads=8
         ).to(self.device)
         
+        # Resolve model weights path from env/config if not provided
+        resolved_model_path = self._resolve_model_path(model_path)
+        
         # Load pretrained weights
-        if model_path and Path(model_path).exists():
-            self._load_model(model_path)
+        if resolved_model_path and Path(resolved_model_path).exists():
+            self._load_model(resolved_model_path)
         else:
-            logger.warning("No model weights provided, using random initialization")
+            logger.warning("No SeedVR2 model weights found, using random initialization")
         
         self.model.eval()
         self.video_utils = VideoUtils()
         
         logger.info("✅ SeedVR2 Handler initialized")
+
+    def _resolve_model_path(self, model_path: Optional[str]) -> Optional[str]:
+        """Resolve model path from explicit arg, env vars, or registry structure.
+        Priority:
+        1) Explicit model_path
+        2) SEEDVR2_3B_DIR or SEEDVR2_7B_DIR env with common filename patterns
+        3) config/model_registry.json local_path with typical weight filenames
+        """
+        if model_path:
+            return str(model_path)
+        import os, json
+        # Check env vars first
+        for env_var in ["SEEDVR2_3B_DIR", "SEEDVR2_7B_DIR"]:
+            d = os.getenv(env_var)
+            if d and Path(d).exists():
+                candidate = self._find_weight_file_in_dir(d)
+                if candidate:
+                    logger.info(f"🔎 Resolved SeedVR2 weights via {env_var}: {candidate}")
+                    return candidate
+        # Check registry
+        registry_path = Path(__file__).resolve().parents[3] / "config" / "model_registry.json"
+        if registry_path.exists():
+            try:
+                data = json.loads(registry_path.read_text())
+                for m in data.get("models", []):
+                    if m.get("id") in ["seedvr2_3b", "seedvr2_7b"] and m.get("enabled", False):
+                        local_path = m.get("local_path")
+                        if local_path and Path(local_path).exists():
+                            candidate = self._find_weight_file_in_dir(local_path)
+                            if candidate:
+                                logger.info(f"🔎 Resolved SeedVR2 weights via registry: {candidate}")
+                                return candidate
+            except Exception as e:
+                logger.warning(f"Could not parse model_registry.json: {e}")
+        return None
+
+    def _find_weight_file_in_dir(self, d: str) -> Optional[str]:
+        """Find a plausible weights file in a directory.
+        Looks for *.safetensors or *.pth files by common names.
+        """
+        p = Path(d)
+        patterns = [
+            "*.safetensors", "*.pt", "*.pth"
+        ]
+        for pat in patterns:
+            matches = list(p.rglob(pat))
+            # Prefer safetensors
+            matches_sorted = sorted(matches, key=lambda x: (x.suffix != ".safetensors", len(str(x))))
+            if matches_sorted:
+                return str(matches_sorted[0])
+        return None
     
     def _load_model(self, model_path: str):
         """Load pretrained SeedVR2 weights."""

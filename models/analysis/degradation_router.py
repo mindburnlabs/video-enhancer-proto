@@ -285,7 +285,10 @@ class DegradationRouter:
     def _create_routing_plan(self, degradations: Dict, content: Dict, 
                            latency_class: str = 'standard', 
                            allow_diffusion: bool = True,
-                           allow_zero_shot: bool = True) -> Dict:
+                           allow_zero_shot: bool = True,
+                           license_mode: str = 'permissive_only',
+                           enable_face_expert: bool = False,
+                           enable_hfr: bool = False) -> Dict:
         """Create SOTA routing plan based on analysis and constraints"""
         
         # Calculate degradation scores
@@ -316,11 +319,11 @@ class DegradationRouter:
             'fallback_model': 'vsrm' if primary_model != 'vsrm' else 'fast_mamba_vsr',
             
             # Post-processing
-            'use_face_expert': content['has_faces'] and content['face_prominence'] > self.thresholds['face_prominence'],
+            'use_face_expert': enable_face_expert and content['has_faces'] and content['face_prominence'] > self.thresholds['face_prominence'],
             'use_temporal_consistency': degradations['temporal_inconsistency'] > 0.3,
             
             # Interpolation (always last)
-            'use_hfr_interpolation': True,
+            'use_hfr_interpolation': enable_hfr,
             
             # Strategy metadata
             'latency_class': latency_class,

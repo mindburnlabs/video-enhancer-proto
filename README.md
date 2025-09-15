@@ -96,6 +96,15 @@ python setup_face_extras.py --backend python
 
 ### 2. **Web Interface (Gradio)**
 ```bash
+# Optionally fetch permissive models (requires git-lfs and jq)
+./scripts/fetch_models.sh
+
+# Example env configuration for permissive-only build
+export LICENSE_MODE=permissive_only
+export SEEDVR2_3B_DIR="$(pwd)/models/weights/SeedVR2-3B"
+export ENABLE_FACE_EXPERT=0
+export ENABLE_HFR=0
+
 # Start SOTA Video Enhancer with health monitoring
 python app.py
 
@@ -240,8 +249,14 @@ print(f"Avg Processing Time: {metrics['performance']['average_processing_time']:
 # Build production image
 docker build -t sota-video-enhancer .
 
-# Run with health monitoring
-docker run -p 7860:7860 -p 7861:7861 --gpus all sota-video-enhancer
+# Run with health monitoring (permissive-only)
+docker run \
+  -e LICENSE_MODE=permissive_only \
+  -e ENABLE_FACE_EXPERT=0 \
+  -e ENABLE_HFR=0 \
+  -e SEEDVR2_3B_DIR=/app/models/weights/SeedVR2-3B \
+  -v "$(pwd)/models/weights:/app/models/weights" \
+  -p 7860:7860 -p 7861:7861 --gpus all sota-video-enhancer
 
 # Check health status
 curl http://localhost:7861/health
