@@ -465,9 +465,27 @@ def initialize_enhancer():
         return f"❌ Initialization failed: {str(e)}"
 
 def process_video_gradio(input_video, target_fps):
-    """Process video through Gradio interface."""
+    """Process video through Gradio interface (accepts Video or File path)."""
     if input_video is None:
         return None, "❌ Please upload a video file."
+    
+    # Resolve source path from possible input types (str path or dict with 'name')
+    src_path = None
+    if isinstance(input_video, (str, Path)):
+        src_path = str(input_video)
+    elif isinstance(input_video, dict) and input_video.get('name'):
+        src_path = input_video['name']
+    else:
+        try:
+            # Some gradio versions provide an object with .name
+            maybe_name = getattr(input_video, 'name', None)
+            if maybe_name:
+                src_path = str(maybe_name)
+        except Exception:
+            src_path = None
+    
+    if not src_path or not os.path.exists(src_path):
+        return None, "❌ Unable to read uploaded video path. Please try again."
     
     if not enhancer.models_loaded and not enhancer.load_models():
         return None, "❌ Models not loaded. Please refresh and try again."
@@ -482,7 +500,7 @@ def process_video_gradio(input_video, target_fps):
             
             # Copy input file
             import shutil
-            shutil.copy2(input_video, input_path)
+            shutil.copy2(src_path, input_path)
             
             # Process video
             logger.info(f"🎬 Starting video processing...")
@@ -565,10 +583,10 @@ with gr.Blocks(title="🏆 ZeroGPU Video Enhancer", theme=gr.themes.Soft()) as a
         with gr.Column(scale=2):
             gr.Markdown("## 📤 Upload & Settings")
             
-            input_video = gr.File(
+            input_video = gr.Video(
                 label="📹 Upload Video",
-                file_types=["video"],
-                type="filepath"
+                sources=["upload"],
+                elem_id="input_video"
             )
             
             target_fps = gr.Slider(
@@ -581,8 +599,7 @@ with gr.Blocks(title="🏆 ZeroGPU Video Enhancer", theme=gr.themes.Soft()) as a
             
             process_btn = gr.Button(
                 "🚀 Enhance Video", 
-                variant="primary", 
-                size="lg"
+                variant="primary"
             )
             
             status_text = gr.Textbox(
