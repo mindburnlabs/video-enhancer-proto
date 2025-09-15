@@ -1,0 +1,77 @@
+# Git and version control
+.git/
+.gitignore
+
+# Python cache and compiled files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+.env/
+.venv/
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS specific files
+.DS_Store
+Thumbs.db
+
+# Logs and temporary files
+logs/
+*.log
+data/temp/
+data/cache/
+
+# Model checkpoints and large files (will be downloaded during setup)
+models/checkpoints/
+*.pth
+*.pt
+*.onnx
+*.safetensors
+
+# Development and testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.cache
+nosetests.xml
+coverage.xml
+
+# Documentation
+docs/_build/
+
+# Jupyter notebooks
+.ipynb_checkpoints
+
+# Local development files
+local_config.py
+*.local
