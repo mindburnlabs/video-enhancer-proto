@@ -106,6 +106,7 @@ export ENABLE_FACE_EXPERT=0
 export ENABLE_HFR=0
 
 # Start SOTA Video Enhancer with health monitoring
+# On Hugging Face Spaces, postBuild runs automatically to fetch permissive models.
 python app.py
 
 # Access web interface at http://localhost:7860

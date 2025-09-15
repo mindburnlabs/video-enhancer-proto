@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Hugging Face Spaces postBuild script
+# Installs system dependencies and fetches permissively licensed model weights.
+
+if command -v apt-get &>/dev/null; then
+  apt-get update -y
+  DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends jq git-lfs
+fi
+
+# Initialize git-lfs (safe to call if already installed)
+if command -v git &>/dev/null; then
+  git lfs install || true
+fi
+
+# Ensure script is executable
+chmod +x scripts/fetch_models.sh 2>/dev/null || true
+
+# Fetch permissive models; ignore failures to avoid blocking build
+./scripts/fetch_models.sh || true
+
+echo "postBuild completed."
