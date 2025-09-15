@@ -110,6 +110,7 @@ export ENABLE_HFR=0
 python app.py
 
 # Access web interface at http://localhost:7860
+# Outputs will be persisted to data/output (or $OUTPUT_DIR) for UI display
 # Health endpoint at http://localhost:7861/health
 # Metrics endpoint at http://localhost:7861/metrics
 ```
@@ -256,7 +257,9 @@ docker run \
   -e ENABLE_FACE_EXPERT=0 \
   -e ENABLE_HFR=0 \
   -e SEEDVR2_3B_DIR=/app/models/weights/SeedVR2-3B \
+  -e OUTPUT_DIR=/app/data/output \
   -v "$(pwd)/models/weights:/app/models/weights" \
+  -v "$(pwd)/data/output:/app/data/output" \
   -p 7860:7860 -p 7861:7861 --gpus all sota-video-enhancer
 
 # Check health status

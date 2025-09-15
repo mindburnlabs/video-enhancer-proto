@@ -287,6 +287,8 @@ class GPUVideoEnhancer:
             
             # Setup output video with 2x upscaling
             fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+            # Ensure parent directory exists
+            Path(output_path).parent.mkdir(parents=True, exist_ok=True)
             out = cv2.VideoWriter(output_path, fourcc, min(target_fps, fps), (width*2, height*2))
             
             if not out.isOpened():
@@ -407,6 +409,8 @@ class GPUVideoEnhancer:
             total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
             
             fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+            # Ensure parent directory exists
+            Path(output_path).parent.mkdir(parents=True, exist_ok=True)
             out = cv2.VideoWriter(output_path, fourcc, min(target_fps, fps), (width*2, height*2))
             
             frame_count = 0
@@ -511,7 +515,15 @@ def process_video_gradio(input_video, target_fps):
             )
             
             if success and output_path.exists():
-                return str(output_path), message
+                # Persist output outside the TemporaryDirectory so Gradio can serve it
+                from uuid import uuid4
+                persist_dir = Path(os.getenv('OUTPUT_DIR', 'data/output'))
+                persist_dir.mkdir(parents=True, exist_ok=True)
+                persistent_path = persist_dir / f"enhanced_{uuid4().hex}.mp4"
+                import shutil as _sh
+                _sh.copy2(output_path, persistent_path)
+                logger.info(f"✅ Persisted enhanced video to {persistent_path}")
+                return str(persistent_path), message
             else:
                 return None, message
                 
