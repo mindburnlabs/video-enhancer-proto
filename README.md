@@ -1,95 +1,79 @@
 ---
-title: "🏆 SOTA Video Enhancer | Beats Topaz Video AI 7"
+title: "🏆 SOTA Video Enhancer | AI-Powered Video Enhancement"
 app_file: app.py
 sdk: gradio
 sdk_version: 4.44.0
-suggested_hardware: t4-medium
-suggested_storage: medium
+suggested_hardware: cpu-upgrade
+suggested_storage: small
+python_version: 3.10
 pinned: false
 license: mit
-colorFrom: red
-colorTo: yellow
-models:
-  - stabilityai/stable-video-diffusion-img2vid-xt
-  - TencentARC/GFPGAN
-  - jingyunliang/RVRT
-  - rife-vsr/RIFE
-  - vsrm/video-super-resolution-mamba
-  - seedvr2/seed-video-restoration-v2
-  - ditvr/diffusion-transformer-vsr
-  - fast-mamba-vsr/fast-mamba-video-sr
-datasets:
-  - video-dataset-examples
+colorFrom: blue
+colorTo: purple
+emoji: 🎬
+short_description: "Professional AI video enhancement with neural super-resolution and robust CPU processing"
 tags:
   - video-enhancement
-  - video-super-resolution
-  - face-restoration
-  - stable-video-diffusion
-  - sota
-  - topaz-killer
-  - gradio
+  - computer-vision
   - pytorch
+  - gradio
+  - ai
+  - cpu-optimized
 ---
 
-# 🏆 SOTA Video Enhancer - Topaz Video AI 7 Killer
+# 🏆 SOTA Video Enhancer - AI-Powered Video Enhancement
 
-## 🚀 **PRODUCTION-READY VIDEO ENHANCEMENT WITH 2025 SOTA MODELS**
+## 🚀 **PRODUCTION-READY VIDEO ENHANCEMENT WITH NEURAL NETWORKS**
 
-This repository contains a complete, production-ready video enhancement pipeline that **surpasses Topaz Video AI 7** using **2025 SOTA models** through intelligent expert routing and advanced AI model orchestration.
+This repository contains a complete, production-ready video enhancement pipeline powered by PyTorch neural networks with robust CPU fallbacks and professional-grade monitoring.
 
-### ✨ **KEY ADVANTAGES OVER TOPAZ VIDEO AI 7**
+### ✨ **KEY FEATURES**
 
-| Feature | Topaz Video AI 7 | **Our Topaz Killer** | Advantage |
-|---------|------------------|----------------------|-----------|
-| **Intelligence** | Static processing | Intelligent degradation routing | 🧠 Smart |
-| **AI Models** | Proprietary | SOTA Open Source (SVD, GFPGAN, RVRT) | 🔓 Transparent |
-| **Customization** | Limited presets | Full pipeline control | ⚙️ Flexible |
-| **Face Restoration** | Basic | Selective GFPGAN with prominence detection | 👤 Advanced |
-| **Compression Cleanup** | Generic | FTVSR frequency-aware transformers | 🔧 Specialized |
-| **Generative Enhancement** | None | Stable Video Diffusion integration | 🎨 Creative |
-| **Speed** | Slow | GPU-optimized parallel processing | ⚡ Fast |
-| **Cost** | $199+ license | Free and open source | 💰 Free |
-| **API Access** | None | Full REST API with webhooks | 🌐 Integrated |
-| **Benchmarking** | Subjective | Quantitative quality metrics | 📊 Measurable |
+| Feature | Description | Status |
+|---------|-------------|---------|
+| **Neural Enhancement** | PyTorch-based video upscaling | ✅ Active |
+| **CPU Compatibility** | Runs on any hardware | ✅ Active |
+| **Gradio Interface** | Professional web UI | ✅ Active |
+| **Health Monitoring** | Production-grade endpoints | ✅ Active |
+| **Graceful Fallbacks** | Robust error handling | ✅ Active |
+| **Docker Ready** | Containerized deployment | ✅ Active |
+| **Open Source** | MIT licensed | ✅ Active |
+| **HF Spaces** | One-click deployment | ✅ Active |
 
 ---
 
 ## 🎬 **DEMO & LIVE DEPLOYMENT**
 
-🌐 **Live Demo**: https://huggingface.co/spaces/YOUR_USERNAME/video-enhancer-proto  
-📊 **Benchmarks**: [View performance comparisons](./BENCHMARKS.md)  
-🎥 **Sample Results**: [Enhanced video gallery](./samples/)
+🌐 **Live Demo**: https://huggingface.co/spaces/mindburn/video-enhancer  
+🔧 **Health Status**: https://mindburn-video-enhancer.hf.space/health  
+📊 **System Metrics**: https://mindburn-video-enhancer.hf.space/metrics
 
 ---
 
-## 🧠 **INTELLIGENT EXPERT PIPELINE**
+## 🧠 **NEURAL VIDEO ENHANCEMENT PIPELINE**
 
-Our pipeline uses **degradation analysis** to intelligently route videos through 2025 SOTA model experts:
+Our pipeline uses PyTorch neural networks with intelligent fallbacks for reliable video enhancement:
 
 ```mermaid
 graph TD
-    A[Input Video] --> B[Degradation Router]
-    B --> C{SOTA Model Selection}
-    C --> D[VSRM - Recurrent Mamba]
-    C --> E[SeedVR2 - Diffusion VSR]
-    C --> F[DiTVR - Zero-shot Transformer]
-    C --> G[Fast Mamba VSR - Speed]
-    D --> H[Face Restoration]
-    E --> H
-    F --> H
-    G --> H
-    H --> I[RIFE Interpolation]
-    I --> J[Enhanced Video]
+    A[Input Video] --> B[Frame Extraction]
+    B --> C{Enhancement Model}
+    C --> D[Neural Upscaler]
+    C --> E[Bicubic Fallback]
+    D --> F[Frame Processing]
+    E --> F
+    F --> G[Video Reconstruction]
+    G --> H[Enhanced Video]
 ```
 
-### 🔍 **SOTA Model Routing Intelligence**
+### 🔍 **Processing Intelligence**
 
-1. **Unknown/Mixed Degradations** → DiTVR Zero-shot Enhancement
-2. **High Quality Needs + Diffusion** → SeedVR2 Advanced Restoration
-3. **Complex Motion/Temporal** → VSRM Recurrent Processing
-4. **Speed Critical** → Fast Mamba VSR Lightning Processing
-5. **Face Prominence** → Selective GFPGAN Enhancement
-6. **Frame Rate Boost** → RIFE Interpolation to 120 FPS
+1. **Neural Enhancement** → Custom CNN upscaler with 2x resolution
+2. **Robust Fallbacks** → High-quality bicubic interpolation
+3. **CPU Optimized** → Efficient processing without GPU requirements
+4. **Frame-by-Frame** → Consistent quality across all frames
+5. **Memory Efficient** → Handles large videos with streaming processing
+6. **Error Recovery** → Graceful handling of corrupted or unusual inputs
 
 ---
 
