@@ -16,6 +16,7 @@ import logging
 import sys
 from datetime import datetime
 import threading
+from typing import Optional
 
 # ZeroGPU import
 try:
@@ -84,6 +85,19 @@ except ImportError as e:
         device = 'cpu'
     else:
         sys.exit(1)
+
+# Attempt to import SOTA router and handlers (graceful if missing)
+SOTA_AVAILABLE = False
+SOTA_IMPORT_ERROR: Optional[str] = None
+try:
+    from models.analysis.degradation_router import DegradationRouter
+    from models.enhancement.vsr.vsrm_handler import VSRMHandler
+    from models.enhancement.zeroshot.seedvr2_handler import SeedVR2Handler
+    from models.enhancement.zeroshot.ditvr_handler import DiTVRHandler
+    from models.enhancement.vsr.fast_mamba_vsr_handler import FastMambaVSRHandler
+    SOTA_AVAILABLE = True
+except Exception as _e:
+    SOTA_IMPORT_ERROR = str(_e)
 
 # Global state
 processing_stats = {
@@ -468,7 +482,49 @@ def initialize_enhancer():
         logger.error(f"Initialization failed: {e}")
         return f"❌ Initialization failed: {str(e)}"
 
-def process_video_gradio(input_video, target_fps):
+def _estimate_duration_seconds(input_path: str) -> int:
+    try:
+        cap = cv2.VideoCapture(input_path)
+        total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+        cap.release()
+        return int(min(max(total_frames * 0.5, 60), 300))
+    except Exception:
+        return 120
+
+
+def _run_sota_pipeline(input_path: str, output_path: str, target_fps: int) -> tuple[bool, str]:
+    """Run the SOTA routing + handler pipeline. Returns (success, message)."""
+    if not SOTA_AVAILABLE:
+        return False, f"SOTA pipeline unavailable: {SOTA_IMPORT_ERROR or 'imports failed'}"
+
+    try:
+        logger.info("🔍 Running Degradation Router analysis...")
+        router = DegradationRouter(device='cuda' if CUDA_AVAILABLE else 'cpu')
+        plan = router.analyze_and_route(input_path)
+        primary = plan['expert_routing'].get('primary_model', 'vsrm')
+        logger.info(f"🗺️ Routing selected primary model: {primary}")
+
+        # Choose handler
+        if primary == 'seedvr2':
+            handler = SeedVR2Handler(device='cuda' if CUDA_AVAILABLE else 'cpu')
+            stats = handler.restore_video(input_path=input_path, output_path=output_path, quality_threshold=0.5)
+        elif primary == 'ditvr':
+            handler = DiTVRHandler(device='cuda' if CUDA_AVAILABLE else 'cpu')
+            stats = handler.restore_video(input_path=input_path, output_path=output_path, degradation_type='unknown', auto_adapt=True)
+        elif primary == 'fast_mamba_vsr':
+            handler = FastMambaVSRHandler(device='cuda' if CUDA_AVAILABLE else 'cpu')
+            stats = handler.enhance_video(input_path=input_path, output_path=output_path, chunk_size=16, fp16=True)
+        else:  # default vsrm
+            handler = VSRMHandler(device='cuda' if CUDA_AVAILABLE else 'cpu')
+            stats = handler.enhance_video(input_path=input_path, output_path=output_path, window=7, fp16=True)
+
+        return True, f"✅ SOTA pipeline completed with {primary}. Stats: {stats}"
+    except Exception as e:
+        logger.error(f"SOTA pipeline failed: {e}")
+        return False, f"❌ SOTA pipeline failed: {e}"
+
+
+def process_video_gradio(input_video, target_fps, engine_choice):
     """Process video through Gradio interface (accepts Video or File path)."""
     if input_video is None:
         return None, "❌ Please upload a video file."
@@ -491,6 +547,49 @@ def process_video_gradio(input_video, target_fps):
     if not src_path or not os.path.exists(src_path):
         return None, "❌ Unable to read uploaded video path. Please try again."
     
+    if not engine_choice:
+        engine_choice = "ZeroGPU Upscaler (fast)"
+
+    if engine_choice.startswith("SOTA"):
+        # Use SOTA pipeline
+        try:
+            with tempfile.TemporaryDirectory() as temp_dir:
+                temp_dir = Path(temp_dir)
+                input_path = temp_dir / "input.mp4"
+                output_path = temp_dir / "enhanced.mp4"
+                import shutil
+                shutil.copy2(src_path, input_path)
+
+                if ZEROGPU_AVAILABLE and spaces:
+                    # Wrap with ZeroGPU for acceleration
+                    duration = _estimate_duration_seconds(str(input_path))
+                    decorator = spaces.GPU(duration=duration)
+                else:
+                    decorator = (lambda f: f)
+
+                @decorator
+                def _sota_job(inp: str, outp: str, fps: int):
+                    return _run_sota_pipeline(inp, outp, fps)
+
+                success, message = _sota_job(str(input_path), str(output_path), int(target_fps))
+
+                if success and output_path.exists():
+                    from uuid import uuid4
+                    persist_dir = Path(os.getenv('OUTPUT_DIR', 'data/output'))
+                    persist_dir.mkdir(parents=True, exist_ok=True)
+                    persistent_path = persist_dir / f"enhanced_{uuid4().hex}.mp4"
+                    import shutil as _sh
+                    _sh.copy2(output_path, persistent_path)
+                    logger.info(f"✅ Persisted enhanced video to {persistent_path}")
+                    return str(persistent_path), message
+                else:
+                    return None, message
+        except Exception as e:
+            error_msg = f"❌ SOTA processing error: {e}"
+            logger.error(error_msg)
+            return None, error_msg
+
+    # Default: ZeroGPU upscaler path
     if not enhancer.models_loaded and not enhancer.load_models():
         return None, "❌ Models not loaded. Please refresh and try again."
     
@@ -608,6 +707,12 @@ with gr.Blocks(title="🏆 ZeroGPU Video Enhancer", theme=gr.themes.Soft()) as a
                 value=30,
                 step=1
             )
+
+            engine_choice = gr.Radio(
+                label="🧠 Engine",
+                choices=["ZeroGPU Upscaler (fast)", "SOTA Router (SeedVR2/VSRM)"] ,
+                value="ZeroGPU Upscaler (fast)"
+            )
             
             process_btn = gr.Button(
                 "🚀 Enhance Video", 
@@ -641,7 +746,7 @@ with gr.Blocks(title="🏆 ZeroGPU Video Enhancer", theme=gr.themes.Soft()) as a
     # Event handlers
     process_btn.click(
         fn=process_video_gradio,
-        inputs=[input_video, target_fps],
+        inputs=[input_video, target_fps, engine_choice],
         outputs=[output_video, status_text],
         show_progress="full"
     )
