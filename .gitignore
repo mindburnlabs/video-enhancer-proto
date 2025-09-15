@@ -51,6 +51,9 @@ triton_cache/
 data/models/gfpgan_ncnn/
 data/models/face_restoration/
 
+# Interpolation Models (git repos)
+models/interpolation/RIFE/
+
 # Data and Media
 data/
 videos/
