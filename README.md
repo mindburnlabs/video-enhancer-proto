@@ -11,7 +11,7 @@ license: mit
 colorFrom: blue
 colorTo: purple
 emoji: 🎬
-short_description: "Professional AI video enhancement with neural super-resolution and robust CPU processing"
+short_description: "AI video enhancement with neural networks"
 tags:
   - video-enhancement
   - computer-vision
