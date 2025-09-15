@@ -535,11 +535,11 @@ def get_system_info():
         f"• Uptime: {(datetime.now() - processing_stats['startup_time']).total_seconds():.0f}s",
         f"",
         f"⚙️ **Features**",
-        f"• GPU Acceleration: {'\u2705' if ZEROGPU_AVAILABLE else '\u274c'}",
-        f"• Batch Processing: {'\u2705' if ZEROGPU_AVAILABLE else '\u274c'}",
-        f"• Dynamic Duration: {'\u2705' if ZEROGPU_AVAILABLE else '\u274c'}",
-        f"• Memory Optimization: \u2705",
-        f"• Robust Fallbacks: \u2705"
+        f"• GPU Acceleration: {'✅' if ZEROGPU_AVAILABLE else '❌'}",
+        f"• Batch Processing: {'✅' if ZEROGPU_AVAILABLE else '❌'}",
+        f"• Dynamic Duration: {'✅' if ZEROGPU_AVAILABLE else '❌'}",
+        "• Memory Optimization: ✅",
+        "• Robust Fallbacks: ✅"
     ]
     
     return "\n".join(info)
