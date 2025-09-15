@@ -17,6 +17,9 @@ import sys
 from datetime import datetime
 import threading
 from typing import Optional
+from collections import deque
+
+from config.logging_config import setup_production_logging, get_performance_logger
 
 # ZeroGPU import
 try:
@@ -86,6 +89,14 @@ except ImportError as e:
     else:
         sys.exit(1)
 
+# Setup structured logging early
+try:
+    setup_production_logging(log_level=os.getenv('LOG_LEVEL', 'INFO'))
+except Exception as _log_e:
+    logging.basicConfig(level=logging.INFO)
+    logging.getLogger(__name__).warning(f"Logging setup failed, using basic config: {_log_e}
+")
+
 # Attempt to import SOTA router and handlers (graceful if missing)
 SOTA_AVAILABLE = False
 SOTA_IMPORT_ERROR: Optional[str] = None
@@ -100,6 +111,27 @@ except Exception as _e:
     SOTA_IMPORT_ERROR = str(_e)
 
 # Global state
+performance_logger = get_performance_logger()
+
+# Ring buffer for live logs
+LOG_RING_MAX = int(os.getenv('LOG_RING_MAX', '500'))
+log_ring = deque(maxlen=LOG_RING_MAX)
+
+class RingBufferHandler(logging.Handler):
+    def emit(self, record):
+        try:
+            msg = self.format(record)
+        except Exception:
+            msg = record.getMessage()
+        log_ring.append(msg)
+
+# Attach ring buffer handler
+_ring_handler = RingBufferHandler()
+_ring_handler.setLevel(logging.INFO)
+_ring_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
+logging.getLogger().addHandler(_ring_handler)
+
+job_history = []  # list of dicts: {id, engine, model, frames, time, input, output, ts}
 processing_stats = {
     'total_processed': 0,
     'total_time': 0,
@@ -341,6 +373,21 @@ class GPUVideoEnhancer:
                     logger.info(f"🚀 ZeroGPU Progress: {progress:.1f}% ({frame_count}/{total_frames})")
             
             # Cleanup
+            # Record job history
+            try:
+                from uuid import uuid4
+                job_history.append({
+                    'id': uuid4().hex,
+                    'engine': 'ZeroGPU Upscaler',
+                    'model': 'AdvancedUpscaler',
+                    'frames': total_frames,
+                    'time': f"{processing_time:.1f}s",
+                    'input': str(input_path),
+                    'output': str(output_path),
+                    'ts': datetime.now().isoformat(timespec='seconds')
+                })
+            except Exception:
+                pass
             cap.release()
             out.release()
             
@@ -492,6 +539,95 @@ def _estimate_duration_seconds(input_path: str) -> int:
         return 120
 
 
+def _apply_compression_cleanup(frame_bgr: np.ndarray) -> np.ndarray:
+    # Use Non-local Means as deblocking/deartifacting proxy
+    return cv2.fastNlMeansDenoisingColored(frame_bgr, None, 3, 3, 7, 21)
+
+
+def _apply_denoising(frame_bgr: np.ndarray) -> np.ndarray:
+    return cv2.fastNlMeansDenoisingColored(frame_bgr, None, 10, 10, 7, 21)
+
+
+def _apply_low_light_enhancement(frame_bgr: np.ndarray) -> np.ndarray:
+    lab = cv2.cvtColor(frame_bgr, cv2.COLOR_BGR2LAB)
+    l, a, b = cv2.split(lab)
+    clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
+    cl = clahe.apply(l)
+    limg = cv2.merge((cl, a, b))
+    out = cv2.cvtColor(limg, cv2.COLOR_LAB2BGR)
+    # Gamma correction
+    gamma = 0.9
+    inv = 1.0 / max(gamma, 1e-6)
+    table = (np.linspace(0, 1, 256) ** inv * 255).astype(np.uint8)
+    return cv2.LUT(out, table)
+
+
+def _preprocess_video(input_path: str, output_path: str, use_compression: bool, use_denoise: bool, use_low_light: bool):
+    cap = cv2.VideoCapture(input_path)
+    if not cap.isOpened():
+        raise ValueError(f"Could not open video: {input_path}")
+    fps = cap.get(cv2.CAP_PROP_FPS)
+    width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+    height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+    Path(output_path).parent.mkdir(parents=True, exist_ok=True)
+    out = cv2.VideoWriter(output_path, fourcc, fps, (width, height))
+    while True:
+        ret, frame = cap.read()
+        if not ret:
+            break
+        proc = frame
+        if use_compression:
+            proc = _apply_compression_cleanup(proc)
+        if use_denoise:
+            proc = _apply_denoising(proc)
+        if use_low_light:
+            proc = _apply_low_light_enhancement(proc)
+        out.write(proc)
+    cap.release(); out.release()
+
+
+def _temporal_smooth(input_path: str, output_path: str):
+    cap = cv2.VideoCapture(input_path)
+    if not cap.isOpened():
+        raise ValueError(f"Could not open video: {input_path}")
+    fps = cap.get(cv2.CAP_PROP_FPS)
+    width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+    height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+    Path(output_path).parent.mkdir(parents=True, exist_ok=True)
+    out = cv2.VideoWriter(output_path, fourcc, fps, (width, height))
+    prev = None
+    dis = None
+    try:
+        dis = cv2.DISOpticalFlow_create(cv2.DISOPTICAL_FLOW_PRESET_FAST)
+    except Exception:
+        dis = None
+    while True:
+        ret, frame = cap.read()
+        if not ret:
+            break
+        if prev is None:
+            out.write(frame)
+            prev = frame
+            continue
+        prev_gray = cv2.cvtColor(prev, cv2.COLOR_BGR2GRAY)
+        curr_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        if dis is not None:
+            flow = dis.calc(prev_gray, curr_gray, None)
+        else:
+            flow = cv2.calcOpticalFlowFarneback(prev_gray, curr_gray, None, 0.5, 3, 15, 3, 5, 1.2, 0)
+        h, w = prev_gray.shape
+        grid_x, grid_y = np.meshgrid(np.arange(w), np.arange(h))
+        map_x = (grid_x + flow[..., 0]).astype(np.float32)
+        map_y = (grid_y + flow[..., 1]).astype(np.float32)
+        warped_prev = cv2.remap(prev, map_x, map_y, cv2.INTER_LINEAR)
+        blended = cv2.addWeighted(frame, 0.7, warped_prev, 0.3, 0)
+        out.write(blended)
+        prev = frame
+    cap.release(); out.release()
+
+
 def _run_sota_pipeline(input_path: str, output_path: str, target_fps: int) -> tuple[bool, str]:
     """Run the SOTA routing + handler pipeline. Returns (success, message)."""
     if not SOTA_AVAILABLE:
@@ -501,27 +637,87 @@ def _run_sota_pipeline(input_path: str, output_path: str, target_fps: int) -> tu
         logger.info("🔍 Running Degradation Router analysis...")
         router = DegradationRouter(device='cuda' if CUDA_AVAILABLE else 'cpu')
         plan = router.analyze_and_route(input_path)
-        primary = plan['expert_routing'].get('primary_model', 'vsrm')
+        route = plan['expert_routing']
+        primary = route.get('primary_model', 'vsrm')
         logger.info(f"🗺️ Routing selected primary model: {primary}")
 
-        # Choose handler
-        if primary == 'seedvr2':
-            handler = SeedVR2Handler(device='cuda' if CUDA_AVAILABLE else 'cpu')
-            stats = handler.restore_video(input_path=input_path, output_path=output_path, quality_threshold=0.5)
-        elif primary == 'ditvr':
-            handler = DiTVRHandler(device='cuda' if CUDA_AVAILABLE else 'cpu')
-            stats = handler.restore_video(input_path=input_path, output_path=output_path, degradation_type='unknown', auto_adapt=True)
-        elif primary == 'fast_mamba_vsr':
-            handler = FastMambaVSRHandler(device='cuda' if CUDA_AVAILABLE else 'cpu')
-            stats = handler.enhance_video(input_path=input_path, output_path=output_path, chunk_size=16, fp16=True)
-        else:  # default vsrm
-            handler = VSRMHandler(device='cuda' if CUDA_AVAILABLE else 'cpu')
-            stats = handler.enhance_video(input_path=input_path, output_path=output_path, window=7, fp16=True)
+        # Preprocess
+        work_input = input_path
+        with tempfile.TemporaryDirectory() as tdir:
+            tdir = Path(tdir)
+            if route.get('use_compression_expert') or route.get('use_denoising') or route.get('use_low_light_expert'):
+                pre_path = str(tdir / "preprocessed.mp4")
+                _preprocess_video(
+                    input_path=work_input,
+                    output_path=pre_path,
+                    use_compression=bool(route.get('use_compression_expert')),
+                    use_denoise=bool(route.get('use_denoising')),
+                    use_low_light=bool(route.get('use_low_light_expert')),
+                )
+                work_input = pre_path
+
+            # Primary handler
+            primary_out = str(tdir / "primary.mp4")
+            if primary == 'seedvr2':
+                handler = SeedVR2Handler(device='cuda' if CUDA_AVAILABLE else 'cpu')
+                stats = handler.restore_video(input_path=work_input, output_path=primary_out, quality_threshold=0.5)
+            elif primary == 'ditvr':
+                handler = DiTVRHandler(device='cuda' if CUDA_AVAILABLE else 'cpu')
+                stats = handler.restore_video(input_path=work_input, output_path=primary_out, degradation_type='unknown', auto_adapt=True)
+            elif primary == 'fast_mamba_vsr':
+                handler = FastMambaVSRHandler(device='cuda' if CUDA_AVAILABLE else 'cpu')
+                stats = handler.enhance_video(input_path=work_input, output_path=primary_out, chunk_size=16, fp16=True)
+            else:
+                handler = VSRMHandler(device='cuda' if CUDA_AVAILABLE else 'cpu')
+                stats = handler.enhance_video(input_path=work_input, output_path=primary_out, window=7, fp16=True)
+
+            work_output = primary_out
+
+            # Face restoration expert
+            if route.get('use_face_expert'):
+                try:
+                    from models.enhancement.face_restoration_expert import FaceRestorationExpert
+                    face_out = str(tdir / "face.mp4")
+                    fre = FaceRestorationExpert(device='cuda' if CUDA_AVAILABLE else 'cpu')
+                    fre.process_video_selective(work_output, face_out)
+                    work_output = face_out
+                except Exception as fe:
+                    logger.warning(f"Face restoration skipped due to error: {fe}")
+
+            # Temporal consistency
+            if route.get('use_temporal_consistency'):
+                temp_out = str(tdir / "tc.mp4")
+                _temporal_smooth(work_output, temp_out)
+                work_output = temp_out
+
+            # Interpolation (HFR)
+            if route.get('use_hfr_interpolation'):
+                try:
+                    from models.interpolation.enhanced_rife_handler import EnhancedRIFEHandler
+                    rife_out = str(tdir / "hfr.mp4")
+                    er = EnhancedRIFEHandler(device='cuda' if CUDA_AVAILABLE else 'cpu')
+                    # Double FPS
+                    cap = cv2.VideoCapture(work_output)
+                    in_fps = cap.get(cv2.CAP_PROP_FPS) or 24
+                    cap.release()
+                    er.interpolate_video(work_output, rife_out, target_fps=float(in_fps)*2, interpolation_factor=2)
+                    work_output = rife_out
+                except Exception as ie:
+                    logger.warning(f"HFR interpolation skipped due to error: {ie}")
+
+            # Persist final output
+            Path(output_path).parent.mkdir(parents=True, exist_ok=True)
+            import shutil as _sh
+            _sh.copy2(work_output, output_path)
 
         return True, f"✅ SOTA pipeline completed with {primary}. Stats: {stats}"
     except Exception as e:
         logger.error(f"SOTA pipeline failed: {e}")
         return False, f"❌ SOTA pipeline failed: {e}"
+
+
+def get_recent_logs(n: int = 200) -> str:
+    return "\n".join(list(log_ring)[-n:])
 
 
 def process_video_gradio(input_video, target_fps, engine_choice):
@@ -581,6 +777,17 @@ def process_video_gradio(input_video, target_fps, engine_choice):
                     import shutil as _sh
                     _sh.copy2(output_path, persistent_path)
                     logger.info(f"✅ Persisted enhanced video to {persistent_path}")
+                    # Record job history (limited fields when using SOTA)
+                    job_history.append({
+                        'id': uuid4().hex,
+                        'engine': 'SOTA Router',
+                        'model': 'auto',
+                        'frames': 'unknown',
+                        'time': 'unknown',
+                        'input': str(input_path),
+                        'output': str(persistent_path),
+                        'ts': datetime.now().isoformat(timespec='seconds')
+                    })
                     return str(persistent_path), message
                 else:
                     return None, message
@@ -736,6 +943,17 @@ with gr.Blocks(title="🏆 ZeroGPU Video Enhancer", theme=gr.themes.Soft()) as a
             )
             
             refresh_btn = gr.Button("🔄 Refresh Info")
+
+    with gr.Accordion("📜 Live Logs", open=False):
+        logs_box = gr.Textbox(label="Recent Logs", value=get_recent_logs(), lines=12, interactive=False)
+        refresh_logs_btn = gr.Button("🔄 Refresh Logs")
+
+    with gr.Accordion("🧾 Job History", open=False):
+        history_table = gr.Dataframe(headers=["id", "engine", "model", "frames", "time", "input", "output", "ts"],
+                                     datatype=["str", "str", "str", "str", "str", "str", "str", "str"],
+                                     interactive=False,
+                                     value=[])
+        refresh_history_btn = gr.Button("🔄 Refresh History")
     
     with gr.Row():
         output_video = gr.Video(
@@ -755,9 +973,62 @@ with gr.Blocks(title="🏆 ZeroGPU Video Enhancer", theme=gr.themes.Soft()) as a
         fn=get_system_info,
         outputs=system_info
     )
+
+    refresh_logs_btn.click(
+        fn=lambda: get_recent_logs(),
+        outputs=logs_box
+    )
+
+    def _get_history_rows():
+        # Convert job_history list of dicts into rows ordered by time desc
+        rows = [[j.get('id'), j.get('engine'), j.get('model'), str(j.get('frames')), str(j.get('time')), j.get('input'), j.get('output'), j.get('ts')] for j in job_history[-200:]]
+        return rows[::-1]
+
+    refresh_history_btn.click(
+        fn=_get_history_rows,
+        outputs=history_table
+    )
     
     # Initialize on startup
     app.load(fn=initialize_enhancer, outputs=status_text)
+
+# Expose health and metrics via underlying FastAPI
+try:
+    from fastapi import FastAPI
+    from fastapi.responses import JSONResponse
+    _fastapi = app.app  # Gradio mounts on FastAPI
+
+    @_fastapi.get("/health")
+    def health():
+        gpu = {
+            'device': device,
+            'cuda_available': bool(CUDA_AVAILABLE),
+            'zerogpu_available': bool(ZEROGPU_AVAILABLE),
+        }
+        status = {
+            'status': 'ok',
+            'enhancer_ready': enhancer.models_loaded,
+            'sota_available': SOTA_AVAILABLE,
+            'processed': processing_stats['total_processed'],
+            'uptime_seconds': (datetime.now() - processing_stats['startup_time']).total_seconds(),
+        }
+        return JSONResponse({ 'gpu': gpu, 'status': status })
+
+    @_fastapi.get("/metrics")
+    def metrics():
+        avg = processing_stats['total_time'] / max(1, processing_stats['total_processed'])
+        return JSONResponse({
+            'requests': {
+                'processed': processing_stats['total_processed'],
+            },
+            'performance': {
+                'total_time': processing_stats['total_time'],
+                'average_processing_time': avg,
+            },
+            'recent_jobs': job_history[-10:]
+        })
+except Exception as _e:
+    logger.warning(f"Health/metrics endpoints not mounted: {_e}")
 
 if __name__ == "__main__":
     # Initialize enhancer
