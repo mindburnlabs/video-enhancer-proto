@@ -1,16 +1,33 @@
-# HuggingFace Spaces Compatible Requirements
-# Simplified and tested for reliable deployment
+# HuggingFace Spaces ZeroGPU Compatible Requirements
+# Optimized for ZeroGPU dynamic allocation with NVIDIA H200
 
-# Core libraries
-gradio>=4.0.0
-torch>=2.0.0,<3.0.0
-torchvision>=0.15.0,<1.0.0
+# ZeroGPU spaces module (required for @spaces.GPU decorator)
+spaces>=0.35.0
+
+# Core libraries (ZeroGPU compatible versions)
+gradio>=4.44.0
+torch>=2.4.0,<3.0.0
+torchvision>=0.19.0
+
+# Scientific computing
 numpy>=1.24.0,<2.0.0
+scipy>=1.11.0
+
+# Image/Video processing
 pillow>=10.0.0
 opencv-python-headless>=4.8.0
+imageio>=2.31.1
+imageio-ffmpeg>=0.4.8
 
-# Utilities
+# ML utilities
 tqdm>=4.65.0
+safetensors>=0.4.1
+
+# Enhanced video processing libraries
+transformers>=4.40.0
+diffusers>=0.28.0
+
+# System monitoring
 requests>=2.31.0
 psutil>=5.9.0
 

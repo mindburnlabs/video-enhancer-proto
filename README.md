@@ -3,7 +3,7 @@ title: "🏆 SOTA Video Enhancer | AI-Powered Video Enhancement"
 app_file: app.py
 sdk: gradio
 sdk_version: 4.44.0
-suggested_hardware: cpu-upgrade
+hw: zero-gpu
 suggested_storage: small
 python_version: 3.10
 pinned: false
@@ -18,9 +18,9 @@ tags:
   - pytorch
   - gradio
   - ai
-  - cpu-optimized
+  - zerogpu
+  - gpu-accelerated
 ---
-
 # 🏆 SOTA Video Enhancer - AI-Powered Video Enhancement
 
 ## 🚀 **PRODUCTION-READY VIDEO ENHANCEMENT WITH NEURAL NETWORKS**
