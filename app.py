@@ -1049,21 +1049,96 @@ def get_system_info():
     return "\n".join(info)
 
 # Create Gradio interface
-def _generate_demo_video(path: str, seconds: int = 3, fps: int = 24, size=(320, 180)):
-    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-    out = cv2.VideoWriter(path, fourcc, fps, size)
+def _generate_demo_video(path: str, seconds: int = 3, fps: int = 24, size=(480, 360)):
+    """Generate a comprehensive demo video for testing enhancement algorithms."""
     import math
-    for i in range(seconds * fps):
-        t = i / fps
-        frame = np.zeros((size[1], size[0], 3), dtype=np.uint8)
-        # Moving rectangle
-        x = int((math.sin(t) * 0.4 + 0.5) * (size[0] - 60))
-        y = int((math.cos(t*1.3) * 0.3 + 0.5) * (size[1] - 40))
-        cv2.rectangle(frame, (x, y), (x+60, y+40), (0, 255, 0), -1)
-        # Text
-        cv2.putText(frame, f"Demo t={t:.2f}", (10, size[1]-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,255,255), 1)
-        out.write(frame)
-    out.release()
+    
+    try:
+        logger.info(f"📹 Generating demo video: {path} ({size[0]}x{size[1]}, {fps}fps, {seconds}s)")
+        
+        # Ensure directory exists
+        Path(path).parent.mkdir(parents=True, exist_ok=True)
+        
+        # Use a more compatible codec
+        fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+        out = cv2.VideoWriter(path, fourcc, fps, size)
+        
+        if not out.isOpened():
+            logger.error("❌ Failed to open VideoWriter")
+            return False
+        
+        total_frames = seconds * fps
+        logger.info(f"🎯 Creating {total_frames} frames...")
+        
+        for i in range(total_frames):
+            t = i / fps  # Time in seconds
+            
+            # Create frame with gradient background
+            frame = np.zeros((size[1], size[0], 3), dtype=np.uint8)
+            
+            # Gradient background (simulates lighting changes)
+            for y in range(size[1]):
+                for x in range(size[0]):
+                    # Dynamic gradient that changes over time
+                    r = int(127 + 127 * math.sin(x * 0.02 + t * 2))
+                    g = int(127 + 127 * math.cos(y * 0.02 + t * 1.5))
+                    b = int(127 + 127 * math.sin((x + y) * 0.01 + t))
+                    frame[y, x] = [b, g, r]  # BGR format
+            
+            # Moving circle (tests motion and circular features)
+            circle_x = int((math.sin(t * 2.5) * 0.3 + 0.5) * size[0])
+            circle_y = int((math.cos(t * 2) * 0.3 + 0.5) * size[1])
+            cv2.circle(frame, (circle_x, circle_y), 30, (0, 255, 255), -1)  # Yellow circle
+            
+            # Moving rectangle (tests rectangular features and motion blur)
+            rect_x = int((math.cos(t * 3) * 0.25 + 0.75) * (size[0] - 80))
+            rect_y = int((math.sin(t * 2.5) * 0.25 + 0.25) * (size[1] - 60))
+            cv2.rectangle(frame, (rect_x, rect_y), (rect_x + 80, rect_y + 60), (255, 0, 255), -1)  # Magenta rectangle
+            
+            # Rotating line (tests line detection and rotation)
+            center_x, center_y = size[0] // 2, size[1] // 2
+            angle = t * 120  # degrees
+            line_length = min(size[0], size[1]) // 3
+            end_x = int(center_x + line_length * math.cos(math.radians(angle)))
+            end_y = int(center_y + line_length * math.sin(math.radians(angle)))
+            cv2.line(frame, (center_x, center_y), (end_x, end_y), (0, 255, 0), 4)  # Green line
+            
+            # Text overlays (tests text clarity and readability)
+            title = "ENHANCEMENT DEMO"
+            cv2.putText(frame, title, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255, 255, 255), 2)
+            
+            timestamp = f"Time: {t:.2f}s | Frame: {i+1:03d}"
+            cv2.putText(frame, timestamp, (10, size[1] - 40), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
+            
+            info = f"Resolution: {size[0]}x{size[1]} | FPS: {fps}"
+            cv2.putText(frame, info, (10, size[1] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (200, 200, 200), 1)
+            
+            # Add some "artifacts" to test enhancement
+            if i % 8 == 0:  # Every 8 frames, add some noise
+                noise = np.random.normal(0, 10, frame.shape).astype(np.int16)
+                frame = np.clip(frame.astype(np.int16) + noise, 0, 255).astype(np.uint8)
+            
+            out.write(frame)
+            
+            # Progress logging
+            if (i + 1) % (total_frames // 4) == 0:
+                progress = ((i + 1) / total_frames) * 100
+                logger.info(f"   Progress: {progress:.0f}% ({i+1}/{total_frames} frames)")
+        
+        out.release()
+        
+        # Verify the file was created successfully
+        if Path(path).exists() and Path(path).stat().st_size > 0:
+            file_size = Path(path).stat().st_size
+            logger.info(f"✅ Demo video created successfully: {file_size / 1024:.1f} KB")
+            return True
+        else:
+            logger.error("❌ Demo video file was not created or is empty")
+            return False
+            
+    except Exception as e:
+        logger.error(f"❌ Error generating demo video: {e}")
+        return False
 
 
 def _evaluate_psnr_ssim(ref_path: str, test_path: str) -> str:
@@ -1207,8 +1282,22 @@ with gr.Blocks(title="🏆 ZeroGPU Video Enhancer", theme=gr.themes.Soft()) as a
 
     input_video.change(fn=lambda x: x, inputs=input_video, outputs=input_video_viewer)
     
+    # Show available demo videos
+    demo_videos_dir = Path('data/demo_videos')
+    available_demo_info = "No demo videos available"
+    if demo_videos_dir.exists():
+        demo_files = list(demo_videos_dir.glob('*.mp4'))
+        if demo_files:
+            file_info = []
+            for f in demo_files:
+                size_kb = f.stat().st_size / 1024
+                file_info.append(f"{f.name} ({size_kb:.1f} KB)")
+            available_demo_info = f"Demo videos available: {', '.join(file_info)}"
+    
+    gr.Markdown(f"**Demo Videos:** {available_demo_info}")
+    
     with gr.Row():
-        demo_btn = gr.Button("▶️ Run Demo (SOTA)")
+        demo_btn = gr.Button("▶️ Run Demo with Real Videos (SOTA)")
         eval_btn = gr.Button("🧪 Evaluate Last Output vs Demo")
     
     # Event handlers
@@ -1220,17 +1309,90 @@ with gr.Blocks(title="🏆 ZeroGPU Video Enhancer", theme=gr.themes.Soft()) as a
     )
 
     def _run_demo():
-        with tempfile.TemporaryDirectory() as td:
-            td = Path(td)
-            demo_in = td / 'demo.mp4'
-            _generate_demo_video(str(demo_in))
-            persist_dir = Path(os.getenv('OUTPUT_DIR', 'data/output'))
-            persist_dir.mkdir(parents=True, exist_ok=True)
-            demo_out = persist_dir / f"demo_sota_{uuid.uuid4().hex}.mp4"
+        try:
+            logger.info("🎬 Starting demo video processing with real video files...")
+            
+            # Create persistent demo directory
+            demo_dir = Path(os.getenv('OUTPUT_DIR', 'data/output')) / 'demo'
+            demo_dir.mkdir(parents=True, exist_ok=True)
+            
+            # Look for available demo videos
+            demo_videos_dir = Path('data/demo_videos')
+            available_videos = []
+            
+            if demo_videos_dir.exists():
+                # Find all mp4 files in the demo videos directory
+                for video_file in demo_videos_dir.glob('*.mp4'):
+                    if video_file.is_file() and video_file.stat().st_size > 0:
+                        available_videos.append(video_file)
+            
+            # If no demo videos found, fall back to generating one
+            if not available_videos:
+                logger.info("📹 No demo videos found in data/demo_videos/, generating synthetic demo...")
+                demo_in = demo_dir / f"demo_input_{uuid.uuid4().hex[:8]}.mp4"
+                _generate_demo_video(str(demo_in), seconds=3, fps=24, size=(480, 360))
+                
+                if not demo_in.exists() or demo_in.stat().st_size == 0:
+                    logger.error("❌ Failed to create demo video")
+                    return None, "❌ Failed to create demo video"
+            else:
+                # Use one of the available demo videos
+                import random
+                selected_video = random.choice(available_videos)
+                demo_in = demo_dir / f"demo_input_{uuid.uuid4().hex[:8]}.mp4"
+                
+                logger.info(f"📹 Using real demo video: {selected_video.name}")
+                
+                # Copy the selected video to demo directory
+                import shutil
+                shutil.copy2(selected_video, demo_in)
+                
+                logger.info(f"✅ Demo video prepared: {demo_in.stat().st_size / 1024:.1f} KB")
+            
+            # Get basic video info for logging
+            try:
+                import cv2
+                cap = cv2.VideoCapture(str(demo_in))
+                if cap.isOpened():
+                    width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+                    height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+                    fps = cap.get(cv2.CAP_PROP_FPS)
+                    frame_count = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+                    duration = frame_count / fps if fps > 0 else 0
+                    cap.release()
+                    
+                    logger.info(f"📊 Video info: {width}x{height} @ {fps:.2f}fps, {duration:.2f}s ({frame_count} frames)")
+                else:
+                    logger.warning("⚠️ Could not read video properties")
+            except Exception as e:
+                logger.warning(f"⚠️ Video info extraction failed: {e}")
+            
+            # Create output file
+            demo_out = demo_dir / f"demo_output_{uuid.uuid4().hex[:8]}.mp4"
+            logger.info(f"🎯 Processing demo with SOTA pipeline...")
+            
+            # Run SOTA pipeline
             ok, msg = _run_sota_pipeline(str(demo_in), str(demo_out), 24, 'standard', False, False)
+            
             if ok and demo_out.exists():
-                return str(demo_out), f"✅ Demo completed: {msg}"
-            return None, msg
+                logger.info(f"✅ Demo processing completed: {demo_out}")
+                # Provide detailed status including file info
+                input_size = demo_in.stat().st_size / 1024
+                output_size = demo_out.stat().st_size / 1024
+                status_msg = f"✅ Demo completed: {msg}\n"
+                status_msg += f"📁 Input: {demo_in.name} ({input_size:.1f} KB)\n"
+                status_msg += f"📁 Output: {demo_out.name} ({output_size:.1f} KB)\n"
+                status_msg += f"📈 Size ratio: {output_size/input_size:.2f}x"
+                
+                return str(demo_out), status_msg
+            else:
+                logger.error(f"❌ Demo processing failed: {msg}")
+                return None, f"❌ Demo processing failed: {msg}"
+                
+        except Exception as e:
+            error_msg = f"❌ Demo failed with error: {str(e)}"
+            logger.error(error_msg)
+            return None, error_msg
 
     demo_btn.click(
         fn=_run_demo,
@@ -1238,7 +1400,7 @@ with gr.Blocks(title="🏆 ZeroGPU Video Enhancer", theme=gr.themes.Soft()) as a
     )
 
     def _eval_last():
-        # Evaluate the last SOTA demo by regenerating demo and computing metrics to last output
+        # Evaluate the last SOTA demo by using real demo video for comparison
         try:
             if not job_history:
                 return "❌ No jobs to evaluate"
@@ -1246,11 +1408,32 @@ with gr.Blocks(title="🏆 ZeroGPU Video Enhancer", theme=gr.themes.Soft()) as a
             last_out = last.get('output')
             if not last_out or not Path(last_out).exists():
                 return "❌ Last output file not found"
-            with tempfile.TemporaryDirectory() as td:
-                td = Path(td)
-                demo_in = td / 'demo.mp4'
-                _generate_demo_video(str(demo_in))
-                return _evaluate_psnr_ssim(str(demo_in), last_out)
+            
+            # Look for available demo videos first
+            demo_videos_dir = Path('data/demo_videos')
+            reference_video = None
+            
+            if demo_videos_dir.exists():
+                available_videos = [v for v in demo_videos_dir.glob('*.mp4') 
+                                  if v.is_file() and v.stat().st_size > 0]
+                if available_videos:
+                    # Use the first available demo video as reference
+                    reference_video = str(available_videos[0])
+                    logger.info(f"📊 Using {available_videos[0].name} as reference for evaluation")
+            
+            # Fallback to generating a demo video if no real ones available
+            if not reference_video:
+                with tempfile.TemporaryDirectory() as td:
+                    td = Path(td)
+                    demo_in = td / 'demo.mp4'
+                    logger.info("📊 Generating synthetic reference video for evaluation")
+                    if _generate_demo_video(str(demo_in)):
+                        reference_video = str(demo_in)
+                    else:
+                        return "❌ Failed to create reference video for evaluation"
+            
+            return _evaluate_psnr_ssim(reference_video, last_out)
+            
         except Exception as e:
             return f"❌ Evaluation failed: {e}"
 

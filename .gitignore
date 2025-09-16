@@ -56,6 +56,8 @@ models/interpolation/RIFE/
 
 # Data and Media
 data/
+!data/demo_videos/
+!data/demo_videos/*.mp4
 videos/
 images/
 cache/
