@@ -46,7 +46,7 @@ from collections import deque
 from uuid import uuid4
 import uuid
 
-from config.logging_config import setup_production_logging, get_performance_logger
+from config.logging_config import get_performance_logger
 
 # Import error handling system
 from utils.error_handler import (
@@ -131,7 +131,8 @@ except ImportError as e:
 
 # Setup structured logging early
 try:
-    setup_production_logging(log_level=os.getenv('LOG_LEVEL', 'INFO'))
+    from config.logging_config import setup_logging
+    setup_logging(log_level=os.getenv('LOG_LEVEL', 'INFO'))
 except Exception as _log_e:
     logging.basicConfig(level=logging.INFO)
     logging.getLogger(__name__).warning(f"Logging setup failed, using basic config: {_log_e}")
@@ -1205,7 +1206,7 @@ with gr.Blocks(title="🏆 ZeroGPU Video Enhancer", theme=gr.themes.Soft()) as a
     process_btn.click(
         fn=process_video_gradio,
         inputs=[input_video, target_fps, engine_choice, latency_class, enable_face, enable_hfr],
-        outputs=[output_video, status_text],
+        outputs=[output_video_viewer, status_text],
         show_progress="full"
     )
 
@@ -1224,7 +1225,7 @@ with gr.Blocks(title="🏆 ZeroGPU Video Enhancer", theme=gr.themes.Soft()) as a
 
     demo_btn.click(
         fn=_run_demo,
-        outputs=[output_video, status_text]
+        outputs=[output_video_viewer, status_text]
     )
 
     def _eval_last():
