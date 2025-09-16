@@ -27,9 +27,13 @@ safetensors>=0.4.1
 transformers>=4.40.0
 diffusers>=0.28.0
 
+# Frame-wise upscaler fallback
+realesrgan>=0.3.0
+
 # System monitoring
 requests>=2.31.0
 psutil>=5.9.0
+scikit-image>=0.22.0
 
 # Health endpoints
 fastapi>=0.105.0

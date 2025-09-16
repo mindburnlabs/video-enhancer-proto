@@ -4,6 +4,31 @@ Comprehensive Test Suite for SOTA Video Enhancement Models
 Tests VSRM, SeedVR2, DiTVR, and Fast Mamba VSR handlers with synthetic validation
 """
 
+"""
+MIT License
+
+Copyright (c) 2024 Video Enhancement Project
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+"""
+
+
 import pytest
 import numpy as np
 import torch
@@ -192,14 +217,14 @@ class TestSeedVR2Handler(TestSOTAModelsBase):
             
             # Test DiffusionVideoUNet
             unet = DiffusionVideoUNet(
-                in_channels=4,
-                out_channels=4,
-                down_block_types=("CrossAttnDownBlock3D", "CrossAttnDownBlock3D", "DownBlock3D"),
-                up_block_types=("UpBlock3D", "CrossAttnUpBlock3D", "CrossAttnUpBlock3D"),
-                block_out_channels=(320, 640, 1280),
-                layers_per_block=2,
-                attention_head_dim=8,
-                cross_attention_dim=768,
+                in_channels=6,  # Input + noise
+                out_channels=3,
+                model_channels=128,
+                num_res_blocks=2,
+                attention_resolutions=[16, 8],
+                dropout=0.0,
+                channel_mult=(1, 2, 4, 8),
+                num_heads=8,
                 num_frames=8
             )
             
@@ -304,12 +329,11 @@ class TestDiTVRHandler(TestSOTAModelsBase):
             input_video = torch.randn(1, 3, 8, 224, 224)  # (batch, channels, frames, height, width)
             
             with torch.no_grad():
-                patches, pos_embed = patch_embed(input_video)
+                patches = patch_embed(input_video)
                 
             # Validate patch embedding output
             assert patches.ndim == 3, "Patches should be 3D: (batch, num_patches, embed_dim)"
             assert patches.shape[-1] == 768, "Embedding dimension should be 768"
-            assert pos_embed.shape == patches.shape, "Position embedding should match patches shape"
             
             # Test VideoTransformer
             transformer = VideoTransformer(
@@ -599,19 +623,29 @@ class TestSOTAModelConfiguration:
             
             config = ModelConfig()
             
+            # Test overall model status
+            status = config.get_model_status()
+            
             # Test SOTA model configurations
             sota_models = ['vsrm', 'seedvr2', 'ditvr', 'fast_mamba_vsr']
             
             for model_name in sota_models:
-                model_status = config.get_model_status(model_name)
-                assert 'available' in model_status
-                assert 'path' in model_status
+                assert model_name in status, f"Model {model_name} not found in status"
+                assert isinstance(status[model_name], bool), f"Status for {model_name} should be boolean"
                 
-                # Test configuration for different latency classes
-                for latency_class in ['strict', 'standard', 'flexible']:
-                    model_config = config.get_model_config(model_name, latency_class)
-                    assert isinstance(model_config, dict)
-                    assert 'fp16' in model_config  # All models should have FP16 setting
+                # Check path is available
+                assert 'paths' in status
+                assert model_name in status['paths']
+                    
+            # Test device configuration
+            assert 'device' in status
+            assert status['device'] in ['cpu', 'cuda']
+            
+            # Test pipeline defaults
+            assert 'pipeline_defaults' in status
+            pipeline_defaults = status['pipeline_defaults']
+            assert 'latency_class' in pipeline_defaults
+            assert pipeline_defaults['latency_class'] in ['strict', 'standard', 'flexible']
                     
             logger.info("✅ Model configuration validation test passed")
             

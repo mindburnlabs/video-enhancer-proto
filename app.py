@@ -7,6 +7,31 @@ A production-ready video enhancement pipeline using ZeroGPU dynamic allocation
 for NVIDIA H200 GPU acceleration on HuggingFace Spaces.
 """
 
+"""
+MIT License
+
+Copyright (c) 2024 Video Enhancement Project
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+"""
+
+
 import gradio as gr
 import os
 import tempfile
@@ -18,8 +43,23 @@ from datetime import datetime
 import threading
 from typing import Optional
 from collections import deque
+from uuid import uuid4
+import uuid
 
 from config.logging_config import setup_production_logging, get_performance_logger
+
+# Import error handling system
+from utils.error_handler import (
+    error_handler, VideoEnhancementError, InputValidationError, ProcessingError,
+    ErrorCode, handle_exceptions, SecurityError
+)
+
+# Import security system
+from utils.security_integration import (
+    SecurityManager, SecurityConfig, SecurityContext, security_manager
+)
+from utils.data_protection import DataCategory
+from utils.file_security import SecurityThreat
 
 # ZeroGPU import
 try:
@@ -94,8 +134,7 @@ try:
     setup_production_logging(log_level=os.getenv('LOG_LEVEL', 'INFO'))
 except Exception as _log_e:
     logging.basicConfig(level=logging.INFO)
-    logging.getLogger(__name__).warning(f"Logging setup failed, using basic config: {_log_e}
-")
+    logging.getLogger(__name__).warning(f"Logging setup failed, using basic config: {_log_e}")
 
 # Attempt to import SOTA router and handlers (graceful if missing)
 SOTA_AVAILABLE = False
@@ -112,6 +151,21 @@ except Exception as _e:
 
 # Global state
 performance_logger = get_performance_logger()
+
+# Security configuration
+security_config = SecurityConfig(
+    api_key_required=bool(os.getenv('SECURITY_API_KEY_REQUIRED', 'true').lower() == 'true'),
+    rate_limit_enabled=bool(os.getenv('SECURITY_RATE_LIMIT_ENABLED', 'true').lower() == 'true'),
+    max_requests_per_minute=int(os.getenv('SECURITY_MAX_REQUESTS_PER_MINUTE', '60')),
+    max_file_size_mb=int(os.getenv('SECURITY_MAX_FILE_SIZE_MB', '500')),
+    file_validation_enabled=bool(os.getenv('SECURITY_FILE_VALIDATION_ENABLED', 'true').lower() == 'true'),
+    encryption_enabled=bool(os.getenv('SECURITY_ENCRYPTION_ENABLED', 'true').lower() == 'true'),
+    allowed_extensions=['.mp4', '.avi', '.mov', '.mkv', '.webm', '.m4v'],
+    audit_logging_enabled=bool(os.getenv('SECURITY_AUDIT_LOGGING_ENABLED', 'true').lower() == 'true')
+)
+
+# Initialize security manager
+app_security_manager = SecurityManager(security_config)
 
 # Ring buffer for live logs
 LOG_RING_MAX = int(os.getenv('LOG_RING_MAX', '500'))
@@ -375,7 +429,6 @@ class GPUVideoEnhancer:
             # Cleanup
             # Record job history
             try:
-                from uuid import uuid4
                 job_history.append({
                     'id': uuid4().hex,
                     'engine': 'ZeroGPU Upscaler',
@@ -628,7 +681,7 @@ def _temporal_smooth(input_path: str, output_path: str):
     cap.release(); out.release()
 
 
-def _run_sota_pipeline(input_path: str, output_path: str, target_fps: int) -> tuple[bool, str]:
+def _run_sota_pipeline(input_path: str, output_path: str, target_fps: int, latency_class: str = 'standard', enable_face_expert: bool = False, enable_hfr: bool = False) -> tuple[bool, str]:
     """Run the SOTA routing + handler pipeline. Returns (success, message)."""
     if not SOTA_AVAILABLE:
         return False, f"SOTA pipeline unavailable: {SOTA_IMPORT_ERROR or 'imports failed'}"
@@ -636,7 +689,7 @@ def _run_sota_pipeline(input_path: str, output_path: str, target_fps: int) -> tu
     try:
         logger.info("🔍 Running Degradation Router analysis...")
         router = DegradationRouter(device='cuda' if CUDA_AVAILABLE else 'cpu')
-        plan = router.analyze_and_route(input_path)
+        plan = router.analyze_and_route(input_path, latency_class=latency_class, enable_face_expert=bool(enable_face_expert), enable_hfr=bool(enable_hfr))
         route = plan['expert_routing']
         primary = route.get('primary_model', 'vsrm')
         logger.info(f"🗺️ Routing selected primary model: {primary}")
@@ -720,56 +773,175 @@ def get_recent_logs(n: int = 200) -> str:
     return "\n".join(list(log_ring)[-n:])
 
 
-def process_video_gradio(input_video, target_fps, engine_choice):
-    """Process video through Gradio interface (accepts Video or File path)."""
-    if input_video is None:
-        return None, "❌ Please upload a video file."
-    
-    # Resolve source path from possible input types (str path or dict with 'name')
-    src_path = None
-    if isinstance(input_video, (str, Path)):
-        src_path = str(input_video)
-    elif isinstance(input_video, dict) and input_video.get('name'):
-        src_path = input_video['name']
-    else:
-        try:
-            # Some gradio versions provide an object with .name
-            maybe_name = getattr(input_video, 'name', None)
-            if maybe_name:
-                src_path = str(maybe_name)
-        except Exception:
-            src_path = None
-    
-    if not src_path or not os.path.exists(src_path):
-        return None, "❌ Unable to read uploaded video path. Please try again."
-    
-    if not engine_choice:
-        engine_choice = "ZeroGPU Upscaler (fast)"
+def process_video_gradio(input_video, target_fps, engine_choice, latency_class, enable_face, enable_hfr, request: gr.Request = None):
+    """Process video through Gradio interface with comprehensive security."""
+    try:
+        if input_video is None:
+            return None, "❌ Please upload a video file."
+        
+        # Create security context from request
+        context = SecurityContext(
+            ip_address=request.client.host if request and request.client else "127.0.0.1",
+            user_agent=request.headers.get('user-agent', 'Unknown') if request else "Gradio-Interface",
+            session_id=getattr(request, 'session_hash', None) if request else None,
+            metadata={"source": "gradio_interface", "user_consent": True}
+        )
+        
+        # Rate limiting check
+        if not app_security_manager.check_rate_limits(context):
+            logger.warning(f"Rate limit exceeded for {context.ip_address}")
+            return None, "❌ Rate limit exceeded. Please wait before uploading another video."
+        
+        # Resolve source path from possible input types (str path or dict with 'name')
+        src_path = None
+        if isinstance(input_video, (str, Path)):
+            src_path = str(input_video)
+        elif isinstance(input_video, dict) and input_video.get('name'):
+            src_path = input_video['name']
+        else:
+            try:
+                # Some gradio versions provide an object with .name
+                maybe_name = getattr(input_video, 'name', None)
+                if maybe_name:
+                    src_path = str(maybe_name)
+            except Exception:
+                src_path = None
+        
+        if not src_path or not os.path.exists(src_path):
+            return None, "❌ Unable to read uploaded video path. Please try again."
+        
+        # File security validation
+        logger.info(f"🔒 Running security validation on uploaded file: {Path(src_path).name}")
+        is_valid, error_or_record_id, threats = app_security_manager.validate_and_secure_file(
+            Path(src_path), 
+            context, 
+            Path(src_path).name
+        )
+        
+        if not is_valid:
+            logger.error(f"Security validation failed: {error_or_record_id}")
+            return None, f"❌ Security validation failed: {error_or_record_id}"
+        
+        # Log security threats if any (but allow processing if they're low risk)
+        if threats:
+            threat_summary = ", ".join([f"{t.threat_type}({t.risk_level})" for t in threats])
+            logger.info(f"ℹ️ Security scan detected: {threat_summary}")
+        
+        record_id = error_or_record_id  # This is now the data protection record ID
+        
+        # Access the protected file for processing
+        if record_id:
+            protected_file_path = app_security_manager.access_protected_file(record_id, context)
+            if protected_file_path:
+                src_path = str(protected_file_path)
+                logger.info(f"✅ Using protected file for processing: {record_id}")
+        
+        if not engine_choice:
+            engine_choice = "ZeroGPU Upscaler (fast)"
 
-    if engine_choice.startswith("SOTA"):
-        # Use SOTA pipeline
+        if engine_choice.startswith("Frame Upscaler"):
+            # Real-ESRGAN frame-wise fallback
+            try:
+                with tempfile.TemporaryDirectory() as temp_dir:
+                    temp_dir = Path(temp_dir)
+                    input_path = temp_dir / "input.mp4"
+                    output_path = temp_dir / "enhanced.mp4"
+                    import shutil
+                    shutil.copy2(src_path, input_path)
+                    from models.enhancement.frame.realesrgan_fallback import RealESRGANFallback
+                    up = RealESRGANFallback(device='cuda' if CUDA_AVAILABLE else 'cpu', scale=2)
+                    up.enhance_video(str(input_path), str(output_path))
+                    if output_path.exists():
+                        from uuid import uuid4
+                        persist_dir = Path(os.getenv('OUTPUT_DIR', 'data/output'))
+                        persist_dir.mkdir(parents=True, exist_ok=True)
+                        persistent_path = persist_dir / f"enhanced_{uuid4().hex}.mp4"
+                        import shutil as _sh
+                        _sh.copy2(output_path, persistent_path)
+                        return str(persistent_path), "✅ Real-ESRGAN upscaling completed"
+                    else:
+                        return None, "❌ Real-ESRGAN failed: no output"
+            except Exception as e:
+                error_msg = f"❌ Real-ESRGAN error: {e}"
+                logger.error(error_msg)
+                return None, error_msg
+
+        if engine_choice.startswith("SOTA"):
+            # Use SOTA pipeline
+            try:
+                with tempfile.TemporaryDirectory() as temp_dir:
+                    temp_dir = Path(temp_dir)
+                    input_path = temp_dir / "input.mp4"
+                    output_path = temp_dir / "enhanced.mp4"
+                    import shutil
+                    shutil.copy2(src_path, input_path)
+
+                    if ZEROGPU_AVAILABLE and spaces:
+                        # Wrap with ZeroGPU for acceleration
+                        duration = _estimate_duration_seconds(str(input_path))
+                        decorator = spaces.GPU(duration=duration)
+                    else:
+                        decorator = (lambda f: f)
+
+                    @decorator
+                    def _sota_job(inp: str, outp: str, fps: int, lat: str, face: bool, hfr: bool):
+                        return _run_sota_pipeline(inp, outp, fps, lat, face, hfr)
+
+                    success, message = _sota_job(str(input_path), str(output_path), int(target_fps), latency_class, bool(enable_face), bool(enable_hfr))
+
+                    if success and output_path.exists():
+                        from uuid import uuid4
+                        persist_dir = Path(os.getenv('OUTPUT_DIR', 'data/output'))
+                        persist_dir.mkdir(parents=True, exist_ok=True)
+                        persistent_path = persist_dir / f"enhanced_{uuid4().hex}.mp4"
+                        import shutil as _sh
+                        _sh.copy2(output_path, persistent_path)
+                        logger.info(f"✅ Persisted enhanced video to {persistent_path}")
+                        # Record job history (limited fields when using SOTA)
+                        job_history.append({
+                            'id': uuid4().hex,
+                            'engine': 'SOTA Router',
+                            'model': 'auto',
+                            'frames': 'unknown',
+                            'time': 'unknown',
+                            'input': str(input_path),
+                            'output': str(persistent_path),
+                            'ts': datetime.now().isoformat(timespec='seconds')
+                        })
+                        return str(persistent_path), message
+                    else:
+                        return None, message
+            except Exception as e:
+                error_msg = f"❌ SOTA processing error: {e}"
+                logger.error(error_msg)
+                return None, error_msg
+
+        # Default: ZeroGPU upscaler path
+        if not enhancer.models_loaded and not enhancer.load_models():
+            return None, "❌ Models not loaded. Please refresh and try again."
+        
         try:
             with tempfile.TemporaryDirectory() as temp_dir:
                 temp_dir = Path(temp_dir)
+                
+                # Setup paths
                 input_path = temp_dir / "input.mp4"
                 output_path = temp_dir / "enhanced.mp4"
+                
+                # Copy input file
                 import shutil
                 shutil.copy2(src_path, input_path)
-
-                if ZEROGPU_AVAILABLE and spaces:
-                    # Wrap with ZeroGPU for acceleration
-                    duration = _estimate_duration_seconds(str(input_path))
-                    decorator = spaces.GPU(duration=duration)
-                else:
-                    decorator = (lambda f: f)
-
-                @decorator
-                def _sota_job(inp: str, outp: str, fps: int):
-                    return _run_sota_pipeline(inp, outp, fps)
-
-                success, message = _sota_job(str(input_path), str(output_path), int(target_fps))
-
+                
+                # Process video
+                logger.info(f"🎬 Starting video processing...")
+                success, message = enhancer.process_video(
+                    str(input_path), 
+                    str(output_path), 
+                    target_fps=int(target_fps)
+                )
+                
                 if success and output_path.exists():
+                    # Persist output outside the TemporaryDirectory so Gradio can serve it
                     from uuid import uuid4
                     persist_dir = Path(os.getenv('OUTPUT_DIR', 'data/output'))
                     persist_dir.mkdir(parents=True, exist_ok=True)
@@ -777,66 +949,39 @@ def process_video_gradio(input_video, target_fps, engine_choice):
                     import shutil as _sh
                     _sh.copy2(output_path, persistent_path)
                     logger.info(f"✅ Persisted enhanced video to {persistent_path}")
-                    # Record job history (limited fields when using SOTA)
-                    job_history.append({
-                        'id': uuid4().hex,
-                        'engine': 'SOTA Router',
-                        'model': 'auto',
-                        'frames': 'unknown',
-                        'time': 'unknown',
-                        'input': str(input_path),
-                        'output': str(persistent_path),
-                        'ts': datetime.now().isoformat(timespec='seconds')
-                    })
                     return str(persistent_path), message
                 else:
                     return None, message
-        except Exception as e:
-            error_msg = f"❌ SOTA processing error: {e}"
+                    
+        except SecurityError as e:
+            error_msg = f"❌ Security error: {str(e)}"
             logger.error(error_msg)
             return None, error_msg
-
-    # Default: ZeroGPU upscaler path
-    if not enhancer.models_loaded and not enhancer.load_models():
-        return None, "❌ Models not loaded. Please refresh and try again."
-    
-    try:
-        with tempfile.TemporaryDirectory() as temp_dir:
-            temp_dir = Path(temp_dir)
-            
-            # Setup paths
-            input_path = temp_dir / "input.mp4"
-            output_path = temp_dir / "enhanced.mp4"
-            
-            # Copy input file
-            import shutil
-            shutil.copy2(src_path, input_path)
-            
-            # Process video
-            logger.info(f"🎬 Starting video processing...")
-            success, message = enhancer.process_video(
-                str(input_path), 
-                str(output_path), 
-                target_fps=int(target_fps)
-            )
-            
-            if success and output_path.exists():
-                # Persist output outside the TemporaryDirectory so Gradio can serve it
-                from uuid import uuid4
-                persist_dir = Path(os.getenv('OUTPUT_DIR', 'data/output'))
-                persist_dir.mkdir(parents=True, exist_ok=True)
-                persistent_path = persist_dir / f"enhanced_{uuid4().hex}.mp4"
-                import shutil as _sh
-                _sh.copy2(output_path, persistent_path)
-                logger.info(f"✅ Persisted enhanced video to {persistent_path}")
-                return str(persistent_path), message
-            else:
-                return None, message
+        except Exception as e:
+            error_msg = f"❌ Processing error: {str(e)}"
+            logger.error(error_msg)
+            return None, error_msg
+        finally:
+            # Cleanup expired security data periodically
+            try:
+                app_security_manager.cleanup_expired_data()
+            except Exception as cleanup_error:
+                logger.warning(f"Security cleanup failed: {cleanup_error}")
                 
+    except SecurityError as e:
+        error_msg = f"❌ Security error: {str(e)}"
+        logger.error(error_msg)
+        return None, error_msg
     except Exception as e:
         error_msg = f"❌ Processing error: {str(e)}"
         logger.error(error_msg)
         return None, error_msg
+    finally:
+        # Cleanup expired security data periodically
+        try:
+            app_security_manager.cleanup_expired_data()
+        except Exception as cleanup_error:
+            logger.warning(f"Security cleanup failed: {cleanup_error}")
 
 def get_system_info():
     """Get system information for display."""
@@ -852,6 +997,10 @@ def get_system_info():
             gpu_info = "CUDA Available"
     else:
         gpu_info = "CPU Only"
+    
+    # Get security status
+    security_status = app_security_manager.get_security_status()
+    data_protection_summary = security_status.get('data_protection_summary', {})
     
     info = [
         f"🎯 **ZeroGPU Video Enhancer**",
@@ -870,17 +1019,85 @@ def get_system_info():
         f"• Average Speed: {processing_stats['total_time'] / max(processing_stats['total_processed'], 1):.1f}s/video",
         f"• Uptime: {(datetime.now() - processing_stats['startup_time']).total_seconds():.0f}s",
         f"",
+        f"🔒 **Security Status**",
+        f"• File Validation: {'✅ Enabled' if security_config.file_validation_enabled else '❌ Disabled'}",
+        f"• Data Encryption: {'✅ Enabled' if security_config.encryption_enabled else '❌ Disabled'}",
+        f"• Rate Limiting: {'✅ Enabled' if security_config.rate_limit_enabled else '❌ Disabled'}",
+        f"• Protected Records: {data_protection_summary.get('total_records', 0)}",
+        f"• Encrypted Files: {data_protection_summary.get('encrypted_records', 0)}",
+        f"• Recent Security Events: {security_status.get('recent_events', 0)}",
+        f"",
         f"⚙️ **Features**",
         f"• GPU Acceleration: {'✅' if ZEROGPU_AVAILABLE else '❌'}",
         f"• Batch Processing: {'✅' if ZEROGPU_AVAILABLE else '❌'}",
         f"• Dynamic Duration: {'✅' if ZEROGPU_AVAILABLE else '❌'}",
         "• Memory Optimization: ✅",
-        "• Robust Fallbacks: ✅"
+        "• Robust Fallbacks: ✅",
+        "• Security Protection: ✅"
     ]
     
     return "\n".join(info)
 
 # Create Gradio interface
+def _generate_demo_video(path: str, seconds: int = 3, fps: int = 24, size=(320, 180)):
+    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+    out = cv2.VideoWriter(path, fourcc, fps, size)
+    import math
+    for i in range(seconds * fps):
+        t = i / fps
+        frame = np.zeros((size[1], size[0], 3), dtype=np.uint8)
+        # Moving rectangle
+        x = int((math.sin(t) * 0.4 + 0.5) * (size[0] - 60))
+        y = int((math.cos(t*1.3) * 0.3 + 0.5) * (size[1] - 40))
+        cv2.rectangle(frame, (x, y), (x+60, y+40), (0, 255, 0), -1)
+        # Text
+        cv2.putText(frame, f"Demo t={t:.2f}", (10, size[1]-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255,255,255), 1)
+        out.write(frame)
+    out.release()
+
+
+def _evaluate_psnr_ssim(ref_path: str, test_path: str) -> str:
+    try:
+        from skimage.metrics import peak_signal_noise_ratio, structural_similarity
+    except Exception as e:
+        return f"❌ skimage not available: {e}"
+    cap1 = cv2.VideoCapture(ref_path)
+    cap2 = cv2.VideoCapture(test_path)
+    if not cap1.isOpened() or not cap2.isOpened():
+        return "❌ Could not open videos for evaluation"
+    psnrs = []
+    ssims = []
+    while True:
+        ret1, f1 = cap1.read(); ret2, f2 = cap2.read()
+        if not ret1 or not ret2:
+            break
+        # Convert to gray for SSIM
+        f1g = cv2.cvtColor(f1, cv2.COLOR_BGR2GRAY)
+        f2g = cv2.cvtColor(f2, cv2.COLOR_BGR2GRAY)
+        psnrs.append(peak_signal_noise_ratio(f1g, f2g, data_range=255))
+        ssims.append(structural_similarity(f1g, f2g, data_range=255))
+    cap1.release(); cap2.release()
+    if not psnrs:
+        return "❌ No overlapping frames to evaluate"
+    return f"PSNR: {np.mean(psnrs):.2f} dB, SSIM: {np.mean(ssims):.4f}"
+
+
+def _cleanup_old_outputs(hours: int = 24, base_dir: str = None) -> int:
+    base = Path(base_dir or os.getenv('OUTPUT_DIR', 'data/output'))
+    if not base.exists():
+        return 0
+    cutoff = datetime.now().timestamp() - hours * 3600
+    removed = 0
+    for p in base.glob('*.mp4'):
+        try:
+            if p.stat().st_mtime < cutoff:
+                p.unlink(missing_ok=True)
+                removed += 1
+        except Exception:
+            pass
+    return removed
+
+
 with gr.Blocks(title="🏆 ZeroGPU Video Enhancer", theme=gr.themes.Soft()) as app:
     gr.Markdown(f"""
     # 🎯 ZeroGPU Video Enhancer
@@ -893,8 +1110,11 @@ with gr.Blocks(title="🏆 ZeroGPU Video Enhancer", theme=gr.themes.Soft()) as a
     - ⚡ **Smart Duration Management** - Automatic processing time estimation
     - 🎯 **Advanced Neural Upscaling** - 2x resolution enhancement
     - 🛡️ **Robust Fallbacks** - CPU processing when needed
+    - 🔒 **Enterprise Security** - File validation, encryption, and threat detection
     
-    {'**Status: ZeroGPU Enabled ✅**' if ZEROGPU_AVAILABLE else '**Status: CPU Fallback Mode ⚠️**'}
+    {'**Status: ZeroGPU Enabled ✅**' if ZEROGPU_AVAILABLE else '**Status: CPU Fallback Mode ⚠️**'} | **Security: Active 🔒**
+    
+    ⚠️ **Security Notice:** All uploaded videos are automatically scanned for threats, encrypted during processing, and automatically deleted after {security_config.data_retention_hours} hours.
     """)
     
     with gr.Row():
@@ -917,9 +1137,17 @@ with gr.Blocks(title="🏆 ZeroGPU Video Enhancer", theme=gr.themes.Soft()) as a
 
             engine_choice = gr.Radio(
                 label="🧠 Engine",
-                choices=["ZeroGPU Upscaler (fast)", "SOTA Router (SeedVR2/VSRM)"] ,
+                choices=["ZeroGPU Upscaler (fast)", "Frame Upscaler (Real-ESRGAN)", "SOTA Router (SeedVR2/VSRM)"] ,
                 value="ZeroGPU Upscaler (fast)"
             )
+
+            latency_class = gr.Radio(
+                label="⏱️ Latency Class",
+                choices=["strict", "standard", "flexible"],
+                value="standard"
+            )
+            enable_face = gr.Checkbox(label="Enable Face Restoration", value=False)
+            enable_hfr = gr.Checkbox(label="Enable HFR Interpolation", value=False)
             
             process_btn = gr.Button(
                 "🚀 Enhance Video", 
@@ -956,17 +1184,69 @@ with gr.Blocks(title="🏆 ZeroGPU Video Enhancer", theme=gr.themes.Soft()) as a
         refresh_history_btn = gr.Button("🔄 Refresh History")
     
     with gr.Row():
-        output_video = gr.Video(
-            label="✨ Enhanced Video",
-            interactive=False
-        )
+        with gr.Column():
+            gr.Markdown("### Before")
+            input_video_viewer = gr.Video(label="Original Video", interactive=False)
+        with gr.Column():
+            gr.Markdown("### After")
+            output_video_viewer = gr.Video(label="Enhanced Video", interactive=False)
+
+    # Link the video players
+    def sync_videos(video_time: gr.Request):
+        return video_time
+
+    input_video.change(fn=lambda x: x, inputs=input_video, outputs=input_video_viewer)
+    
+    with gr.Row():
+        demo_btn = gr.Button("▶️ Run Demo (SOTA)")
+        eval_btn = gr.Button("🧪 Evaluate Last Output vs Demo")
     
     # Event handlers
     process_btn.click(
         fn=process_video_gradio,
-        inputs=[input_video, target_fps, engine_choice],
+        inputs=[input_video, target_fps, engine_choice, latency_class, enable_face, enable_hfr],
         outputs=[output_video, status_text],
         show_progress="full"
+    )
+
+    def _run_demo():
+        with tempfile.TemporaryDirectory() as td:
+            td = Path(td)
+            demo_in = td / 'demo.mp4'
+            _generate_demo_video(str(demo_in))
+            persist_dir = Path(os.getenv('OUTPUT_DIR', 'data/output'))
+            persist_dir.mkdir(parents=True, exist_ok=True)
+            demo_out = persist_dir / f"demo_sota_{uuid.uuid4().hex}.mp4"
+            ok, msg = _run_sota_pipeline(str(demo_in), str(demo_out), 24, 'standard', False, False)
+            if ok and demo_out.exists():
+                return str(demo_out), f"✅ Demo completed: {msg}"
+            return None, msg
+
+    demo_btn.click(
+        fn=_run_demo,
+        outputs=[output_video, status_text]
+    )
+
+    def _eval_last():
+        # Evaluate the last SOTA demo by regenerating demo and computing metrics to last output
+        try:
+            if not job_history:
+                return "❌ No jobs to evaluate"
+            last = job_history[-1]
+            last_out = last.get('output')
+            if not last_out or not Path(last_out).exists():
+                return "❌ Last output file not found"
+            with tempfile.TemporaryDirectory() as td:
+                td = Path(td)
+                demo_in = td / 'demo.mp4'
+                _generate_demo_video(str(demo_in))
+                return _evaluate_psnr_ssim(str(demo_in), last_out)
+        except Exception as e:
+            return f"❌ Evaluation failed: {e}"
+
+    eval_btn.click(
+        fn=_eval_last,
+        outputs=status_text
     )
     
     refresh_btn.click(
@@ -994,9 +1274,12 @@ with gr.Blocks(title="🏆 ZeroGPU Video Enhancer", theme=gr.themes.Soft()) as a
 
 # Expose health and metrics via underlying FastAPI
 try:
-    from fastapi import FastAPI
+    from fastapi import FastAPI, Request
     from fastapi.responses import JSONResponse
     _fastapi = app.app  # Gradio mounts on FastAPI
+    
+    # Rate limiting state for API endpoints
+    _rate = {}
 
     @_fastapi.get("/health")
     def health():
@@ -1012,7 +1295,12 @@ try:
             'processed': processing_stats['total_processed'],
             'uptime_seconds': (datetime.now() - processing_stats['startup_time']).total_seconds(),
         }
-        return JSONResponse({ 'gpu': gpu, 'status': status })
+        security_status = app_security_manager.get_security_status()
+        return JSONResponse({ 
+            'gpu': gpu, 
+            'status': status,
+            'security': security_status
+        })
 
     @_fastapi.get("/metrics")
     def metrics():
@@ -1027,6 +1315,132 @@ try:
             },
             'recent_jobs': job_history[-10:]
         })
+    @_fastapi.post("/api/v1/process/auto")
+    def api_process_auto(payload: dict, request: Request):
+        """Programmatic processing endpoint with enhanced security.
+        Accepts JSON: {
+          "engine": "zero|frame|sota",
+          "source_url": "http..." (optional),
+          "latency_class": "strict|standard|flexible",
+          "enable_face": bool,
+          "enable_hfr": bool,
+          "target_fps": int (optional)
+        }
+        """
+        import requests
+        
+        try:
+            # Create security context
+            context = SecurityContext(
+                ip_address=request.client.host if request.client else 'unknown',
+                user_agent=request.headers.get('user-agent', 'API-Client'),
+                metadata={'source': 'api', 'endpoint': '/api/v1/process/auto'}
+            )
+            
+            # Enhanced authentication using security manager
+            api_key = request.headers.get('X-API-Key')
+            if security_config.api_key_required:
+                if not app_security_manager.authenticate_request(context, api_key):
+                    return JSONResponse({ 'error': 'unauthorized' }, status_code=401)
+            
+            # Enhanced rate limiting using security manager
+            if not app_security_manager.check_rate_limits(context):
+                return JSONResponse({ 'error': 'rate limit exceeded' }, status_code=429)
+            
+            eng = (payload.get('engine') or 'sota').lower()
+            source_url = payload.get('source_url')
+            latency = payload.get('latency_class') or 'standard'
+            enable_face = bool(payload.get('enable_face', False))
+            enable_hfr = bool(payload.get('enable_hfr', False))
+            target_fps = int(payload.get('target_fps') or 30)
+
+            if not source_url:
+                return JSONResponse({ 'error': 'source_url required' }, status_code=400)
+
+            # Download to temp with security validation
+            with tempfile.TemporaryDirectory() as tdir:
+                tdirp = Path(tdir)
+                in_path = tdirp / 'input.mp4'
+                
+                # Download file
+                r = requests.get(source_url, stream=True, timeout=60)
+                r.raise_for_status()
+                with open(in_path, 'wb') as f:
+                    for chunk in r.iter_content(chunk_size=8192):
+                        if chunk:
+                            f.write(chunk)
+                
+                # Security validation on downloaded file
+                is_valid, error_or_record_id, threats = app_security_manager.validate_and_secure_file(
+                    in_path, 
+                    context, 
+                    f"api_download_{uuid.uuid4().hex[:8]}.mp4"
+                )
+                
+                if not is_valid:
+                    return JSONResponse({ 
+                        'error': f'security_validation_failed: {error_or_record_id}' 
+                    }, status_code=400)
+                
+                # Use protected file if available
+                record_id = error_or_record_id
+                if record_id:
+                    protected_file_path = app_security_manager.access_protected_file(record_id, context)
+                    if protected_file_path:
+                        in_path = protected_file_path
+                
+                out_dir = Path(os.getenv('OUTPUT_DIR', 'data/output'))
+                out_dir.mkdir(parents=True, exist_ok=True)
+                out_path = out_dir / f"api_enhanced_{uuid.uuid4().hex}.mp4"
+
+                # Choose engine
+                if eng.startswith('zero'):
+                    ok, msg = enhancer.process_video(str(in_path), str(out_path), target_fps)
+                elif eng.startswith('frame'):
+                    from models.enhancement.frame.realesrgan_fallback import RealESRGANFallback
+                    up = RealESRGANFallback(device='cuda' if CUDA_AVAILABLE else 'cpu', scale=2)
+                    stats = up.enhance_video(str(in_path), str(out_path))
+                    ok, msg = True, f"✅ Real-ESRGAN upscaling completed: {stats}"
+                else:  # sota
+                    ok, msg = _run_sota_pipeline(str(in_path), str(out_path), target_fps, latency, enable_face, enable_hfr)
+
+                if ok and out_path.exists():
+                    job = {
+                        'id': uuid.uuid4().hex,
+                        'engine': 'sota' if eng.startswith('sota') else ('frame' if eng.startswith('frame') else 'zero'),
+                        'model': 'auto',
+                        'frames': 'unknown',
+                        'time': 'unknown',
+                        'input': str(in_path),
+                        'output': str(out_path),
+                        'ts': datetime.now().isoformat(timespec='seconds')
+                    }
+                    job_history.append(job)
+                    return JSONResponse({
+                        'job': job,
+                        'message': msg
+                    })
+                else:
+                    return JSONResponse({ 'error': msg or 'processing failed' }, status_code=500)
+        
+        except SecurityError as e:
+            logger.error(f"API security error: {e}")
+            return JSONResponse({ 'error': f'security_error: {str(e)}' }, status_code=403)
+        except Exception as e:
+            logger.error(f"API process failed: {e}")
+            return JSONResponse({ 'error': str(e) }, status_code=500)
+
+    @_fastapi.get("/api/v1/jobs")
+    def api_list_jobs():
+        return JSONResponse(job_history[-200:][::-1])
+
+    @_fastapi.get("/api/v1/job/{job_id}")
+    def api_get_job(job_id: str):
+        for j in reversed(job_history):
+            if j.get('id') == job_id:
+                return JSONResponse(j)
+        return JSONResponse({ 'error': 'not found' }, status_code=404)
+
 except Exception as _e:
     logger.warning(f"Health/metrics endpoints not mounted: {_e}")
 

@@ -1,0 +1,5446 @@
+{
+  "audit_timestamp": "2025-09-16T10:51:13.560159",
+  "project_root": "/Users/ivan/Code/work/video-enhancer-proto",
+  "summary": {
+    "total_dependencies": 293,
+    "problematic_licenses": 0,
+    "unknown_licenses": 69,
+    "permissive_licenses": 171,
+    "license_distribution": {
+      "Unknown": 69,
+      "Apache-2.0": 53,
+      "UNKNOWN": 3,
+      "PSF-2.0": 1,
+      "Copyright (c) 2015-2023, Vega-Altair Developers": 1,
+      "": 34,
+      "MIT": 70,
+      "BSD-3-Clause": 45,
+      "MPL-2.0": 1,
+      "Copyright (c) 2015, matplotlib project": 1,
+      "ISC": 2,
+      "Unlicense": 1,
+      "Copyright (c) 2021, Hugo van Kemenade and contributors": 1,
+      "=========================": 1,
+      "OLDAP-2.8": 1,
+      "Copyright 2010 Pallets": 1,
+      "License agreement for matplotlib versions 1.3.0 and later": 1,
+      "LGPL-2.1-or-later": 2,
+      "MIT + file LICENSE": 1,
+      "Copyright (c) 2012-2019 Richard Jones <richard@python.org>": 1,
+      "Dual License": 1,
+      "ISC License": 1,
+      "MPL-2.0 AND MIT": 1
+    }
+  },
+  "dependencies": {
+    "absl-py": {
+      "version": "2.3.1",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "The Abseil Authors",
+      "summary": "Abseil Python Common Libraries, see https://github.com/abseil/abseil-py.",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "accelerate": {
+      "version": "1.10.1",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://github.com/huggingface/accelerate",
+      "author": "The HuggingFace team",
+      "summary": "Accelerate",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "addict": {
+      "version": "2.4.0",
+      "license": "UNKNOWN",
+      "license_classifier": [],
+      "home_page": "https://github.com/mewwts/addict",
+      "author": "Mats Julian Olsen",
+      "summary": "Addict is a dictionary whose items can be set using both attribute and item syntax.",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "aiofiles": {
+      "version": "24.1.0",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "",
+      "summary": "File support for asyncio.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "aiohappyeyeballs": {
+      "version": "2.6.1",
+      "license": "PSF-2.0",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "J. Nick Koston",
+      "summary": "Happy Eyeballs for asyncio",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "aiohttp": {
+      "version": "3.12.15",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://github.com/aio-libs/aiohttp",
+      "author": "",
+      "summary": "Async http client/server framework (asyncio)",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "aiosignal": {
+      "version": "1.4.0",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://github.com/aio-libs/aiosignal",
+      "author": "",
+      "summary": "aiosignal: a list of registered asynchronous callbacks",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "altair": {
+      "version": "5.5.0",
+      "license": "Copyright (c) 2015-2023, Vega-Altair Developers",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "Vega-Altair Contributors",
+      "summary": "Vega-Altair: A declarative statistical visualization library for Python.",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "annotated-types": {
+      "version": "0.7.0",
+      "license": "",
+      "license_classifier": [],
+      "home_page": "https://github.com/annotated-types/annotated-types",
+      "author": "",
+      "summary": "Reusable constraint types to use with typing.Annotated",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "anthropic": {
+      "version": "0.67.0",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/anthropics/anthropic-sdk-python",
+      "author": "",
+      "summary": "The official Python library for the anthropic API",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "anyio": {
+      "version": "4.10.0",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "",
+      "summary": "High-level concurrency and networking framework on top of asyncio or Trio",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "argcomplete": {
+      "version": "3.5.1",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://github.com/kislyuk/argcomplete",
+      "author": "Andrey Kislyuk",
+      "summary": "Bash tab completion for argparse",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "asyncio-mqtt": {
+      "version": "0.16.2",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "",
+      "summary": "Idiomatic asyncio wrapper around paho-mqtt",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "attrs": {
+      "version": "25.3.0",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "",
+      "summary": "Classes Without Boilerplate",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "Authlib": {
+      "version": "1.6.3",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "",
+      "summary": "The ultimate Python library in building OAuth and OpenID Connect servers and clients.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "babel": {
+      "version": "2.17.0",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "https://babel.pocoo.org/",
+      "author": "Armin Ronacher",
+      "summary": "Internationalization utilities",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "backrefs": {
+      "version": "5.9",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/facelessuser/backrefs",
+      "author": "",
+      "summary": "A wrapper around re and regex that adds additional back references.",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "basicsr": {
+      "version": "1.4.2",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://github.com/xinntao/BasicSR",
+      "author": "Xintao Wang",
+      "summary": "Open Source Image and Video Super-Resolution Toolbox",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "beautifulsoup4": {
+      "version": "4.13.5",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://www.crummy.com/software/BeautifulSoup/bs4/",
+      "author": "",
+      "summary": "Screen-scraping library",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "blinker": {
+      "version": "1.9.0",
+      "license": "",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "Jason Kirtland",
+      "summary": "Fast, simple object-to-object and broadcast signaling",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "borb": {
+      "version": "2.1.25",
+      "license": "",
+      "license_classifier": [],
+      "home_page": "https://github.com/jorisschellekens/borb",
+      "author": "Joris Schellekens",
+      "summary": "borb is a library for reading, creating and manipulating PDF files in python.",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "Brotli": {
+      "version": "1.1.0",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/google/brotli",
+      "author": "The Brotli Authors",
+      "summary": "Python bindings for the Brotli compression library",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "cachetools": {
+      "version": "6.2.0",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/tkem/cachetools/",
+      "author": "Thomas Kemmer",
+      "summary": "Extensible memoizing collections and decorators",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "certifi": {
+      "version": "2025.8.3",
+      "license": "MPL-2.0",
+      "license_classifier": [],
+      "home_page": "https://github.com/certifi/python-certifi",
+      "author": "Kenneth Reitz",
+      "summary": "Python package for providing Mozilla's CA Bundle.",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "cffi": {
+      "version": "2.0.0",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "Armin Rigo, Maciej Fijalkowski",
+      "summary": "Foreign Function Interface for Python calling C code.",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "charset-normalizer": {
+      "version": "3.4.3",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "",
+      "summary": "The Real First Universal Charset Detector. Open, modern and actively maintained alternative to Chardet.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "click": {
+      "version": "8.2.1",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "",
+      "summary": "Composable command line interface toolkit",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "colorama": {
+      "version": "0.4.6",
+      "license": "",
+      "license_classifier": [],
+      "home_page": "https://github.com/tartley/colorama",
+      "author": "",
+      "summary": "Cross-platform colored terminal text.",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "contourpy": {
+      "version": "1.3.3",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "https://github.com/contourpy/contourpy",
+      "author": "",
+      "summary": "Python library for calculating contours of 2D quadrilateral grids",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "cryptography": {
+      "version": "44.0.3",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://github.com/pyca/cryptography",
+      "author": "The cryptography developers <cryptography-dev@python.org>",
+      "summary": "cryptography is a package which provides cryptographic recipes and primitives to Python developers.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "curlify": {
+      "version": "2.2.1",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/oeegor/curlify",
+      "author": "Egor Orlov",
+      "summary": "Library to convert python requests object to curl command.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "cycler": {
+      "version": "0.12.1",
+      "license": "Copyright (c) 2015, matplotlib project",
+      "license_classifier": [],
+      "home_page": "https://matplotlib.org/cycler/",
+      "author": "",
+      "summary": "Composable style cycles",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "cyclopts": {
+      "version": "3.24.0",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://github.com/BrianPugh/cyclopts",
+      "author": "Brian Pugh",
+      "summary": "Intuitive, easy CLIs based on type hints.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "deepagents": {
+      "version": "0.0.5",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "",
+      "summary": "General purpose 'deep agent' with sub-agent spawning, todo list capabilities, and mock file system. Built on LangGraph.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "deepcode-hku": {
+      "version": "1.0.4",
+      "license": "",
+      "license_classifier": [],
+      "home_page": "https://github.com/HKUDS/DeepCode",
+      "author": "DeepCodeTeam",
+      "summary": "AI Research Engine - Transform research papers into working code automatically",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "deepmcpagent": {
+      "version": "0.4.0",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://github.com/cryxnet/deepmcpagent",
+      "author": "cryxnet",
+      "summary": "DeepMCPAgent: LangChain/LangGraph agents powered by MCP tools over FastMCP.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "dill": {
+      "version": "0.4.0",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "https://github.com/uqfoundation/dill",
+      "author": "Mike McKerns",
+      "summary": "serialize all of Python",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "distro": {
+      "version": "1.9.0",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://github.com/python-distro/distro",
+      "author": "Nir Cohen",
+      "summary": "Distro - an OS platform information API",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "dnspython": {
+      "version": "2.8.0",
+      "license": "ISC",
+      "license_classifier": [],
+      "home_page": "https://www.dnspython.org",
+      "author": "",
+      "summary": "DNS toolkit",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "docling": {
+      "version": "2.52.0",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/docling-project/docling",
+      "author": "",
+      "summary": "SDK and CLI for parsing PDF, DOCX, HTML, and more, to a unified document representation for powering downstream workflows such as gen AI applications.",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "docling-core": {
+      "version": "2.48.1",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/docling-project",
+      "author": "",
+      "summary": "A python library to define and validate data types in Docling.",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "docling-ibm-models": {
+      "version": "3.9.1",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/docling-project/docling-ibm-models",
+      "author": "",
+      "summary": "This package contains the AI models used by the Docling PDF conversion package",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "docling-parse": {
+      "version": "4.4.0",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/docling-project/docling-parse",
+      "author": "",
+      "summary": "Simple package to extract text with coordinates from programmatic PDFs",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "docstring_parser": {
+      "version": "0.17.0",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/rr-/docstring_parser",
+      "author": "",
+      "summary": "Parse Python docstrings in reST, Google and Numpydoc format",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "docutils": {
+      "version": "0.22",
+      "license": "",
+      "license_classifier": [],
+      "home_page": "https://docutils.sourceforge.io",
+      "author": "",
+      "summary": "Docutils -- Python Documentation Utilities",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "dunamai": {
+      "version": "1.25.0",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/mtkennerly/dunamai",
+      "author": "Matthew T. Kennerly",
+      "summary": "Dynamic version generation",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "easyocr": {
+      "version": "1.7.2",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://github.com/jaidedai/easyocr",
+      "author": "Rakpong Kittinaradorn",
+      "summary": "End-to-End Multi-Lingual Optical Character Recognition (OCR) Solution",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "einops": {
+      "version": "0.8.1",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/arogozhnikov/einops",
+      "author": "Alex Rogozhnikov",
+      "summary": "A new flavour of deep learning operations",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "email-validator": {
+      "version": "2.3.0",
+      "license": "Unlicense",
+      "license_classifier": [],
+      "home_page": "https://github.com/JoshData/python-email-validator",
+      "author": "Joshua Tauberer",
+      "summary": "A robust email address syntax and deliverability validation library.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "et_xmlfile": {
+      "version": "2.0.0",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://foss.heptapod.net/openpyxl/et_xmlfile",
+      "author": "See AUTHORS.txt",
+      "summary": "An implementation of lxml.xmlfile for the standard library",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "exceptiongroup": {
+      "version": "1.3.0",
+      "license": "",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "",
+      "summary": "Backport of PEP 654 (exception groups)",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "facexlib": {
+      "version": "0.3.0",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://github.com/xinntao/facexlib",
+      "author": "Xintao Wang",
+      "summary": "Basic face library",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "Faker": {
+      "version": "37.6.0",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/joke2k/faker",
+      "author": "joke2k",
+      "summary": "Faker is a Python package that generates fake data for you.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "fastapi": {
+      "version": "0.116.1",
+      "license": "",
+      "license_classifier": [],
+      "home_page": "https://github.com/fastapi/fastapi",
+      "author": "",
+      "summary": "FastAPI framework, high performance, easy to learn, fast to code, ready for production",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "fastmcp": {
+      "version": "2.12.3",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://gofastmcp.com",
+      "author": "Jeremiah Lowin",
+      "summary": "The fast, Pythonic way to build MCP servers and clients.",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "ffmpeg-python": {
+      "version": "0.2.0",
+      "license": "UNKNOWN",
+      "license_classifier": [],
+      "home_page": "https://github.com/kkroening/ffmpeg-python",
+      "author": "Karl Kroening",
+      "summary": "Python bindings for FFmpeg - with complex filtering support",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "ffmpy": {
+      "version": "0.6.1",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "Andrii Yurchuk",
+      "summary": "A simple Python wrapper for FFmpeg",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "filelock": {
+      "version": "3.19.1",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/tox-dev/py-filelock",
+      "author": "",
+      "summary": "A platform independent file lock.",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "filetype": {
+      "version": "1.2.0",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/h2non/filetype.py",
+      "author": "Tomas Aparicio",
+      "summary": "Infer file type and MIME type of any file/buffer. No external dependencies.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "filterpy": {
+      "version": "1.4.5",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/rlabbe/filterpy",
+      "author": "Roger Labbe",
+      "summary": "Kalman filtering and optimal estimation library",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "flatbuffers": {
+      "version": "25.2.10",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://google.github.io/flatbuffers/",
+      "author": "Derek Bailey",
+      "summary": "The FlatBuffers serialization format for Python",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "fonttools": {
+      "version": "4.59.2",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "http://github.com/fonttools/fonttools",
+      "author": "Just van Rossum",
+      "summary": "Tools to manipulate font files",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "frozenlist": {
+      "version": "1.7.0",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://github.com/aio-libs/frozenlist",
+      "author": "",
+      "summary": "A list-like structure which implements collections.abc.MutableSequence",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "fsspec": {
+      "version": "2025.9.0",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/fsspec/filesystem_spec",
+      "author": "",
+      "summary": "File-system specification",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "future": {
+      "version": "1.0.0",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://python-future.org",
+      "author": "Ed Schofield",
+      "summary": "Clean single-source support for Python 3 and 2",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "gfpgan": {
+      "version": "1.3.8",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://github.com/TencentARC/GFPGAN",
+      "author": "Xintao Wang",
+      "summary": "GFPGAN aims at developing Practical Algorithms for Real-world Face Restoration",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "ghp-import": {
+      "version": "2.1.0",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://github.com/c-w/ghp-import",
+      "author": "Paul Joseph Davis",
+      "summary": "Copy your docs directly to the gh-pages branch.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "gitdb": {
+      "version": "4.0.12",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "https://github.com/gitpython-developers/gitdb",
+      "author": "Sebastian Thiel",
+      "summary": "Git Object Database",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "GitPython": {
+      "version": "3.1.45",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "https://github.com/gitpython-developers/GitPython",
+      "author": "Sebastian Thiel, Michael Trier",
+      "summary": "GitPython is a Python library used to interact with Git repositories",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "googleapis-common-protos": {
+      "version": "1.70.0",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "",
+      "summary": "Common protobufs used in Google APIs",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "gradio": {
+      "version": "5.45.0",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/gradio-app/gradio",
+      "author": "",
+      "summary": "Python library for easily interacting with trained machine learning models",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "gradio_client": {
+      "version": "1.13.0",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/gradio-app/gradio",
+      "author": "",
+      "summary": "Python library for easily interacting with trained machine learning models",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "griffe": {
+      "version": "1.14.0",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://mkdocstrings.github.io/griffe",
+      "author": "",
+      "summary": "Signatures for entire Python programs. Extract the structure, the frame, the skeleton of your project, to generate API documentation or find breaking changes in your API.",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "groovy": {
+      "version": "0.1.2",
+      "license": "",
+      "license_classifier": [],
+      "home_page": "https://github.com/gradio-app/groovy",
+      "author": "",
+      "summary": "A small Python library created to help developers protect their applications from Server Side Request Forgery (SSRF) attacks.",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "grpcio": {
+      "version": "1.74.0",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://grpc.io",
+      "author": "The gRPC Authors",
+      "summary": "HTTP/2-based RPC framework",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "h11": {
+      "version": "0.16.0",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/python-hyper/h11",
+      "author": "Nathaniel J. Smith",
+      "summary": "A pure-Python, bring-your-own-I/O implementation of HTTP/1.1",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "h5py": {
+      "version": "3.14.0",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://www.h5py.org/",
+      "author": "",
+      "summary": "Read and write HDF5 files from Python",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "hf-xet": {
+      "version": "1.1.10",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/huggingface/xet-core",
+      "author": "",
+      "summary": "Fast transfer of large files with the Hugging Face Hub.",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "httpcore": {
+      "version": "1.0.9",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://www.encode.io/httpcore/",
+      "author": "",
+      "summary": "A minimal low-level HTTP client.",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "httpx": {
+      "version": "0.28.1",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "https://github.com/encode/httpx",
+      "author": "",
+      "summary": "The next generation HTTP client.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "httpx-sse": {
+      "version": "0.4.1",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/florimondmanca/httpx-sse",
+      "author": "",
+      "summary": "Consume Server-Sent Event (SSE) messages with HTTPX.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "huggingface-hub": {
+      "version": "0.34.5",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://github.com/huggingface/huggingface_hub",
+      "author": "Hugging Face, Inc.",
+      "summary": "Client library to download and publish models, datasets and other repos on the huggingface.co hub",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "idna": {
+      "version": "3.10",
+      "license": "",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "",
+      "summary": "Internationalized Domain Names in Applications (IDNA)",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "imageio": {
+      "version": "2.37.0",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "https://github.com/imageio/imageio",
+      "author": "imageio contributors",
+      "summary": "Library for reading and writing a wide range of image, video, scientific, and volumetric data formats.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "importlib_metadata": {
+      "version": "8.7.0",
+      "license": "",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "",
+      "summary": "Read metadata from Python packages",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "iniconfig": {
+      "version": "2.1.0",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/pytest-dev/iniconfig",
+      "author": "",
+      "summary": "brain-dead simple config-ini parsing",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "inquirerpy": {
+      "version": "0.3.4",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/kazhala/InquirerPy",
+      "author": "Kevin Zhuang",
+      "summary": "Python port of Inquirer.js (A collection of common interactive command-line user interfaces)",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "isodate": {
+      "version": "0.7.2",
+      "license": "Copyright (c) 2021, Hugo van Kemenade and contributors",
+      "license_classifier": [],
+      "home_page": "https://github.com/gweis/isodate/",
+      "author": "Gerhard Weis",
+      "summary": "An ISO 8601 date/time/duration parser and formatter",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "jax": {
+      "version": "0.7.1",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://github.com/jax-ml/jax",
+      "author": "JAX team",
+      "summary": "Differentiate, compile, and transform Numpy code.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "jaxlib": {
+      "version": "0.7.1",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://github.com/jax-ml/jax",
+      "author": "JAX team",
+      "summary": "XLA library for JAX",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "Jinja2": {
+      "version": "3.1.6",
+      "license": "",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "",
+      "summary": "A very fast and expressive template engine.",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "jiter": {
+      "version": "0.10.0",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/pydantic/jiter/",
+      "author": "Samuel Colvin <samuel@pydantic.dev>",
+      "summary": "Fast iterable JSON parser.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "joblib": {
+      "version": "1.5.2",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "https://joblib.readthedocs.io",
+      "author": "",
+      "summary": "Lightweight pipelining with Python functions",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "jsonlines": {
+      "version": "3.1.0",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "https://github.com/wbolster/jsonlines",
+      "author": "wouter bolsterlee",
+      "summary": "Library with helpers for the jsonlines file format",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "jsonpatch": {
+      "version": "1.33",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "https://github.com/stefankoegl/python-json-patch",
+      "author": "Stefan K\u00f6gl",
+      "summary": "Apply JSON-Patches (RFC 6902)",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "jsonpointer": {
+      "version": "3.0.0",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "https://github.com/stefankoegl/python-json-pointer",
+      "author": "Stefan K\u00f6gl",
+      "summary": "Identify specific nodes in a JSON document (RFC 6901)",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "jsonref": {
+      "version": "1.1.0",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "",
+      "summary": "jsonref is a library for automatic dereferencing of JSON Reference objects for Python.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "jsonschema": {
+      "version": "4.25.1",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/python-jsonschema/jsonschema",
+      "author": "",
+      "summary": "An implementation of JSON Schema validation for Python",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "jsonschema-path": {
+      "version": "0.3.4",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "Artur Maciag",
+      "summary": "JSONSchema Spec with object-oriented paths",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "jsonschema-specifications": {
+      "version": "2025.9.1",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/python-jsonschema/jsonschema-specifications",
+      "author": "",
+      "summary": "The JSON Schema meta-schemas and vocabularies, exposed as a Registry",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "kiwisolver": {
+      "version": "1.4.9",
+      "license": "=========================",
+      "license_classifier": [],
+      "home_page": "https://github.com/nucleic/kiwi",
+      "author": "",
+      "summary": "A fast implementation of the Cassowary constraint solver",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "langchain": {
+      "version": "0.3.27",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "",
+      "summary": "Building applications with LLMs through composability",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "langchain-anthropic": {
+      "version": "0.3.20",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "",
+      "summary": "An integration package connecting Anthropic and LangChain",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "langchain-core": {
+      "version": "0.3.76",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "",
+      "summary": "Building applications with LLMs through composability",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "langchain-openai": {
+      "version": "0.3.33",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "",
+      "summary": "An integration package connecting OpenAI and LangChain",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "langchain-text-splitters": {
+      "version": "0.3.11",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "",
+      "summary": "LangChain text splitting utilities",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "langgraph": {
+      "version": "0.6.7",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "",
+      "summary": "Building stateful, multi-actor applications with LLMs",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "langgraph-checkpoint": {
+      "version": "2.1.1",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "",
+      "summary": "Library with base interfaces for LangGraph checkpoint savers.",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "langgraph-prebuilt": {
+      "version": "0.6.4",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "",
+      "summary": "Library with high-level APIs for creating and executing LangGraph agents and tools.",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "langgraph-sdk": {
+      "version": "0.2.6",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "",
+      "summary": "SDK for interacting with LangGraph API",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "langsmith": {
+      "version": "0.4.27",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://smith.langchain.com/",
+      "author": "",
+      "summary": "Client library to connect to the LangSmith LLM Tracing and Evaluation Platform.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "latex2mathml": {
+      "version": "3.78.1",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "Ronie Martinez",
+      "summary": "Pure Python library for LaTeX to MathML conversion",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "lazy_loader": {
+      "version": "0.4",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "Scientific Python Developers",
+      "summary": "Makes it easy to load subpackages and functions on demand.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "lazy-object-proxy": {
+      "version": "1.12.0",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "",
+      "summary": "A fast and thorough lazy object proxy.",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "llvmlite": {
+      "version": "0.44.0",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "http://llvmlite.readthedocs.io",
+      "author": "",
+      "summary": "lightweight wrapper around basic LLVM functionality",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "lmdb": {
+      "version": "1.7.3",
+      "license": "OLDAP-2.8",
+      "license_classifier": [],
+      "home_page": "http://github.com/jnwatson/py-lmdb/",
+      "author": "David Wilson",
+      "summary": "Universal Python binding for the LMDB 'Lightning' Database",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "lxml": {
+      "version": "5.4.0",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "https://lxml.de/",
+      "author": "lxml dev team",
+      "summary": "Powerful and Pythonic XML processing library combining libxml2/libxslt with the ElementTree API.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "Markdown": {
+      "version": "3.9",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://Python-Markdown.github.io/",
+      "author": "Manfred Stienstra, Yuri Takhteyev",
+      "summary": "Python implementation of John Gruber's Markdown.",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "markdown-it-py": {
+      "version": "4.0.0",
+      "license": "",
+      "license_classifier": [],
+      "home_page": "https://github.com/executablebooks/markdown-it-py",
+      "author": "",
+      "summary": "Python port of markdown-it. Markdown parsing, done right!",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "marko": {
+      "version": "2.2.0",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/frostming/marko",
+      "author": "",
+      "summary": "A markdown parser with high extensibility.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "MarkupSafe": {
+      "version": "3.0.2",
+      "license": "Copyright 2010 Pallets",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "",
+      "summary": "Safely add untrusted strings to HTML/XML markup.",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "matplotlib": {
+      "version": "3.10.6",
+      "license": "License agreement for matplotlib versions 1.3.0 and later",
+      "license_classifier": [],
+      "home_page": "https://matplotlib.org",
+      "author": "John D. Hunter, Michael Droettboom",
+      "summary": "Python plotting package",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "mcp": {
+      "version": "1.14.0",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://modelcontextprotocol.io",
+      "author": "Anthropic, PBC.",
+      "summary": "Model Context Protocol SDK",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "mcp-agent": {
+      "version": "0.1.20",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "",
+      "summary": "Build effective agents with Model Context Protocol (MCP) using simple, composable patterns.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "mcp-server-git": {
+      "version": "2025.7.1",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "Anthropic, PBC.",
+      "summary": "A Model Context Protocol server providing tools to read, search, and manipulate Git repositories programmatically via LLMs",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "mdurl": {
+      "version": "0.1.2",
+      "license": "",
+      "license_classifier": [],
+      "home_page": "https://github.com/executablebooks/mdurl",
+      "author": "",
+      "summary": "Markdown URL utilities",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "mediapipe": {
+      "version": "0.10.14",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://github.com/google/mediapipe",
+      "author": "The MediaPipe Authors",
+      "summary": "MediaPipe is the simplest way for researchers and developers to build world-class ML solutions and applications for mobile, edge, cloud and the web.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "mergedeep": {
+      "version": "1.3.4",
+      "license": "UNKNOWN",
+      "license_classifier": [],
+      "home_page": "https://github.com/clarketm/mergedeep",
+      "author": "Travis Clarke",
+      "summary": "A deep merge function for \ud83d\udc0d.",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "mkdocs": {
+      "version": "1.6.1",
+      "license": "",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "",
+      "summary": "Project documentation with Markdown.",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "mkdocs-autorefs": {
+      "version": "1.4.3",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://mkdocstrings.github.io/autorefs",
+      "author": "",
+      "summary": "Automatically link across pages in MkDocs.",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "mkdocs-get-deps": {
+      "version": "0.2.0",
+      "license": "",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "",
+      "summary": "MkDocs extension that lists all dependencies according to a mkdocs.yml file",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "mkdocs-material": {
+      "version": "9.6.19",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "",
+      "summary": "Documentation that simply works",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "mkdocs-material-extensions": {
+      "version": "1.3.1",
+      "license": "",
+      "license_classifier": [],
+      "home_page": "https://github.com/facelessuser/mkdocs-material-extensions",
+      "author": "",
+      "summary": "Extension pack for Python Markdown and MkDocs Material.",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "mkdocstrings": {
+      "version": "0.30.0",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://mkdocstrings.github.io",
+      "author": "",
+      "summary": "Automatic documentation from sources, for MkDocs.",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "mkdocstrings-python": {
+      "version": "1.18.2",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://mkdocstrings.github.io/python",
+      "author": "",
+      "summary": "A Python handler for mkdocstrings.",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "ml_dtypes": {
+      "version": "0.5.3",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/jax-ml/ml_dtypes",
+      "author": "",
+      "summary": "ml_dtypes is a stand-alone implementation of several NumPy dtype extensions used in machine learning.",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "more-itertools": {
+      "version": "10.8.0",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/more-itertools/more-itertools",
+      "author": "",
+      "summary": "More routines for operating on iterables, beyond itertools",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "mpire": {
+      "version": "2.10.2",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/sybrenjansen/mpire",
+      "author": "Sybren Jansen",
+      "summary": "A Python package for easy multiprocessing, but faster than multiprocessing",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "mpmath": {
+      "version": "1.3.0",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "http://mpmath.org/",
+      "author": "Fredrik Johansson",
+      "summary": "Python library for arbitrary-precision floating-point arithmetic",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "multidict": {
+      "version": "6.6.4",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://github.com/aio-libs/multidict",
+      "author": "Andrew Svetlov",
+      "summary": "multidict implementation",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "multiprocess": {
+      "version": "0.70.18",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "https://github.com/uqfoundation/multiprocess",
+      "author": "Mike McKerns",
+      "summary": "better multiprocessing and multithreading in Python",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "mypy": {
+      "version": "1.18.1",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://www.mypy-lang.org/",
+      "author": "",
+      "summary": "Optional static typing for Python",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "mypy_extensions": {
+      "version": "1.1.0",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/python/mypy_extensions",
+      "author": "",
+      "summary": "Type system extensions for programs checked with the mypy type checker.",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "narwhals": {
+      "version": "2.5.0",
+      "license": "",
+      "license_classifier": [],
+      "home_page": "https://github.com/narwhals-dev/narwhals",
+      "author": "",
+      "summary": "Extremely lightweight compatibility layer between dataframe libraries",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "nest-asyncio": {
+      "version": "1.6.0",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "https://github.com/erdewit/nest_asyncio",
+      "author": "Ewald R. de Wit",
+      "summary": "Patch asyncio to allow nested event loops",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "networkx": {
+      "version": "3.5",
+      "license": "",
+      "license_classifier": [],
+      "home_page": "https://networkx.org/",
+      "author": "",
+      "summary": "Python package for creating and manipulating graphs and networks",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "ninja": {
+      "version": "1.13.0",
+      "license": "",
+      "license_classifier": [],
+      "home_page": "http://ninja-build.org/",
+      "author": "",
+      "summary": "Ninja is a small build system with a focus on speed",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "numba": {
+      "version": "0.61.2",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "https://numba.pydata.org",
+      "author": "",
+      "summary": "compiling Python code using LLVM",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "numpy": {
+      "version": "2.2.6",
+      "license": "LGPL-2.1-or-later",
+      "license_classifier": [],
+      "home_page": "https://numpy.org",
+      "author": "Travis E. Oliphant et al.",
+      "summary": "Fundamental package for array computing in Python",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "openai": {
+      "version": "1.107.2",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://github.com/openai/openai-python",
+      "author": "",
+      "summary": "The official Python library for the openai API",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "openapi-core": {
+      "version": "0.19.5",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "Artur Maciag",
+      "summary": "client-side and server-side support for the OpenAPI Specification v3",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "openapi-pydantic": {
+      "version": "0.5.1",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/mike-oakley/openapi-pydantic",
+      "author": "Mike Oakley",
+      "summary": "Pydantic OpenAPI schema implementation",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "openapi-schema-validator": {
+      "version": "0.6.3",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "https://github.com/python-openapi/openapi-schema-validator",
+      "author": "Artur Maciag",
+      "summary": "OpenAPI schema validation for Python",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "openapi-spec-validator": {
+      "version": "0.7.2",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "Artur Maciag",
+      "summary": "OpenAPI 2.0 (aka Swagger) and OpenAPI 3 spec validator",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "opencv-contrib-python": {
+      "version": "4.11.0.86",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://github.com/opencv/opencv-python",
+      "author": "",
+      "summary": "Wrapper package for OpenCV python bindings.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "opencv-python": {
+      "version": "4.12.0.88",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://github.com/opencv/opencv-python",
+      "author": "",
+      "summary": "Wrapper package for OpenCV python bindings.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "opencv-python-headless": {
+      "version": "4.11.0.86",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://github.com/opencv/opencv-python",
+      "author": "",
+      "summary": "Wrapper package for OpenCV python bindings.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "openpyxl": {
+      "version": "3.1.5",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://openpyxl.readthedocs.io",
+      "author": "See AUTHORS",
+      "summary": "A Python library to read/write Excel 2010 xlsx/xlsm files",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "opentelemetry-api": {
+      "version": "1.37.0",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/open-telemetry/opentelemetry-python/tree/main/opentelemetry-api",
+      "author": "",
+      "summary": "OpenTelemetry Python API",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "opentelemetry-distro": {
+      "version": "0.58b0",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/open-telemetry/opentelemetry-python-contrib/tree/main/opentelemetry-distro",
+      "author": "",
+      "summary": "OpenTelemetry Python Distro",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "opentelemetry-exporter-otlp-proto-common": {
+      "version": "1.37.0",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/open-telemetry/opentelemetry-python/tree/main/exporter/opentelemetry-exporter-otlp-proto-common",
+      "author": "",
+      "summary": "OpenTelemetry Protobuf encoding",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "opentelemetry-exporter-otlp-proto-http": {
+      "version": "1.37.0",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/open-telemetry/opentelemetry-python/tree/main/exporter/opentelemetry-exporter-otlp-proto-http",
+      "author": "",
+      "summary": "OpenTelemetry Collector Protobuf over HTTP Exporter",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "opentelemetry-instrumentation": {
+      "version": "0.58b0",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/open-telemetry/opentelemetry-python-contrib/tree/main/opentelemetry-instrumentation",
+      "author": "",
+      "summary": "Instrumentation Tools & Auto Instrumentation for OpenTelemetry Python",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "opentelemetry-instrumentation-anthropic": {
+      "version": "0.47.0",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "Gal Kleinman",
+      "summary": "OpenTelemetry Anthropic instrumentation",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "opentelemetry-instrumentation-openai": {
+      "version": "0.47.0",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "Gal Kleinman",
+      "summary": "OpenTelemetry OpenAI instrumentation",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "opentelemetry-proto": {
+      "version": "1.37.0",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/open-telemetry/opentelemetry-python/tree/main/opentelemetry-proto",
+      "author": "",
+      "summary": "OpenTelemetry Python Proto",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "opentelemetry-sdk": {
+      "version": "1.37.0",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/open-telemetry/opentelemetry-python/tree/main/opentelemetry-sdk",
+      "author": "",
+      "summary": "OpenTelemetry Python SDK",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "opentelemetry-semantic-conventions": {
+      "version": "0.58b0",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/open-telemetry/opentelemetry-python/tree/main/opentelemetry-semantic-conventions",
+      "author": "",
+      "summary": "OpenTelemetry Semantic Conventions",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "opentelemetry-semantic-conventions-ai": {
+      "version": "0.4.13",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "Gal Kleinman",
+      "summary": "OpenTelemetry Semantic Conventions Extension for Large Language Models",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "opt_einsum": {
+      "version": "3.4.0",
+      "license": "",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "",
+      "summary": "Path optimization of einsum functions.",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "orjson": {
+      "version": "3.11.3",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "",
+      "summary": "Fast, correct Python JSON library supporting dataclasses, datetimes, and numpy",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "ormsgpack": {
+      "version": "1.10.0",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://github.com/aviramha/ormsgpack",
+      "author": "Aviram Hassan <aviramyhassan@gmail.com>, Emanuele Giaquinta <emanuele.giaquinta@gmail.com>",
+      "summary": "Fast, correct Python msgpack library supporting dataclasses, datetimes, and numpy",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "packaging": {
+      "version": "25.0",
+      "license": "",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "",
+      "summary": "Core utilities for Python packages",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "paginate": {
+      "version": "0.5.7",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/Signum/paginate",
+      "author": "Christoph Haas",
+      "summary": "Divides large result sets into pages for easier browsing",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "paho-mqtt": {
+      "version": "2.1.0",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "http://eclipse.org/paho",
+      "author": "",
+      "summary": "MQTT version 5.0/3.1.1 client class",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "pandas": {
+      "version": "2.3.2",
+      "license": "MIT + file LICENSE",
+      "license_classifier": [],
+      "home_page": "https://pandas.pydata.org",
+      "author": "",
+      "summary": "Powerful data structures for data analysis, time series, and statistics",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "parse": {
+      "version": "1.20.2",
+      "license": "Copyright (c) 2012-2019 Richard Jones <richard@python.org>",
+      "license_classifier": [],
+      "home_page": "https://github.com/r1chardj0n3s/parse",
+      "author": "",
+      "summary": "parse() is the opposite of format()",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "pathable": {
+      "version": "0.4.4",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://github.com/p1c2u/pathable",
+      "author": "Artur Maciag",
+      "summary": "Object-oriented paths",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "pathlib2": {
+      "version": "2.3.7.post1",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/jazzband/pathlib2",
+      "author": "Matthias C. M. Troffaes",
+      "summary": "Object-oriented filesystem paths",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "pathspec": {
+      "version": "0.12.1",
+      "license": "",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "",
+      "summary": "Utility library for gitignore style pattern matching of file paths.",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "pfzy": {
+      "version": "0.3.4",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/kazhala/pfzy",
+      "author": "Kevin Zhuang",
+      "summary": "Python port of the fzy fuzzy string matching algorithm",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "pillow": {
+      "version": "11.3.0",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://python-pillow.github.io",
+      "author": "",
+      "summary": "Python Imaging Library (Fork)",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "pip": {
+      "version": "25.2",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://pip.pypa.io/",
+      "author": "",
+      "summary": "The PyPA recommended tool for installing Python packages.",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "pip-licenses": {
+      "version": "5.0.0",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/raimon49/pip-licenses",
+      "author": "",
+      "summary": "Dump the software license list of Python packages installed with pip.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "platformdirs": {
+      "version": "4.4.0",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/tox-dev/platformdirs",
+      "author": "",
+      "summary": "A small Python package for determining appropriate platform-specific dirs, e.g. a `user data dir`.",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "pluggy": {
+      "version": "1.6.0",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "",
+      "summary": "plugin and hook calling mechanisms for python",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "poetry-dynamic-versioning": {
+      "version": "1.9.1",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/mtkennerly/poetry-dynamic-versioning",
+      "author": "Matthew T. Kennerly",
+      "summary": "Plugin for Poetry to enable dynamic versioning based on VCS tags",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "polyfactory": {
+      "version": "2.22.2",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/litestar-org/polyfactory",
+      "author": "",
+      "summary": "Mock data generation factories",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "prettytable": {
+      "version": "3.16.0",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/prettytable/prettytable",
+      "author": "",
+      "summary": "A simple Python library for easily displaying tabular data in a visually appealing ASCII table format",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "prompt_toolkit": {
+      "version": "3.0.52",
+      "license": "",
+      "license_classifier": [],
+      "home_page": "https://github.com/prompt-toolkit/python-prompt-toolkit",
+      "author": "Jonathan Slenders",
+      "summary": "Library for building powerful interactive command lines in Python",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "propcache": {
+      "version": "0.3.2",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://github.com/aio-libs/propcache",
+      "author": "Andrew Svetlov",
+      "summary": "Accelerated property cache",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "protobuf": {
+      "version": "4.25.8",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "https://developers.google.com/protocol-buffers/",
+      "author": "protobuf@googlegroups.com",
+      "summary": "",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "psutil": {
+      "version": "5.9.8",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "https://github.com/giampaolo/psutil",
+      "author": "Giampaolo Rodola",
+      "summary": "Cross-platform lib for process and system monitoring in Python.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "pyarrow": {
+      "version": "21.0.0",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://arrow.apache.org/",
+      "author": "",
+      "summary": "Python library for Apache Arrow",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "pyclipper": {
+      "version": "1.3.0.post6",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/greginvm/pyclipper",
+      "author": "Angus Johnson, Maxime Chalton, Lukas Treyer, Gregor Ratajc",
+      "summary": "Cython wrapper for the C++ translation of the Angus Johnson's Clipper library (ver. 6.4.2)",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "pycparser": {
+      "version": "2.23",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "https://github.com/eliben/pycparser",
+      "author": "Eli Bendersky",
+      "summary": "C parser in Python",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "pydantic": {
+      "version": "2.11.9",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/pydantic/pydantic",
+      "author": "",
+      "summary": "Data validation using Python type hints",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "pydantic_core": {
+      "version": "2.33.2",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/pydantic/pydantic-core",
+      "author": "",
+      "summary": "Core functionality for Pydantic validation and serialization",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "pydantic-settings": {
+      "version": "2.10.1",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/pydantic/pydantic-settings",
+      "author": "",
+      "summary": "Settings management using Pydantic",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "pydantic-yaml": {
+      "version": "1.6.0",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "",
+      "summary": "YAML reading/writing for Pydantic models",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "pydeck": {
+      "version": "0.9.1",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://github.com/visgl/deck.gl/tree/master/bindings/pydeck",
+      "author": "Andrew Duberstein",
+      "summary": "Widget for deck.gl maps",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "pydub": {
+      "version": "0.25.1",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "http://pydub.com",
+      "author": "James Robert",
+      "summary": "Manipulate audio with an simple and easy high level interface",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "Pygments": {
+      "version": "2.19.2",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "https://pygments.org",
+      "author": "",
+      "summary": "Pygments is a syntax highlighting package written in Python.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "pylatexenc": {
+      "version": "2.10",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/phfaist/pylatexenc",
+      "author": "Philippe Faist",
+      "summary": "Simple LaTeX parser providing latex-to-unicode and unicode-to-latex conversion",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "pymdown-extensions": {
+      "version": "10.16.1",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/facelessuser/pymdown-extensions",
+      "author": "",
+      "summary": "Extension pack for Python Markdown.",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "pyparsing": {
+      "version": "3.2.4",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/pyparsing/pyparsing/",
+      "author": "",
+      "summary": "pyparsing - Classes and methods to define and execute parsing grammars",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "PyPDF2": {
+      "version": "3.0.1",
+      "license": "",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "",
+      "summary": "A pure-python PDF library capable of splitting, merging, cropping, and transforming PDF files",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "pypdfium2": {
+      "version": "4.30.0",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://github.com/pypdfium2-team/pypdfium2",
+      "author": "pypdfium2-team",
+      "summary": "Python bindings to PDFium",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "pyperclip": {
+      "version": "1.9.0",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "https://github.com/asweigart/pyperclip",
+      "author": "Al Sweigart",
+      "summary": "A cross-platform clipboard module for Python. (Only handles plain text for now.)",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "pytest": {
+      "version": "8.4.2",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://docs.pytest.org/en/latest/",
+      "author": "Holger Krekel, Bruno Oliveira, Ronny Pfannschmidt, Floris Bruynooghe, Brianna Laugher, Florian Bruhin, Others (See AUTHORS)",
+      "summary": "pytest: simple powerful testing with Python",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "pytest-asyncio": {
+      "version": "1.2.0",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/pytest-dev/pytest-asyncio",
+      "author": "",
+      "summary": "Pytest support for asyncio",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "python-barcode": {
+      "version": "0.16.1",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "",
+      "summary": "Create standard barcodes with Python. No external modules needed. (optional Pillow support included).",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "python-bidi": {
+      "version": "0.6.6",
+      "license": "",
+      "license_classifier": [],
+      "home_page": "https://github.com/MeirKriheli/python-bidi",
+      "author": "Meir Kriheli <mkriheli@gmail.com>",
+      "summary": "Python Bidi layout wrapping the Rust crate unicode-bidi",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "python-dateutil": {
+      "version": "2.9.0.post0",
+      "license": "Dual License",
+      "license_classifier": [],
+      "home_page": "https://github.com/dateutil/dateutil",
+      "author": "Gustavo Niemeyer",
+      "summary": "Extensions to the standard Python datetime module",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "python-docx": {
+      "version": "1.2.0",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/python-openxml/python-docx",
+      "author": "",
+      "summary": "Create, read, and update Microsoft Word .docx files.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "python-dotenv": {
+      "version": "1.1.1",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "https://github.com/theskumar/python-dotenv",
+      "author": "Saurabh Kumar",
+      "summary": "Read key-value pairs from a .env file and set them as environment variables",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "python-multipart": {
+      "version": "0.0.20",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/Kludex/python-multipart",
+      "author": "",
+      "summary": "A streaming multipart parser for Python",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "python-pptx": {
+      "version": "1.0.2",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/scanny/python-pptx",
+      "author": "",
+      "summary": "Create, read, and update PowerPoint 2007+ (.pptx) files.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "pytz": {
+      "version": "2025.2",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "http://pythonhosted.org/pytz",
+      "author": "Stuart Bishop",
+      "summary": "World timezone definitions, modern and historical",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "PyYAML": {
+      "version": "6.0.2",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://pyyaml.org/",
+      "author": "Kirill Simonov",
+      "summary": "YAML parser and emitter for Python",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "pyyaml_env_tag": {
+      "version": "1.1",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/waylan/pyyaml-env-tag",
+      "author": "",
+      "summary": "A custom YAML tag for referencing environment variables in YAML files.",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "qrcode": {
+      "version": "8.2",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "https://github.com/lincolnloop/python-qrcode",
+      "author": "Lincoln Loop",
+      "summary": "QR Code image generator",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "realesrgan": {
+      "version": "0.3.0",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "https://github.com/xinntao/Real-ESRGAN",
+      "author": "Xintao Wang",
+      "summary": "Real-ESRGAN aims at developing Practical Algorithms for General Image Restoration",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "referencing": {
+      "version": "0.36.2",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/python-jsonschema/referencing",
+      "author": "",
+      "summary": "JSON Referencing + Python",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "regex": {
+      "version": "2025.9.1",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/mrabarnett/mrab-regex",
+      "author": "",
+      "summary": "Alternative regular expression module, to replace re.",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "reportlab": {
+      "version": "4.4.3",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "https://www.reportlab.com/",
+      "author": "Andy Robinson, Robin Becker, the ReportLab team and the community",
+      "summary": "The Reportlab Toolkit",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "requests": {
+      "version": "2.32.5",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://requests.readthedocs.io",
+      "author": "Kenneth Reitz",
+      "summary": "Python HTTP for Humans.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "requests-toolbelt": {
+      "version": "1.0.0",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://toolbelt.readthedocs.io/",
+      "author": "Ian Cordasco, Cory Benfield",
+      "summary": "A utility belt for advanced users of python-requests",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "rfc3339-validator": {
+      "version": "0.1.4",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/naimetti/rfc3339-validator",
+      "author": "Nicolas Aimetti",
+      "summary": "A pure python RFC3339 validator",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "rich": {
+      "version": "14.1.0",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/Textualize/rich",
+      "author": "Will McGugan",
+      "summary": "Render rich text, tables, progress bars, syntax highlighting, markdown and more to the terminal",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "rich-rst": {
+      "version": "1.3.1",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://wasi-master.github.io/rich-rst",
+      "author": "Wasi Master",
+      "summary": "A beautiful reStructuredText renderer for rich",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "rpds-py": {
+      "version": "0.27.1",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/crate-py/rpds",
+      "author": "",
+      "summary": "Python bindings to Rust's persistent data structures (rpds)",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "rtree": {
+      "version": "1.4.1",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "",
+      "summary": "R-Tree spatial index for Python GIS",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "ruamel.yaml": {
+      "version": "0.18.15",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "Anthon van der Neut",
+      "summary": "ruamel.yaml is a YAML parser/emitter that supports roundtrip preservation of comments, seq/map flow style, and map key order",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "ruamel.yaml.clib": {
+      "version": "0.2.12",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "Anthon van der Neut",
+      "summary": "C version of reader, parser and emitter for ruamel.yaml derived from libyaml",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "ruff": {
+      "version": "0.13.0",
+      "license": "",
+      "license_classifier": [],
+      "home_page": "https://docs.astral.sh/ruff",
+      "author": "",
+      "summary": "An extremely fast Python linter and code formatter, written in Rust.",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "safehttpx": {
+      "version": "0.1.6",
+      "license": "",
+      "license_classifier": [],
+      "home_page": "https://github.com/gradio-app/safehttpx",
+      "author": "",
+      "summary": "A small Python library created to help developers protect their applications from Server Side Request Forgery (SSRF) attacks.",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "safetensors": {
+      "version": "0.6.2",
+      "license": "",
+      "license_classifier": [],
+      "home_page": "https://github.com/huggingface/safetensors",
+      "author": "",
+      "summary": "",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "scikit-image": {
+      "version": "0.25.2",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://scikit-image.org",
+      "author": "",
+      "summary": "Image processing in Python",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "scikit-learn": {
+      "version": "1.7.2",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://scikit-learn.org",
+      "author": "",
+      "summary": "A set of python modules for machine learning and data mining",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "scipy": {
+      "version": "1.16.2",
+      "license": "LGPL-2.1-or-later",
+      "license_classifier": [],
+      "home_page": "https://scipy.org/",
+      "author": "",
+      "summary": "Fundamental algorithms for scientific computing in Python",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "semantic-version": {
+      "version": "2.10.0",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "https://github.com/rbarrois/python-semanticversion",
+      "author": "Rapha\u00ebl Barrois",
+      "summary": "A library implementing the 'SemVer' scheme.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "semchunk": {
+      "version": "2.2.2",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/umarbutler/semchunk",
+      "author": "",
+      "summary": "A fast and lightweight Python library for splitting text into semantically meaningful chunks.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "sentencepiece": {
+      "version": "0.2.1",
+      "license": "",
+      "license_classifier": [],
+      "home_page": "https://github.com/google/sentencepiece",
+      "author": "",
+      "summary": "Unsupervised text tokenizer and detokenizer.",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "setuptools": {
+      "version": "80.9.0",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "",
+      "summary": "Easily download, build, install, upgrade, and uninstall Python packages",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "shapely": {
+      "version": "2.1.1",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "Sean Gillies",
+      "summary": "Manipulation and analysis of geometric objects",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "shellingham": {
+      "version": "1.5.4",
+      "license": "ISC License",
+      "license_classifier": [],
+      "home_page": "https://github.com/sarugaku/shellingham",
+      "author": "Tzu-ping Chung",
+      "summary": "Tool to Detect Surrounding Shell",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "six": {
+      "version": "1.17.0",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/benjaminp/six",
+      "author": "Benjamin Peterson",
+      "summary": "Python 2 and 3 compatibility utilities",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "smmap": {
+      "version": "5.0.2",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "https://github.com/gitpython-developers/smmap",
+      "author": "Sebastian Thiel",
+      "summary": "A pure Python implementation of a sliding window memory map manager",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "sniffio": {
+      "version": "1.3.1",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://github.com/python-trio/sniffio",
+      "author": "",
+      "summary": "Sniff out which async library your code is running under",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "sounddevice": {
+      "version": "0.5.2",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "http://python-sounddevice.readthedocs.io/",
+      "author": "Matthias Geier",
+      "summary": "Play and Record Sound with Python",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "soupsieve": {
+      "version": "2.8",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/facelessuser/soupsieve",
+      "author": "",
+      "summary": "A modern CSS selector implementation for Beautiful Soup.",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "spaces": {
+      "version": "0.40.3",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://huggingface.co",
+      "author": "Charles Bensimon",
+      "summary": "Utilities for Hugging Face Spaces",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "SQLAlchemy": {
+      "version": "2.0.43",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://www.sqlalchemy.org",
+      "author": "Mike Bayer",
+      "summary": "Database Abstraction Library",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "sse-starlette": {
+      "version": "3.0.2",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "",
+      "summary": "SSE plugin for Starlette",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "starlette": {
+      "version": "0.47.3",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/encode/starlette",
+      "author": "",
+      "summary": "The little ASGI library that shines.",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "streamlit": {
+      "version": "1.49.1",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://streamlit.io",
+      "author": "Snowflake Inc",
+      "summary": "A faster way to build and share data apps",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "sympy": {
+      "version": "1.14.0",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "https://sympy.org",
+      "author": "SymPy development team",
+      "summary": "Computer algebra system (CAS) in Python",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "tabulate": {
+      "version": "0.9.0",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/astanin/python-tabulate",
+      "author": "",
+      "summary": "Pretty-print tabular data",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "tb-nightly": {
+      "version": "2.21.0a20250914",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://github.com/tensorflow/tensorboard",
+      "author": "Google Inc.",
+      "summary": "TensorBoard lets you watch Tensors Flow",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "tenacity": {
+      "version": "9.1.2",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://github.com/jd/tenacity",
+      "author": "Julien Danjou",
+      "summary": "Retry code until it succeeds",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "tensorboard-data-server": {
+      "version": "0.7.2",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://github.com/tensorflow/tensorboard/tree/master/tensorboard/data/server",
+      "author": "Google Inc.",
+      "summary": "Fast data loading for TensorBoard",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "threadpoolctl": {
+      "version": "3.6.0",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "https://github.com/joblib/threadpoolctl",
+      "author": "Thomas Moreau",
+      "summary": "threadpoolctl",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "tifffile": {
+      "version": "2025.9.9",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "https://www.cgohlke.com",
+      "author": "Christoph Gohlke",
+      "summary": "Read and write TIFF files",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "tiktoken": {
+      "version": "0.11.0",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/openai/tiktoken",
+      "author": "Shantanu Jain",
+      "summary": "tiktoken is a fast BPE tokeniser for use with OpenAI's models",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "tokenizers": {
+      "version": "0.22.0",
+      "license": "",
+      "license_classifier": [],
+      "home_page": "https://github.com/huggingface/tokenizers",
+      "author": "",
+      "summary": "",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "toml": {
+      "version": "0.10.2",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/uiri/toml",
+      "author": "William Pearson",
+      "summary": "Python Library for Tom's Obvious, Minimal Language",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "tomli": {
+      "version": "2.2.1",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/hukkin/tomli",
+      "author": "",
+      "summary": "A lil' TOML parser",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "tomlkit": {
+      "version": "0.13.3",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/sdispater/tomlkit",
+      "author": "S\u00e9bastien Eustace",
+      "summary": "Style preserving TOML library",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "torch": {
+      "version": "2.8.0",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "https://pytorch.org/",
+      "author": "PyTorch Team",
+      "summary": "Tensors and Dynamic neural networks in Python with strong GPU acceleration",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "torchvision": {
+      "version": "0.23.0",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "https://github.com/pytorch/vision",
+      "author": "PyTorch Core Team",
+      "summary": "image and video datasets and models for torch deep learning",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "tornado": {
+      "version": "6.5.2",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "http://www.tornadoweb.org/",
+      "author": "Facebook",
+      "summary": "Tornado is a Python web framework and asynchronous networking library, originally developed at FriendFeed.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "tqdm": {
+      "version": "4.67.1",
+      "license": "MPL-2.0 AND MIT",
+      "license_classifier": [],
+      "home_page": "https://tqdm.github.io",
+      "author": "",
+      "summary": "Fast, Extensible Progress Meter",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "transformers": {
+      "version": "4.56.1",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://github.com/huggingface/transformers",
+      "author": "The Hugging Face team (past and future) with the help of all our contributors (https://github.com/huggingface/transformers/graphs/contributors)",
+      "summary": "State-of-the-art Machine Learning for JAX, PyTorch and TensorFlow",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "typer": {
+      "version": "0.16.1",
+      "license": "",
+      "license_classifier": [],
+      "home_page": "https://github.com/fastapi/typer",
+      "author": "",
+      "summary": "Typer, build great CLIs. Easy to code. Based on Python type hints.",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "typing_extensions": {
+      "version": "4.15.0",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "",
+      "summary": "Backported and Experimental Type Hints for Python 3.9+",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "typing-inspection": {
+      "version": "0.4.1",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/pydantic/typing-inspection",
+      "author": "",
+      "summary": "Runtime typing introspection tools",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "tzdata": {
+      "version": "2025.2",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://github.com/python/tzdata",
+      "author": "Python Software Foundation",
+      "summary": "Provider of IANA time zone data",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "urllib3": {
+      "version": "2.2.3",
+      "license": "",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "",
+      "summary": "HTTP library with thread-safe connection pooling, file post, and more.",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "uvicorn": {
+      "version": "0.35.0",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://www.uvicorn.org/",
+      "author": "",
+      "summary": "The lightning-fast ASGI server.",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "vastai": {
+      "version": "0.3.1",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://cloud.vast.ai/",
+      "author": "jake cannell",
+      "summary": "",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "watchdog": {
+      "version": "6.0.0",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://github.com/gorakhargosh/watchdog",
+      "author": "Micka\u00ebl Schoentgen",
+      "summary": "Filesystem events monitoring",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "wcwidth": {
+      "version": "0.2.13",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/jquast/wcwidth",
+      "author": "Jeff Quast",
+      "summary": "Measures the displayed width of unicode strings in a terminal",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "websockets": {
+      "version": "15.0.1",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "https://github.com/python-websockets/websockets",
+      "author": "",
+      "summary": "An implementation of the WebSocket Protocol (RFC 6455 & 7692)",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "Werkzeug": {
+      "version": "3.1.1",
+      "license": "",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "",
+      "summary": "The comprehensive WSGI web application library.",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "wrapt": {
+      "version": "1.17.3",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "https://github.com/GrahamDumpleton/wrapt",
+      "author": "Graham Dumpleton",
+      "summary": "Module for decorators, wrappers and monkey patching.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "xdg": {
+      "version": "6.0.0",
+      "license": "ISC",
+      "license_classifier": [],
+      "home_page": "https://github.com/srstevenson/xdg-base-dirs",
+      "author": "Scott Stevenson",
+      "summary": "Variables defined by the XDG Base Directory Specification",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "xlsxwriter": {
+      "version": "3.2.6",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "https://github.com/jmcnamara/XlsxWriter",
+      "author": "John McNamara",
+      "summary": "A Python module for creating Excel XLSX files.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "xxhash": {
+      "version": "3.5.0",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "https://github.com/ifduyue/python-xxhash",
+      "author": "Yue Du",
+      "summary": "Python binding for xxHash",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "yapf": {
+      "version": "0.43.0",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "Google Inc.",
+      "summary": "A formatter for Python code",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "yarl": {
+      "version": "1.20.1",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://github.com/aio-libs/yarl",
+      "author": "Andrew Svetlov",
+      "summary": "Yet another URL library",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "zipp": {
+      "version": "3.23.0",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "",
+      "summary": "Backport of pathlib-compatible object wrapper for zip files",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "zstandard": {
+      "version": "0.24.0",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "https://github.com/indygreg/python-zstandard",
+      "author": "",
+      "summary": "Zstandard bindings for Python",
+      "is_problematic": false,
+      "is_permissive": true
+    }
+  },
+  "problematic_dependencies": {},
+  "unknown_licenses": {
+    "absl-py": {
+      "version": "2.3.1",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "The Abseil Authors",
+      "summary": "Abseil Python Common Libraries, see https://github.com/abseil/abseil-py.",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "anyio": {
+      "version": "4.10.0",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "",
+      "summary": "High-level concurrency and networking framework on top of asyncio or Trio",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "attrs": {
+      "version": "25.3.0",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "",
+      "summary": "Classes Without Boilerplate",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "backrefs": {
+      "version": "5.9",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/facelessuser/backrefs",
+      "author": "",
+      "summary": "A wrapper around re and regex that adds additional back references.",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "cffi": {
+      "version": "2.0.0",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "Armin Rigo, Maciej Fijalkowski",
+      "summary": "Foreign Function Interface for Python calling C code.",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "click": {
+      "version": "8.2.1",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "",
+      "summary": "Composable command line interface toolkit",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "docling": {
+      "version": "2.52.0",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/docling-project/docling",
+      "author": "",
+      "summary": "SDK and CLI for parsing PDF, DOCX, HTML, and more, to a unified document representation for powering downstream workflows such as gen AI applications.",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "docling-core": {
+      "version": "2.48.1",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/docling-project",
+      "author": "",
+      "summary": "A python library to define and validate data types in Docling.",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "docling-ibm-models": {
+      "version": "3.9.1",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/docling-project/docling-ibm-models",
+      "author": "",
+      "summary": "This package contains the AI models used by the Docling PDF conversion package",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "docling-parse": {
+      "version": "4.4.0",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/docling-project/docling-parse",
+      "author": "",
+      "summary": "Simple package to extract text with coordinates from programmatic PDFs",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "fastmcp": {
+      "version": "2.12.3",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://gofastmcp.com",
+      "author": "Jeremiah Lowin",
+      "summary": "The fast, Pythonic way to build MCP servers and clients.",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "ffmpy": {
+      "version": "0.6.1",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "Andrii Yurchuk",
+      "summary": "A simple Python wrapper for FFmpeg",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "filelock": {
+      "version": "3.19.1",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/tox-dev/py-filelock",
+      "author": "",
+      "summary": "A platform independent file lock.",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "fsspec": {
+      "version": "2025.9.0",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/fsspec/filesystem_spec",
+      "author": "",
+      "summary": "File-system specification",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "gradio": {
+      "version": "5.45.0",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/gradio-app/gradio",
+      "author": "",
+      "summary": "Python library for easily interacting with trained machine learning models",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "gradio_client": {
+      "version": "1.13.0",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/gradio-app/gradio",
+      "author": "",
+      "summary": "Python library for easily interacting with trained machine learning models",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "griffe": {
+      "version": "1.14.0",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://mkdocstrings.github.io/griffe",
+      "author": "",
+      "summary": "Signatures for entire Python programs. Extract the structure, the frame, the skeleton of your project, to generate API documentation or find breaking changes in your API.",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "h5py": {
+      "version": "3.14.0",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://www.h5py.org/",
+      "author": "",
+      "summary": "Read and write HDF5 files from Python",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "hf-xet": {
+      "version": "1.1.10",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/huggingface/xet-core",
+      "author": "",
+      "summary": "Fast transfer of large files with the Hugging Face Hub.",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "httpcore": {
+      "version": "1.0.9",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://www.encode.io/httpcore/",
+      "author": "",
+      "summary": "A minimal low-level HTTP client.",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "iniconfig": {
+      "version": "2.1.0",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/pytest-dev/iniconfig",
+      "author": "",
+      "summary": "brain-dead simple config-ini parsing",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "jsonschema": {
+      "version": "4.25.1",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/python-jsonschema/jsonschema",
+      "author": "",
+      "summary": "An implementation of JSON Schema validation for Python",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "jsonschema-specifications": {
+      "version": "2025.9.1",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/python-jsonschema/jsonschema-specifications",
+      "author": "",
+      "summary": "The JSON Schema meta-schemas and vocabularies, exposed as a Registry",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "langgraph": {
+      "version": "0.6.7",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "",
+      "summary": "Building stateful, multi-actor applications with LLMs",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "langgraph-checkpoint": {
+      "version": "2.1.1",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "",
+      "summary": "Library with base interfaces for LangGraph checkpoint savers.",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "langgraph-prebuilt": {
+      "version": "0.6.4",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "",
+      "summary": "Library with high-level APIs for creating and executing LangGraph agents and tools.",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "langgraph-sdk": {
+      "version": "0.2.6",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "",
+      "summary": "SDK for interacting with LangGraph API",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "lazy-object-proxy": {
+      "version": "1.12.0",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "",
+      "summary": "A fast and thorough lazy object proxy.",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "Markdown": {
+      "version": "3.9",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://Python-Markdown.github.io/",
+      "author": "Manfred Stienstra, Yuri Takhteyev",
+      "summary": "Python implementation of John Gruber's Markdown.",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "mkdocs-autorefs": {
+      "version": "1.4.3",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://mkdocstrings.github.io/autorefs",
+      "author": "",
+      "summary": "Automatically link across pages in MkDocs.",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "mkdocs-material": {
+      "version": "9.6.19",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "",
+      "summary": "Documentation that simply works",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "mkdocstrings": {
+      "version": "0.30.0",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://mkdocstrings.github.io",
+      "author": "",
+      "summary": "Automatic documentation from sources, for MkDocs.",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "mkdocstrings-python": {
+      "version": "1.18.2",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://mkdocstrings.github.io/python",
+      "author": "",
+      "summary": "A Python handler for mkdocstrings.",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "ml_dtypes": {
+      "version": "0.5.3",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/jax-ml/ml_dtypes",
+      "author": "",
+      "summary": "ml_dtypes is a stand-alone implementation of several NumPy dtype extensions used in machine learning.",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "more-itertools": {
+      "version": "10.8.0",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/more-itertools/more-itertools",
+      "author": "",
+      "summary": "More routines for operating on iterables, beyond itertools",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "mypy_extensions": {
+      "version": "1.1.0",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/python/mypy_extensions",
+      "author": "",
+      "summary": "Type system extensions for programs checked with the mypy type checker.",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "opentelemetry-api": {
+      "version": "1.37.0",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/open-telemetry/opentelemetry-python/tree/main/opentelemetry-api",
+      "author": "",
+      "summary": "OpenTelemetry Python API",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "opentelemetry-distro": {
+      "version": "0.58b0",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/open-telemetry/opentelemetry-python-contrib/tree/main/opentelemetry-distro",
+      "author": "",
+      "summary": "OpenTelemetry Python Distro",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "opentelemetry-exporter-otlp-proto-common": {
+      "version": "1.37.0",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/open-telemetry/opentelemetry-python/tree/main/exporter/opentelemetry-exporter-otlp-proto-common",
+      "author": "",
+      "summary": "OpenTelemetry Protobuf encoding",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "opentelemetry-exporter-otlp-proto-http": {
+      "version": "1.37.0",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/open-telemetry/opentelemetry-python/tree/main/exporter/opentelemetry-exporter-otlp-proto-http",
+      "author": "",
+      "summary": "OpenTelemetry Collector Protobuf over HTTP Exporter",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "opentelemetry-instrumentation": {
+      "version": "0.58b0",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/open-telemetry/opentelemetry-python-contrib/tree/main/opentelemetry-instrumentation",
+      "author": "",
+      "summary": "Instrumentation Tools & Auto Instrumentation for OpenTelemetry Python",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "opentelemetry-proto": {
+      "version": "1.37.0",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/open-telemetry/opentelemetry-python/tree/main/opentelemetry-proto",
+      "author": "",
+      "summary": "OpenTelemetry Python Proto",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "opentelemetry-sdk": {
+      "version": "1.37.0",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/open-telemetry/opentelemetry-python/tree/main/opentelemetry-sdk",
+      "author": "",
+      "summary": "OpenTelemetry Python SDK",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "opentelemetry-semantic-conventions": {
+      "version": "0.58b0",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/open-telemetry/opentelemetry-python/tree/main/opentelemetry-semantic-conventions",
+      "author": "",
+      "summary": "OpenTelemetry Semantic Conventions",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "orjson": {
+      "version": "3.11.3",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "",
+      "summary": "Fast, correct Python JSON library supporting dataclasses, datetimes, and numpy",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "pillow": {
+      "version": "11.3.0",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://python-pillow.github.io",
+      "author": "",
+      "summary": "Python Imaging Library (Fork)",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "pip": {
+      "version": "25.2",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://pip.pypa.io/",
+      "author": "",
+      "summary": "The PyPA recommended tool for installing Python packages.",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "platformdirs": {
+      "version": "4.4.0",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/tox-dev/platformdirs",
+      "author": "",
+      "summary": "A small Python package for determining appropriate platform-specific dirs, e.g. a `user data dir`.",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "prettytable": {
+      "version": "3.16.0",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/prettytable/prettytable",
+      "author": "",
+      "summary": "A simple Python library for easily displaying tabular data in a visually appealing ASCII table format",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "pydantic": {
+      "version": "2.11.9",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/pydantic/pydantic",
+      "author": "",
+      "summary": "Data validation using Python type hints",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "pydantic-settings": {
+      "version": "2.10.1",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/pydantic/pydantic-settings",
+      "author": "",
+      "summary": "Settings management using Pydantic",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "pymdown-extensions": {
+      "version": "10.16.1",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/facelessuser/pymdown-extensions",
+      "author": "",
+      "summary": "Extension pack for Python Markdown.",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "pyparsing": {
+      "version": "3.2.4",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/pyparsing/pyparsing/",
+      "author": "",
+      "summary": "pyparsing - Classes and methods to define and execute parsing grammars",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "pytest-asyncio": {
+      "version": "1.2.0",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/pytest-dev/pytest-asyncio",
+      "author": "",
+      "summary": "Pytest support for asyncio",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "python-multipart": {
+      "version": "0.0.20",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/Kludex/python-multipart",
+      "author": "",
+      "summary": "A streaming multipart parser for Python",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "pyyaml_env_tag": {
+      "version": "1.1",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/waylan/pyyaml-env-tag",
+      "author": "",
+      "summary": "A custom YAML tag for referencing environment variables in YAML files.",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "referencing": {
+      "version": "0.36.2",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/python-jsonschema/referencing",
+      "author": "",
+      "summary": "JSON Referencing + Python",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "regex": {
+      "version": "2025.9.1",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/mrabarnett/mrab-regex",
+      "author": "",
+      "summary": "Alternative regular expression module, to replace re.",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "rpds-py": {
+      "version": "0.27.1",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/crate-py/rpds",
+      "author": "",
+      "summary": "Python bindings to Rust's persistent data structures (rpds)",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "rtree": {
+      "version": "1.4.1",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "",
+      "summary": "R-Tree spatial index for Python GIS",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "scikit-learn": {
+      "version": "1.7.2",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://scikit-learn.org",
+      "author": "",
+      "summary": "A set of python modules for machine learning and data mining",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "setuptools": {
+      "version": "80.9.0",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "",
+      "summary": "Easily download, build, install, upgrade, and uninstall Python packages",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "soupsieve": {
+      "version": "2.8",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/facelessuser/soupsieve",
+      "author": "",
+      "summary": "A modern CSS selector implementation for Beautiful Soup.",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "sse-starlette": {
+      "version": "3.0.2",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "",
+      "summary": "SSE plugin for Starlette",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "starlette": {
+      "version": "0.47.3",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/encode/starlette",
+      "author": "",
+      "summary": "The little ASGI library that shines.",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "typing_extensions": {
+      "version": "4.15.0",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "",
+      "summary": "Backported and Experimental Type Hints for Python 3.9+",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "typing-inspection": {
+      "version": "0.4.1",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://github.com/pydantic/typing-inspection",
+      "author": "",
+      "summary": "Runtime typing introspection tools",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "uvicorn": {
+      "version": "0.35.0",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "https://www.uvicorn.org/",
+      "author": "",
+      "summary": "The lightning-fast ASGI server.",
+      "is_problematic": false,
+      "is_permissive": false
+    },
+    "zipp": {
+      "version": "3.23.0",
+      "license": "Unknown",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "",
+      "summary": "Backport of pathlib-compatible object wrapper for zip files",
+      "is_problematic": false,
+      "is_permissive": false
+    }
+  },
+  "permissive_dependencies": {
+    "accelerate": {
+      "version": "1.10.1",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://github.com/huggingface/accelerate",
+      "author": "The HuggingFace team",
+      "summary": "Accelerate",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "aiofiles": {
+      "version": "24.1.0",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "",
+      "summary": "File support for asyncio.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "aiohttp": {
+      "version": "3.12.15",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://github.com/aio-libs/aiohttp",
+      "author": "",
+      "summary": "Async http client/server framework (asyncio)",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "aiosignal": {
+      "version": "1.4.0",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://github.com/aio-libs/aiosignal",
+      "author": "",
+      "summary": "aiosignal: a list of registered asynchronous callbacks",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "anthropic": {
+      "version": "0.67.0",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/anthropics/anthropic-sdk-python",
+      "author": "",
+      "summary": "The official Python library for the anthropic API",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "argcomplete": {
+      "version": "3.5.1",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://github.com/kislyuk/argcomplete",
+      "author": "Andrey Kislyuk",
+      "summary": "Bash tab completion for argparse",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "asyncio-mqtt": {
+      "version": "0.16.2",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "",
+      "summary": "Idiomatic asyncio wrapper around paho-mqtt",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "Authlib": {
+      "version": "1.6.3",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "",
+      "summary": "The ultimate Python library in building OAuth and OpenID Connect servers and clients.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "babel": {
+      "version": "2.17.0",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "https://babel.pocoo.org/",
+      "author": "Armin Ronacher",
+      "summary": "Internationalization utilities",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "basicsr": {
+      "version": "1.4.2",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://github.com/xinntao/BasicSR",
+      "author": "Xintao Wang",
+      "summary": "Open Source Image and Video Super-Resolution Toolbox",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "beautifulsoup4": {
+      "version": "4.13.5",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://www.crummy.com/software/BeautifulSoup/bs4/",
+      "author": "",
+      "summary": "Screen-scraping library",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "Brotli": {
+      "version": "1.1.0",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/google/brotli",
+      "author": "The Brotli Authors",
+      "summary": "Python bindings for the Brotli compression library",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "cachetools": {
+      "version": "6.2.0",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/tkem/cachetools/",
+      "author": "Thomas Kemmer",
+      "summary": "Extensible memoizing collections and decorators",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "charset-normalizer": {
+      "version": "3.4.3",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "",
+      "summary": "The Real First Universal Charset Detector. Open, modern and actively maintained alternative to Chardet.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "contourpy": {
+      "version": "1.3.3",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "https://github.com/contourpy/contourpy",
+      "author": "",
+      "summary": "Python library for calculating contours of 2D quadrilateral grids",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "cryptography": {
+      "version": "44.0.3",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://github.com/pyca/cryptography",
+      "author": "The cryptography developers <cryptography-dev@python.org>",
+      "summary": "cryptography is a package which provides cryptographic recipes and primitives to Python developers.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "curlify": {
+      "version": "2.2.1",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/oeegor/curlify",
+      "author": "Egor Orlov",
+      "summary": "Library to convert python requests object to curl command.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "cyclopts": {
+      "version": "3.24.0",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://github.com/BrianPugh/cyclopts",
+      "author": "Brian Pugh",
+      "summary": "Intuitive, easy CLIs based on type hints.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "deepagents": {
+      "version": "0.0.5",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "",
+      "summary": "General purpose 'deep agent' with sub-agent spawning, todo list capabilities, and mock file system. Built on LangGraph.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "deepmcpagent": {
+      "version": "0.4.0",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://github.com/cryxnet/deepmcpagent",
+      "author": "cryxnet",
+      "summary": "DeepMCPAgent: LangChain/LangGraph agents powered by MCP tools over FastMCP.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "dill": {
+      "version": "0.4.0",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "https://github.com/uqfoundation/dill",
+      "author": "Mike McKerns",
+      "summary": "serialize all of Python",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "distro": {
+      "version": "1.9.0",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://github.com/python-distro/distro",
+      "author": "Nir Cohen",
+      "summary": "Distro - an OS platform information API",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "dnspython": {
+      "version": "2.8.0",
+      "license": "ISC",
+      "license_classifier": [],
+      "home_page": "https://www.dnspython.org",
+      "author": "",
+      "summary": "DNS toolkit",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "docstring_parser": {
+      "version": "0.17.0",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/rr-/docstring_parser",
+      "author": "",
+      "summary": "Parse Python docstrings in reST, Google and Numpydoc format",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "dunamai": {
+      "version": "1.25.0",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/mtkennerly/dunamai",
+      "author": "Matthew T. Kennerly",
+      "summary": "Dynamic version generation",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "easyocr": {
+      "version": "1.7.2",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://github.com/jaidedai/easyocr",
+      "author": "Rakpong Kittinaradorn",
+      "summary": "End-to-End Multi-Lingual Optical Character Recognition (OCR) Solution",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "einops": {
+      "version": "0.8.1",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/arogozhnikov/einops",
+      "author": "Alex Rogozhnikov",
+      "summary": "A new flavour of deep learning operations",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "email-validator": {
+      "version": "2.3.0",
+      "license": "Unlicense",
+      "license_classifier": [],
+      "home_page": "https://github.com/JoshData/python-email-validator",
+      "author": "Joshua Tauberer",
+      "summary": "A robust email address syntax and deliverability validation library.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "et_xmlfile": {
+      "version": "2.0.0",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://foss.heptapod.net/openpyxl/et_xmlfile",
+      "author": "See AUTHORS.txt",
+      "summary": "An implementation of lxml.xmlfile for the standard library",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "facexlib": {
+      "version": "0.3.0",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://github.com/xinntao/facexlib",
+      "author": "Xintao Wang",
+      "summary": "Basic face library",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "Faker": {
+      "version": "37.6.0",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/joke2k/faker",
+      "author": "joke2k",
+      "summary": "Faker is a Python package that generates fake data for you.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "filetype": {
+      "version": "1.2.0",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/h2non/filetype.py",
+      "author": "Tomas Aparicio",
+      "summary": "Infer file type and MIME type of any file/buffer. No external dependencies.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "filterpy": {
+      "version": "1.4.5",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/rlabbe/filterpy",
+      "author": "Roger Labbe",
+      "summary": "Kalman filtering and optimal estimation library",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "flatbuffers": {
+      "version": "25.2.10",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://google.github.io/flatbuffers/",
+      "author": "Derek Bailey",
+      "summary": "The FlatBuffers serialization format for Python",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "fonttools": {
+      "version": "4.59.2",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "http://github.com/fonttools/fonttools",
+      "author": "Just van Rossum",
+      "summary": "Tools to manipulate font files",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "frozenlist": {
+      "version": "1.7.0",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://github.com/aio-libs/frozenlist",
+      "author": "",
+      "summary": "A list-like structure which implements collections.abc.MutableSequence",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "future": {
+      "version": "1.0.0",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://python-future.org",
+      "author": "Ed Schofield",
+      "summary": "Clean single-source support for Python 3 and 2",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "gfpgan": {
+      "version": "1.3.8",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://github.com/TencentARC/GFPGAN",
+      "author": "Xintao Wang",
+      "summary": "GFPGAN aims at developing Practical Algorithms for Real-world Face Restoration",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "ghp-import": {
+      "version": "2.1.0",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://github.com/c-w/ghp-import",
+      "author": "Paul Joseph Davis",
+      "summary": "Copy your docs directly to the gh-pages branch.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "gitdb": {
+      "version": "4.0.12",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "https://github.com/gitpython-developers/gitdb",
+      "author": "Sebastian Thiel",
+      "summary": "Git Object Database",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "GitPython": {
+      "version": "3.1.45",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "https://github.com/gitpython-developers/GitPython",
+      "author": "Sebastian Thiel, Michael Trier",
+      "summary": "GitPython is a Python library used to interact with Git repositories",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "googleapis-common-protos": {
+      "version": "1.70.0",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "",
+      "summary": "Common protobufs used in Google APIs",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "grpcio": {
+      "version": "1.74.0",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://grpc.io",
+      "author": "The gRPC Authors",
+      "summary": "HTTP/2-based RPC framework",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "h11": {
+      "version": "0.16.0",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/python-hyper/h11",
+      "author": "Nathaniel J. Smith",
+      "summary": "A pure-Python, bring-your-own-I/O implementation of HTTP/1.1",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "httpx": {
+      "version": "0.28.1",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "https://github.com/encode/httpx",
+      "author": "",
+      "summary": "The next generation HTTP client.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "httpx-sse": {
+      "version": "0.4.1",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/florimondmanca/httpx-sse",
+      "author": "",
+      "summary": "Consume Server-Sent Event (SSE) messages with HTTPX.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "huggingface-hub": {
+      "version": "0.34.5",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://github.com/huggingface/huggingface_hub",
+      "author": "Hugging Face, Inc.",
+      "summary": "Client library to download and publish models, datasets and other repos on the huggingface.co hub",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "imageio": {
+      "version": "2.37.0",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "https://github.com/imageio/imageio",
+      "author": "imageio contributors",
+      "summary": "Library for reading and writing a wide range of image, video, scientific, and volumetric data formats.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "inquirerpy": {
+      "version": "0.3.4",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/kazhala/InquirerPy",
+      "author": "Kevin Zhuang",
+      "summary": "Python port of Inquirer.js (A collection of common interactive command-line user interfaces)",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "jax": {
+      "version": "0.7.1",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://github.com/jax-ml/jax",
+      "author": "JAX team",
+      "summary": "Differentiate, compile, and transform Numpy code.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "jaxlib": {
+      "version": "0.7.1",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://github.com/jax-ml/jax",
+      "author": "JAX team",
+      "summary": "XLA library for JAX",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "jiter": {
+      "version": "0.10.0",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/pydantic/jiter/",
+      "author": "Samuel Colvin <samuel@pydantic.dev>",
+      "summary": "Fast iterable JSON parser.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "joblib": {
+      "version": "1.5.2",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "https://joblib.readthedocs.io",
+      "author": "",
+      "summary": "Lightweight pipelining with Python functions",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "jsonlines": {
+      "version": "3.1.0",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "https://github.com/wbolster/jsonlines",
+      "author": "wouter bolsterlee",
+      "summary": "Library with helpers for the jsonlines file format",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "jsonpatch": {
+      "version": "1.33",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "https://github.com/stefankoegl/python-json-patch",
+      "author": "Stefan K\u00f6gl",
+      "summary": "Apply JSON-Patches (RFC 6902)",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "jsonpointer": {
+      "version": "3.0.0",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "https://github.com/stefankoegl/python-json-pointer",
+      "author": "Stefan K\u00f6gl",
+      "summary": "Identify specific nodes in a JSON document (RFC 6901)",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "jsonref": {
+      "version": "1.1.0",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "",
+      "summary": "jsonref is a library for automatic dereferencing of JSON Reference objects for Python.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "jsonschema-path": {
+      "version": "0.3.4",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "Artur Maciag",
+      "summary": "JSONSchema Spec with object-oriented paths",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "langchain": {
+      "version": "0.3.27",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "",
+      "summary": "Building applications with LLMs through composability",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "langchain-anthropic": {
+      "version": "0.3.20",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "",
+      "summary": "An integration package connecting Anthropic and LangChain",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "langchain-core": {
+      "version": "0.3.76",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "",
+      "summary": "Building applications with LLMs through composability",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "langchain-openai": {
+      "version": "0.3.33",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "",
+      "summary": "An integration package connecting OpenAI and LangChain",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "langchain-text-splitters": {
+      "version": "0.3.11",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "",
+      "summary": "LangChain text splitting utilities",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "langsmith": {
+      "version": "0.4.27",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://smith.langchain.com/",
+      "author": "",
+      "summary": "Client library to connect to the LangSmith LLM Tracing and Evaluation Platform.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "latex2mathml": {
+      "version": "3.78.1",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "Ronie Martinez",
+      "summary": "Pure Python library for LaTeX to MathML conversion",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "lazy_loader": {
+      "version": "0.4",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "Scientific Python Developers",
+      "summary": "Makes it easy to load subpackages and functions on demand.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "llvmlite": {
+      "version": "0.44.0",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "http://llvmlite.readthedocs.io",
+      "author": "",
+      "summary": "lightweight wrapper around basic LLVM functionality",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "lxml": {
+      "version": "5.4.0",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "https://lxml.de/",
+      "author": "lxml dev team",
+      "summary": "Powerful and Pythonic XML processing library combining libxml2/libxslt with the ElementTree API.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "marko": {
+      "version": "2.2.0",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/frostming/marko",
+      "author": "",
+      "summary": "A markdown parser with high extensibility.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "mcp": {
+      "version": "1.14.0",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://modelcontextprotocol.io",
+      "author": "Anthropic, PBC.",
+      "summary": "Model Context Protocol SDK",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "mcp-agent": {
+      "version": "0.1.20",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "",
+      "summary": "Build effective agents with Model Context Protocol (MCP) using simple, composable patterns.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "mcp-server-git": {
+      "version": "2025.7.1",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "Anthropic, PBC.",
+      "summary": "A Model Context Protocol server providing tools to read, search, and manipulate Git repositories programmatically via LLMs",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "mediapipe": {
+      "version": "0.10.14",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://github.com/google/mediapipe",
+      "author": "The MediaPipe Authors",
+      "summary": "MediaPipe is the simplest way for researchers and developers to build world-class ML solutions and applications for mobile, edge, cloud and the web.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "mpire": {
+      "version": "2.10.2",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/sybrenjansen/mpire",
+      "author": "Sybren Jansen",
+      "summary": "A Python package for easy multiprocessing, but faster than multiprocessing",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "mpmath": {
+      "version": "1.3.0",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "http://mpmath.org/",
+      "author": "Fredrik Johansson",
+      "summary": "Python library for arbitrary-precision floating-point arithmetic",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "multidict": {
+      "version": "6.6.4",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://github.com/aio-libs/multidict",
+      "author": "Andrew Svetlov",
+      "summary": "multidict implementation",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "multiprocess": {
+      "version": "0.70.18",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "https://github.com/uqfoundation/multiprocess",
+      "author": "Mike McKerns",
+      "summary": "better multiprocessing and multithreading in Python",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "mypy": {
+      "version": "1.18.1",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://www.mypy-lang.org/",
+      "author": "",
+      "summary": "Optional static typing for Python",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "nest-asyncio": {
+      "version": "1.6.0",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "https://github.com/erdewit/nest_asyncio",
+      "author": "Ewald R. de Wit",
+      "summary": "Patch asyncio to allow nested event loops",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "numba": {
+      "version": "0.61.2",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "https://numba.pydata.org",
+      "author": "",
+      "summary": "compiling Python code using LLVM",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "openai": {
+      "version": "1.107.2",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://github.com/openai/openai-python",
+      "author": "",
+      "summary": "The official Python library for the openai API",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "openapi-core": {
+      "version": "0.19.5",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "Artur Maciag",
+      "summary": "client-side and server-side support for the OpenAPI Specification v3",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "openapi-pydantic": {
+      "version": "0.5.1",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/mike-oakley/openapi-pydantic",
+      "author": "Mike Oakley",
+      "summary": "Pydantic OpenAPI schema implementation",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "openapi-schema-validator": {
+      "version": "0.6.3",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "https://github.com/python-openapi/openapi-schema-validator",
+      "author": "Artur Maciag",
+      "summary": "OpenAPI schema validation for Python",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "openapi-spec-validator": {
+      "version": "0.7.2",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "Artur Maciag",
+      "summary": "OpenAPI 2.0 (aka Swagger) and OpenAPI 3 spec validator",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "opencv-contrib-python": {
+      "version": "4.11.0.86",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://github.com/opencv/opencv-python",
+      "author": "",
+      "summary": "Wrapper package for OpenCV python bindings.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "opencv-python": {
+      "version": "4.12.0.88",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://github.com/opencv/opencv-python",
+      "author": "",
+      "summary": "Wrapper package for OpenCV python bindings.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "opencv-python-headless": {
+      "version": "4.11.0.86",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://github.com/opencv/opencv-python",
+      "author": "",
+      "summary": "Wrapper package for OpenCV python bindings.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "openpyxl": {
+      "version": "3.1.5",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://openpyxl.readthedocs.io",
+      "author": "See AUTHORS",
+      "summary": "A Python library to read/write Excel 2010 xlsx/xlsm files",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "opentelemetry-instrumentation-anthropic": {
+      "version": "0.47.0",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "Gal Kleinman",
+      "summary": "OpenTelemetry Anthropic instrumentation",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "opentelemetry-instrumentation-openai": {
+      "version": "0.47.0",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "Gal Kleinman",
+      "summary": "OpenTelemetry OpenAI instrumentation",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "opentelemetry-semantic-conventions-ai": {
+      "version": "0.4.13",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "Gal Kleinman",
+      "summary": "OpenTelemetry Semantic Conventions Extension for Large Language Models",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "ormsgpack": {
+      "version": "1.10.0",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://github.com/aviramha/ormsgpack",
+      "author": "Aviram Hassan <aviramyhassan@gmail.com>, Emanuele Giaquinta <emanuele.giaquinta@gmail.com>",
+      "summary": "Fast, correct Python msgpack library supporting dataclasses, datetimes, and numpy",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "paginate": {
+      "version": "0.5.7",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/Signum/paginate",
+      "author": "Christoph Haas",
+      "summary": "Divides large result sets into pages for easier browsing",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "paho-mqtt": {
+      "version": "2.1.0",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "http://eclipse.org/paho",
+      "author": "",
+      "summary": "MQTT version 5.0/3.1.1 client class",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "pathable": {
+      "version": "0.4.4",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://github.com/p1c2u/pathable",
+      "author": "Artur Maciag",
+      "summary": "Object-oriented paths",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "pathlib2": {
+      "version": "2.3.7.post1",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/jazzband/pathlib2",
+      "author": "Matthias C. M. Troffaes",
+      "summary": "Object-oriented filesystem paths",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "pfzy": {
+      "version": "0.3.4",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/kazhala/pfzy",
+      "author": "Kevin Zhuang",
+      "summary": "Python port of the fzy fuzzy string matching algorithm",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "pip-licenses": {
+      "version": "5.0.0",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/raimon49/pip-licenses",
+      "author": "",
+      "summary": "Dump the software license list of Python packages installed with pip.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "pluggy": {
+      "version": "1.6.0",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "",
+      "summary": "plugin and hook calling mechanisms for python",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "poetry-dynamic-versioning": {
+      "version": "1.9.1",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/mtkennerly/poetry-dynamic-versioning",
+      "author": "Matthew T. Kennerly",
+      "summary": "Plugin for Poetry to enable dynamic versioning based on VCS tags",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "polyfactory": {
+      "version": "2.22.2",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/litestar-org/polyfactory",
+      "author": "",
+      "summary": "Mock data generation factories",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "propcache": {
+      "version": "0.3.2",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://github.com/aio-libs/propcache",
+      "author": "Andrew Svetlov",
+      "summary": "Accelerated property cache",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "protobuf": {
+      "version": "4.25.8",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "https://developers.google.com/protocol-buffers/",
+      "author": "protobuf@googlegroups.com",
+      "summary": "",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "psutil": {
+      "version": "5.9.8",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "https://github.com/giampaolo/psutil",
+      "author": "Giampaolo Rodola",
+      "summary": "Cross-platform lib for process and system monitoring in Python.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "pyarrow": {
+      "version": "21.0.0",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://arrow.apache.org/",
+      "author": "",
+      "summary": "Python library for Apache Arrow",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "pyclipper": {
+      "version": "1.3.0.post6",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/greginvm/pyclipper",
+      "author": "Angus Johnson, Maxime Chalton, Lukas Treyer, Gregor Ratajc",
+      "summary": "Cython wrapper for the C++ translation of the Angus Johnson's Clipper library (ver. 6.4.2)",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "pycparser": {
+      "version": "2.23",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "https://github.com/eliben/pycparser",
+      "author": "Eli Bendersky",
+      "summary": "C parser in Python",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "pydantic_core": {
+      "version": "2.33.2",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/pydantic/pydantic-core",
+      "author": "",
+      "summary": "Core functionality for Pydantic validation and serialization",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "pydantic-yaml": {
+      "version": "1.6.0",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "",
+      "summary": "YAML reading/writing for Pydantic models",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "pydeck": {
+      "version": "0.9.1",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://github.com/visgl/deck.gl/tree/master/bindings/pydeck",
+      "author": "Andrew Duberstein",
+      "summary": "Widget for deck.gl maps",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "pydub": {
+      "version": "0.25.1",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "http://pydub.com",
+      "author": "James Robert",
+      "summary": "Manipulate audio with an simple and easy high level interface",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "Pygments": {
+      "version": "2.19.2",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "https://pygments.org",
+      "author": "",
+      "summary": "Pygments is a syntax highlighting package written in Python.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "pylatexenc": {
+      "version": "2.10",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/phfaist/pylatexenc",
+      "author": "Philippe Faist",
+      "summary": "Simple LaTeX parser providing latex-to-unicode and unicode-to-latex conversion",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "pypdfium2": {
+      "version": "4.30.0",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://github.com/pypdfium2-team/pypdfium2",
+      "author": "pypdfium2-team",
+      "summary": "Python bindings to PDFium",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "pyperclip": {
+      "version": "1.9.0",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "https://github.com/asweigart/pyperclip",
+      "author": "Al Sweigart",
+      "summary": "A cross-platform clipboard module for Python. (Only handles plain text for now.)",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "pytest": {
+      "version": "8.4.2",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://docs.pytest.org/en/latest/",
+      "author": "Holger Krekel, Bruno Oliveira, Ronny Pfannschmidt, Floris Bruynooghe, Brianna Laugher, Florian Bruhin, Others (See AUTHORS)",
+      "summary": "pytest: simple powerful testing with Python",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "python-barcode": {
+      "version": "0.16.1",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "",
+      "summary": "Create standard barcodes with Python. No external modules needed. (optional Pillow support included).",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "python-docx": {
+      "version": "1.2.0",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/python-openxml/python-docx",
+      "author": "",
+      "summary": "Create, read, and update Microsoft Word .docx files.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "python-dotenv": {
+      "version": "1.1.1",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "https://github.com/theskumar/python-dotenv",
+      "author": "Saurabh Kumar",
+      "summary": "Read key-value pairs from a .env file and set them as environment variables",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "python-pptx": {
+      "version": "1.0.2",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/scanny/python-pptx",
+      "author": "",
+      "summary": "Create, read, and update PowerPoint 2007+ (.pptx) files.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "pytz": {
+      "version": "2025.2",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "http://pythonhosted.org/pytz",
+      "author": "Stuart Bishop",
+      "summary": "World timezone definitions, modern and historical",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "PyYAML": {
+      "version": "6.0.2",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://pyyaml.org/",
+      "author": "Kirill Simonov",
+      "summary": "YAML parser and emitter for Python",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "qrcode": {
+      "version": "8.2",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "https://github.com/lincolnloop/python-qrcode",
+      "author": "Lincoln Loop",
+      "summary": "QR Code image generator",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "realesrgan": {
+      "version": "0.3.0",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "https://github.com/xinntao/Real-ESRGAN",
+      "author": "Xintao Wang",
+      "summary": "Real-ESRGAN aims at developing Practical Algorithms for General Image Restoration",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "reportlab": {
+      "version": "4.4.3",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "https://www.reportlab.com/",
+      "author": "Andy Robinson, Robin Becker, the ReportLab team and the community",
+      "summary": "The Reportlab Toolkit",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "requests": {
+      "version": "2.32.5",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://requests.readthedocs.io",
+      "author": "Kenneth Reitz",
+      "summary": "Python HTTP for Humans.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "requests-toolbelt": {
+      "version": "1.0.0",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://toolbelt.readthedocs.io/",
+      "author": "Ian Cordasco, Cory Benfield",
+      "summary": "A utility belt for advanced users of python-requests",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "rfc3339-validator": {
+      "version": "0.1.4",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/naimetti/rfc3339-validator",
+      "author": "Nicolas Aimetti",
+      "summary": "A pure python RFC3339 validator",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "rich": {
+      "version": "14.1.0",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/Textualize/rich",
+      "author": "Will McGugan",
+      "summary": "Render rich text, tables, progress bars, syntax highlighting, markdown and more to the terminal",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "rich-rst": {
+      "version": "1.3.1",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://wasi-master.github.io/rich-rst",
+      "author": "Wasi Master",
+      "summary": "A beautiful reStructuredText renderer for rich",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "ruamel.yaml": {
+      "version": "0.18.15",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "Anthon van der Neut",
+      "summary": "ruamel.yaml is a YAML parser/emitter that supports roundtrip preservation of comments, seq/map flow style, and map key order",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "ruamel.yaml.clib": {
+      "version": "0.2.12",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "Anthon van der Neut",
+      "summary": "C version of reader, parser and emitter for ruamel.yaml derived from libyaml",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "scikit-image": {
+      "version": "0.25.2",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://scikit-image.org",
+      "author": "",
+      "summary": "Image processing in Python",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "semantic-version": {
+      "version": "2.10.0",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "https://github.com/rbarrois/python-semanticversion",
+      "author": "Rapha\u00ebl Barrois",
+      "summary": "A library implementing the 'SemVer' scheme.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "semchunk": {
+      "version": "2.2.2",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/umarbutler/semchunk",
+      "author": "",
+      "summary": "A fast and lightweight Python library for splitting text into semantically meaningful chunks.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "shapely": {
+      "version": "2.1.1",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "Sean Gillies",
+      "summary": "Manipulation and analysis of geometric objects",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "six": {
+      "version": "1.17.0",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/benjaminp/six",
+      "author": "Benjamin Peterson",
+      "summary": "Python 2 and 3 compatibility utilities",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "smmap": {
+      "version": "5.0.2",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "https://github.com/gitpython-developers/smmap",
+      "author": "Sebastian Thiel",
+      "summary": "A pure Python implementation of a sliding window memory map manager",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "sniffio": {
+      "version": "1.3.1",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://github.com/python-trio/sniffio",
+      "author": "",
+      "summary": "Sniff out which async library your code is running under",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "sounddevice": {
+      "version": "0.5.2",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "http://python-sounddevice.readthedocs.io/",
+      "author": "Matthias Geier",
+      "summary": "Play and Record Sound with Python",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "spaces": {
+      "version": "0.40.3",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://huggingface.co",
+      "author": "Charles Bensimon",
+      "summary": "Utilities for Hugging Face Spaces",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "SQLAlchemy": {
+      "version": "2.0.43",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://www.sqlalchemy.org",
+      "author": "Mike Bayer",
+      "summary": "Database Abstraction Library",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "streamlit": {
+      "version": "1.49.1",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://streamlit.io",
+      "author": "Snowflake Inc",
+      "summary": "A faster way to build and share data apps",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "sympy": {
+      "version": "1.14.0",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "https://sympy.org",
+      "author": "SymPy development team",
+      "summary": "Computer algebra system (CAS) in Python",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "tabulate": {
+      "version": "0.9.0",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/astanin/python-tabulate",
+      "author": "",
+      "summary": "Pretty-print tabular data",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "tb-nightly": {
+      "version": "2.21.0a20250914",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://github.com/tensorflow/tensorboard",
+      "author": "Google Inc.",
+      "summary": "TensorBoard lets you watch Tensors Flow",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "tenacity": {
+      "version": "9.1.2",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://github.com/jd/tenacity",
+      "author": "Julien Danjou",
+      "summary": "Retry code until it succeeds",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "tensorboard-data-server": {
+      "version": "0.7.2",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://github.com/tensorflow/tensorboard/tree/master/tensorboard/data/server",
+      "author": "Google Inc.",
+      "summary": "Fast data loading for TensorBoard",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "threadpoolctl": {
+      "version": "3.6.0",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "https://github.com/joblib/threadpoolctl",
+      "author": "Thomas Moreau",
+      "summary": "threadpoolctl",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "tifffile": {
+      "version": "2025.9.9",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "https://www.cgohlke.com",
+      "author": "Christoph Gohlke",
+      "summary": "Read and write TIFF files",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "tiktoken": {
+      "version": "0.11.0",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/openai/tiktoken",
+      "author": "Shantanu Jain",
+      "summary": "tiktoken is a fast BPE tokeniser for use with OpenAI's models",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "toml": {
+      "version": "0.10.2",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/uiri/toml",
+      "author": "William Pearson",
+      "summary": "Python Library for Tom's Obvious, Minimal Language",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "tomli": {
+      "version": "2.2.1",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/hukkin/tomli",
+      "author": "",
+      "summary": "A lil' TOML parser",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "tomlkit": {
+      "version": "0.13.3",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/sdispater/tomlkit",
+      "author": "S\u00e9bastien Eustace",
+      "summary": "Style preserving TOML library",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "torch": {
+      "version": "2.8.0",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "https://pytorch.org/",
+      "author": "PyTorch Team",
+      "summary": "Tensors and Dynamic neural networks in Python with strong GPU acceleration",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "torchvision": {
+      "version": "0.23.0",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "https://github.com/pytorch/vision",
+      "author": "PyTorch Core Team",
+      "summary": "image and video datasets and models for torch deep learning",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "tornado": {
+      "version": "6.5.2",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "http://www.tornadoweb.org/",
+      "author": "Facebook",
+      "summary": "Tornado is a Python web framework and asynchronous networking library, originally developed at FriendFeed.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "transformers": {
+      "version": "4.56.1",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://github.com/huggingface/transformers",
+      "author": "The Hugging Face team (past and future) with the help of all our contributors (https://github.com/huggingface/transformers/graphs/contributors)",
+      "summary": "State-of-the-art Machine Learning for JAX, PyTorch and TensorFlow",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "tzdata": {
+      "version": "2025.2",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://github.com/python/tzdata",
+      "author": "Python Software Foundation",
+      "summary": "Provider of IANA time zone data",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "vastai": {
+      "version": "0.3.1",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://cloud.vast.ai/",
+      "author": "jake cannell",
+      "summary": "",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "watchdog": {
+      "version": "6.0.0",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://github.com/gorakhargosh/watchdog",
+      "author": "Micka\u00ebl Schoentgen",
+      "summary": "Filesystem events monitoring",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "wcwidth": {
+      "version": "0.2.13",
+      "license": "MIT",
+      "license_classifier": [],
+      "home_page": "https://github.com/jquast/wcwidth",
+      "author": "Jeff Quast",
+      "summary": "Measures the displayed width of unicode strings in a terminal",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "websockets": {
+      "version": "15.0.1",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "https://github.com/python-websockets/websockets",
+      "author": "",
+      "summary": "An implementation of the WebSocket Protocol (RFC 6455 & 7692)",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "wrapt": {
+      "version": "1.17.3",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "https://github.com/GrahamDumpleton/wrapt",
+      "author": "Graham Dumpleton",
+      "summary": "Module for decorators, wrappers and monkey patching.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "xdg": {
+      "version": "6.0.0",
+      "license": "ISC",
+      "license_classifier": [],
+      "home_page": "https://github.com/srstevenson/xdg-base-dirs",
+      "author": "Scott Stevenson",
+      "summary": "Variables defined by the XDG Base Directory Specification",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "xlsxwriter": {
+      "version": "3.2.6",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "https://github.com/jmcnamara/XlsxWriter",
+      "author": "John McNamara",
+      "summary": "A Python module for creating Excel XLSX files.",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "xxhash": {
+      "version": "3.5.0",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "https://github.com/ifduyue/python-xxhash",
+      "author": "Yue Du",
+      "summary": "Python binding for xxHash",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "yapf": {
+      "version": "0.43.0",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "",
+      "author": "Google Inc.",
+      "summary": "A formatter for Python code",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "yarl": {
+      "version": "1.20.1",
+      "license": "Apache-2.0",
+      "license_classifier": [],
+      "home_page": "https://github.com/aio-libs/yarl",
+      "author": "Andrew Svetlov",
+      "summary": "Yet another URL library",
+      "is_problematic": false,
+      "is_permissive": true
+    },
+    "zstandard": {
+      "version": "0.24.0",
+      "license": "BSD-3-Clause",
+      "license_classifier": [],
+      "home_page": "https://github.com/indygreg/python-zstandard",
+      "author": "",
+      "summary": "Zstandard bindings for Python",
+      "is_problematic": false,
+      "is_permissive": true
+    }
+  },
+  "file_licenses": {
+    "scripts/license_audit.py": [
+      "Apache-2.0",
+      "GPL-3.0",
+      "GPL-2.0"
+    ],
+    "LICENSES.md": [
+      "Apache-2.0"
+    ],
+    "models/weights/SeedVR2-3B/README.md": [
+      "Apache-2.0"
+    ],
+    "models/interpolation/RIFE/LICENSE": [
+      "MIT"
+    ]
+  },
+  "requirements_files": {
+    "requirements.txt": [
+      "spaces",
+      "gradio",
+      "torch",
+      "torchvision",
+      "numpy",
+      "scipy",
+      "pillow",
+      "opencv-python-headless",
+      "imageio",
+      "imageio-ffmpeg",
+      "tqdm",
+      "safetensors",
+      "transformers",
+      "diffusers",
+      "realesrgan",
+      "requests",
+      "psutil",
+      "scikit-image",
+      "fastapi",
+      "uvicorn"
+    ],
+    "requirements-minimal.txt": [
+      "numpy",
+      "pillow",
+      "opencv-python-headless",
+      "requests",
+      "torch",
+      "torchvision",
+      "transformers",
+      "mamba-ssm",
+      "causal-conv1d",
+      "diffusers",
+      "einops",
+      "timm",
+      "safetensors",
+      "gradio",
+      "pydantic",
+      "tqdm",
+      "pyyaml",
+      "psutil",
+      "lpips",
+      "torchmetrics",
+      "imageio",
+      "imageio-ffmpeg",
+      "scikit-image",
+      "scikit-learn"
+    ]
+  },
+  "compliance_status": "PASS",
+  "recommendations": [
+    "\u2753 69 dependencies have unknown licenses. Manual review required to determine compliance.",
+    "\ud83d\udccb Consider adding license headers to project source files",
+    "\ud83d\udcc4 Create/update LICENSES.md with all dependency licenses",
+    "\ud83d\udd04 Set up automated license scanning in CI/CD pipeline",
+    "\ud83d\udcdd Document license policy and compliance procedures"
+  ]
+}

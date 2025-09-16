@@ -6,12 +6,38 @@ based on detected degradations like compression artifacts, motion blur, low ligh
 noise levels, and face prominence.
 """
 
+"""
+MIT License
+
+Copyright (c) 2024 Video Enhancement Project
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+"""
+
+
 import torch
 import cv2
 import numpy as np
 from typing import Dict, List, Tuple
 import logging
 from pathlib import Path
+from utils.performance_monitor import get_performance_tracker
 
 logger = logging.getLogger(__name__)
 
@@ -103,49 +129,71 @@ class DegradationRouter:
         Returns:
             Dict containing degradation analysis, content analysis, and expert routing plan
         """
-        logger.info(f"🎬 Analyzing video for expert routing: {Path(video_path).name}")
+        tracker = get_performance_tracker()
+        operation_id = tracker.start_operation('analysis', 'degradation_router', {
+            'video_path': video_path,
+            'latency_class': latency_class
+        })
         
-        # Sample frames for analysis
-        frames = self._sample_frames(video_path, num_samples=12)
-        
-        if not frames:
-            logger.error("❌ Failed to sample frames from video")
-            return self._get_fallback_routing()
-        
-        # Detect degradation types
-        logger.info("🔍 Detecting video degradations...")
-        degradations = self._detect_degradations(frames)
-        
-        # Analyze content characteristics
-        logger.info("📊 Analyzing content characteristics...")
-        content_analysis = self._analyze_content(frames)
-        
-        # Create routing plan
-        logger.info("🗺️ Creating expert routing plan...")
-        routing_plan = self._create_routing_plan(
-            degradations, content_analysis,
-            latency_class=latency_class,
-            allow_diffusion=allow_diffusion,
-            allow_zero_shot=allow_zero_shot,
-            license_mode=license_mode,
-            enable_face_expert=enable_face_expert,
-            enable_hfr=enable_hfr
-        )
-        
-        # Determine optimal processing order
-        processing_order = self._determine_processing_order(routing_plan)
-        
-        result = {
-            'degradations': degradations,
-            'content_analysis': content_analysis,
-            'expert_routing': routing_plan,
-            'processing_order': processing_order,
-            'confidence_score': self._calculate_routing_confidence(degradations, content_analysis)
-        }
-        
-        self._log_routing_decision(result)
-        
-        return result
+        try:
+            logger.info(f"🎬 Analyzing video for expert routing: {Path(video_path).name}")
+            
+            # Sample frames for analysis
+            frames = self._sample_frames(video_path, num_samples=12)
+            
+            if not frames:
+                logger.error("❌ Failed to sample frames from video")
+                return self._get_fallback_routing()
+            
+            # Detect degradation types
+            logger.info("🔍 Detecting video degradations...")
+            degradations = self._detect_degradations(frames)
+            
+            # Analyze content characteristics
+            logger.info("📊 Analyzing content characteristics...")
+            content_analysis = self._analyze_content(frames)
+            
+            # Create routing plan
+            logger.info("🗺️ Creating expert routing plan...")
+            routing_plan = self._create_routing_plan(
+                degradations, content_analysis,
+                latency_class=latency_class,
+                allow_diffusion=allow_diffusion,
+                allow_zero_shot=allow_zero_shot,
+                license_mode=license_mode,
+                enable_face_expert=enable_face_expert,
+                enable_hfr=enable_hfr
+            )
+            
+            # Determine optimal processing order
+            processing_order = self._determine_processing_order(routing_plan)
+            
+            result = {
+                'degradations': degradations,
+                'content_analysis': content_analysis,
+                'expert_routing': routing_plan,
+                'processing_order': processing_order,
+                'confidence_score': self._calculate_routing_confidence(degradations, content_analysis)
+            }
+            
+            self._log_routing_decision(result)
+            
+            # Update performance tracking
+            tracker.update_operation(operation_id, 
+                frames_processed=len(frames),
+                quality_score=result['confidence_score']
+            )
+            tracker.finish_operation(operation_id, success=True)
+            
+            return result
+            
+        except Exception as e:
+            tracker.finish_operation(operation_id, success=False, error_message=str(e))
+            raise
+    
+    def _detect_degradations(self, frames: List[np.ndarray]) -> Dict[str, float]:
+        """Detect and quantify video degradations"""
+        degradations = {
             'compression_artifacts': 0.0,
             'motion_blur': 0.0,
             'low_light': 0.0,

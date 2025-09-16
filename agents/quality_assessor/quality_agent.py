@@ -8,6 +8,31 @@ This agent is responsible for:
 4. Providing quality reports and feedback
 """
 
+"""
+MIT License
+
+Copyright (c) 2024 Video Enhancement Project
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+"""
+
+
 import asyncio
 import logging
 import time
@@ -360,6 +385,34 @@ class QualityAssessmentAgent(AgentBase):
         except Exception as e:
             logger.error(f"LPIPS computation failed: {e}")
             return 0.5  # Return neutral score on error
+    
+    async def _compute_lpips_variance(self, frames: List[np.ndarray]) -> float:
+        """Compute the variance of LPIPS scores between consecutive frames."""
+        if len(frames) < 2:
+            return 0.0
+
+        try:
+            lpips_scores = []
+            for i in range(len(frames) - 1):
+                frame1 = torch.from_numpy(frames[i]).permute(2, 0, 1).float() / 255.0
+                frame2 = torch.from_numpy(frames[i+1]).permute(2, 0, 1).float() / 255.0
+
+                frame1 = F.interpolate(frame1.unsqueeze(0), size=(224, 224), mode='bilinear').to(self.device)
+                frame2 = F.interpolate(frame2.unsqueeze(0), size=(224, 224), mode='bilinear').to(self.device)
+
+                frame1 = self.vgg_normalize(frame1)
+                frame2 = self.vgg_normalize(frame2)
+
+                with torch.no_grad():
+                    features1 = self.perceptual_model(frame1)
+                    features2 = self.perceptual_model(frame2)
+                    lpips_score = F.mse_loss(features1, features2).cpu().item()
+                    lpips_scores.append(lpips_score)
+            
+            return np.var(lpips_scores)
+        except Exception as e:
+            logger.error(f"LPIPS variance computation failed: {e}")
+            return 0.1  # Return neutral score on error
     
     async def _compute_perceptual_loss(self, original_frames: List[np.ndarray], 
                                      enhanced_frames: List[np.ndarray]) -> float:

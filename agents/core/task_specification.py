@@ -1,6 +1,31 @@
 """
 Task Specification module for defining video processing tasks and requirements.
 """
+
+"""
+MIT License
+
+Copyright (c) 2024 Video Enhancement Project
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+"""
+
 from dataclasses import dataclass
 from typing import Dict, Any, List, Optional, Tuple
 from enum import Enum
@@ -67,19 +92,17 @@ class ProcessingConstraints:
 class TaskSpecification:
     """Complete specification for a video processing task."""
     
-    # Core task definition
+    # Required fields first
     task_id: str
     task_type: TaskType
-    priority: Priority = Priority.NORMAL
-    quality: Quality = Quality.BALANCED
-    
-    # Input/Output specifications  
     input_path: str
     output_path: str
     video_specs: VideoSpecs
-    
-    # Processing configuration
     processing_constraints: ProcessingConstraints
+    
+    # Optional fields with defaults
+    priority: Priority = Priority.NORMAL
+    quality: Quality = Quality.BALANCED
     model_preferences: Dict[str, Any] = None
     preprocessing_steps: List[str] = None
     postprocessing_steps: List[str] = None

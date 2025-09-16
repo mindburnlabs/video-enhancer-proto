@@ -1,12 +1,79 @@
 """
 Model configuration and paths for 2025 SOTA video enhancer
 """
+
+"""
+MIT License
+
+Copyright (c) 2024 Video Enhancement Project
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+"""
+
 import os
+import json
+import hashlib
+
+class ModelRegistry:
+    """Manages model registry, signatures, and validation."""
+
+    def __init__(self, registry_path="config/model_registry.json"):
+        self.registry_path = registry_path
+        self.registry = self._load_registry()
+
+    def _load_registry(self):
+        if os.path.exists(self.registry_path):
+            with open(self.registry_path, "r") as f:
+                return json.load(f)
+        return {"models": {}}
+
+    def _save_registry(self):
+        with open(self.registry_path, "w") as f:
+            json.dump(self.registry, f, indent=4)
+
+    def add_model(self, model_id, path, signature):
+        self.registry["models"][model_id] = {"path": path, "signature": signature}
+        self._save_registry()
+
+    def get_model_info(self, model_id):
+        return self.registry["models"].get(model_id)
+
+    def validate_model(self, model_id):
+        model_info = self.get_model_info(model_id)
+        if not model_info:
+            return False, "Model not found in registry"
+
+        if not os.path.exists(model_info["path"]):
+            return False, "Model file not found"
+
+        with open(model_info["path"], "rb") as f:
+            file_hash = hashlib.sha256(f.read()).hexdigest()
+
+        if file_hash != model_info["signature"]:
+            return False, "Invalid model signature"
+
+        return True, "Model validated successfully"
 
 class ModelConfig:
     """Configuration class for SOTA model paths and settings"""
     
-    # Base paths
+        self.model_registry = ModelRegistry()
     BASE_MODEL_PATH = os.getenv('BASE_MODEL_PATH', '/app/models')
     CACHE_PATH = os.getenv('HUGGINGFACE_HUB_CACHE', '/app/cache')
     
@@ -50,37 +117,10 @@ class ModelConfig:
     
     @classmethod
     def get_model_status(cls):
-        """Check which SOTA models are available"""
-        status = {
-            # ASR Models
-            'faster_whisper': True,  # Always available via pip
-            
-            # 2025 SOTA Models
-            'vsrm': os.path.exists(cls.VSRM_CKPT),
-            'seedvr2': os.path.exists(cls.SEEDVR2_CKPT),
-            'ditvr': os.path.exists(cls.DITVR_CKPT),
-            'fast_mamba_vsr': os.path.exists(cls.FAST_MAMBA_VSR_CKPT),
-            
-            # Fallback Models
-            'rvrt': os.path.exists(cls.RVRT_MODEL_PATH),
-            'enhanced_rife': os.path.exists(cls.ENHANCED_RIFE_MODEL_PATH),
-            'reframing': True,  # YOLO models are downloaded automatically
-            
-            'device': cls.DEVICE,
-            'pipeline_defaults': cls.PIPELINE_DEFAULTS,
-            'face_restoration_backend': cls.FACE_RESTORATION_BACKEND,
-            
-            'paths': {
-                'vsrm': cls.VSRM_CKPT,
-                'seedvr2': cls.SEEDVR2_CKPT,
-                'ditvr': cls.DITVR_CKPT,
-                'fast_mamba_vsr': cls.FAST_MAMBA_VSR_CKPT,
-                'rvrt': cls.RVRT_MODEL_PATH,
-                'enhanced_rife': cls.ENHANCED_RIFE_MODEL_PATH,
-                'yolo': cls.YOLO_MODEL_PATH,
-                'cache': cls.CACHE_PATH
-            }
-        }
+        status = {}
+        for model_id, model_info in cls.model_registry.registry["models"].items():
+            is_valid, reason = cls.model_registry.validate_model(model_id)
+            status[model_id] = {"path": model_info["path"], "valid": is_valid, "reason": reason}
         return status
     
     @classmethod

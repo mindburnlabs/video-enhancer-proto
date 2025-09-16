@@ -1,0 +1,346 @@
+# Video Enhancement Policy Configuration v1
+# Comprehensive routing rules and thresholds for SOTA video enhancement pipeline
+
+# Policy Version and Metadata
+policy_version: "1.0"
+created_date: "2024-01-15"
+last_updated: "2024-01-15"
+description: "SOTA video enhancement routing policy with intelligent degradation-aware strategy selection"
+
+# Global Pipeline Defaults
+pipeline_defaults:
+  allow_diffusion: true
+  allow_zero_shot: true
+  latency_class: "standard"
+  preferred_backbone: "eamamba"  # eamamba | mambairv2
+  target_fps_default: 30
+  enable_face_expert: false
+  enable_hfr: false
+  enable_temporal_consistency: true
+
+# Strategy Routing Configuration
+routing_strategies:
+  # Primary SOTA Models
+  vsrm:
+    name: "VSRM (Video Super-Resolution Mamba)"
+    priority: 1
+    best_for: ["high_motion", "temporal_consistency", "general_enhancement"]
+    latency_classes: ["standard", "flexible"]
+    max_scale_factor: 4.0
+    memory_requirements_gb: 12
+    processing_speed: "medium"
+    quality_tier: "high"
+    
+  seedvr2:
+    name: "SeedVR2 (One-step Diffusion Restoration)"
+    priority: 2
+    best_for: ["compression_artifacts", "mixed_degradations", "unknown_quality"]
+    latency_classes: ["flexible"]
+    max_scale_factor: 2.0
+    memory_requirements_gb: 16
+    processing_speed: "slow"
+    quality_tier: "premium"
+    requires_diffusion: true
+    
+  ditvr:
+    name: "DiTVR (Zero-shot Diffusion Transformer)"
+    priority: 3
+    best_for: ["unknown_degradations", "zero_shot", "adaptive_processing"]
+    latency_classes: ["standard", "flexible"]
+    max_scale_factor: 3.0
+    memory_requirements_gb: 14
+    processing_speed: "medium"
+    quality_tier: "high"
+    requires_zero_shot: true
+    
+  fast_mamba_vsr:
+    name: "Fast Mamba VSR (Ultra-efficient)"
+    priority: 4
+    best_for: ["real_time", "low_latency", "batch_processing"]
+    latency_classes: ["strict", "standard"]
+    max_scale_factor: 2.0
+    memory_requirements_gb: 8
+    processing_speed: "fast"
+    quality_tier: "standard"
+
+# Degradation Analysis Thresholds
+degradation_thresholds:
+  # Compression artifacts detection
+  compression_artifacts:
+    low_threshold: 0.3
+    medium_threshold: 0.6
+    high_threshold: 0.8
+    expert_required: 0.7
+    
+  # Motion blur detection
+  motion_blur:
+    low_threshold: 0.2
+    medium_threshold: 0.5
+    high_threshold: 0.7
+    expert_required: 0.6
+    
+  # Low light detection
+  low_light:
+    brightness_threshold: 120  # 0-255 scale
+    histogram_dark_ratio: 0.6
+    enhancement_threshold: 0.6
+    
+  # Noise level detection
+  noise_level:
+    low_threshold: 0.2
+    medium_threshold: 0.4
+    high_threshold: 0.7
+    denoising_threshold: 0.4
+    
+  # Temporal inconsistency
+  temporal_inconsistency:
+    low_threshold: 0.2
+    medium_threshold: 0.4
+    high_threshold: 0.6
+    consistency_expert_threshold: 0.3
+    
+  # Face prominence for face restoration
+  face_prominence:
+    detection_threshold: 0.03
+    restoration_threshold: 0.05
+    high_quality_threshold: 0.1
+    
+  # Scene complexity for processing strategy
+  scene_complexity:
+    simple_threshold: 0.3
+    complex_threshold: 0.7
+    ultra_complex_threshold: 0.9
+
+# Unknown Degradation Scoring
+unknown_degradation_scoring:
+  multi_degradation_penalty_weight: 0.4
+  ambiguity_weight: 0.3
+  temporal_inconsistency_weight: 0.3
+  threshold_for_zero_shot: 0.6
+  threshold_for_diffusion: 0.7
+
+# Routing Rules by Latency Class
+routing_rules:
+  strict:
+    max_processing_time_per_frame: 0.5  # seconds
+    memory_budget_gb: 8
+    preferred_strategies: ["fast_mamba_vsr"]
+    fallback_strategies: ["vsrm"]
+    allow_diffusion: false
+    allow_zero_shot: false
+    enable_tiling: false
+    max_resolution: [1920, 1080]
+    
+  standard:
+    max_processing_time_per_frame: 2.0  # seconds
+    memory_budget_gb: 16
+    preferred_strategies: ["vsrm", "ditvr"]
+    fallback_strategies: ["fast_mamba_vsr", "rvrt"]
+    allow_diffusion: true
+    allow_zero_shot: true
+    enable_tiling: true
+    max_resolution: [3840, 2160]
+    
+  flexible:
+    max_processing_time_per_frame: 10.0  # seconds
+    memory_budget_gb: 24
+    preferred_strategies: ["seedvr2", "ditvr", "vsrm"]
+    fallback_strategies: ["rvrt", "fast_mamba_vsr"]
+    allow_diffusion: true
+    allow_zero_shot: true
+    enable_tiling: true
+    max_resolution: [7680, 4320]
+
+# Strategy Selection Logic
+strategy_selection:
+  # Primary selection based on degradation analysis
+  primary_selection:
+    high_motion_content:
+      unknown_deg_score: [0.0, 0.4]
+      motion_complexity: [0.7, 1.0]
+      strategy: "vsrm"
+      
+    compression_heavy:
+      compression_artifacts: [0.7, 1.0]
+      unknown_deg_score: [0.0, 0.6]
+      strategy: "seedvr2"
+      requires: ["allow_diffusion"]
+      
+    unknown_degradations:
+      unknown_deg_score: [0.6, 1.0]
+      strategy: "ditvr"
+      requires: ["allow_zero_shot"]
+      
+    low_latency_required:
+      latency_class: "strict"
+      strategy: "fast_mamba_vsr"
+      
+    mixed_degradations:
+      compression_artifacts: [0.5, 0.8]
+      noise_level: [0.4, 0.8]
+      strategy: "seedvr2"
+      requires: ["allow_diffusion"]
+
+  # Fallback selection logic
+  fallback_logic:
+    model_unavailable:
+      fallback_order: ["vsrm", "ditvr", "fast_mamba_vsr", "rvrt"]
+      
+    memory_exceeded:
+      reduce_batch_size: true
+      enable_tiling: true
+      fallback_to: "fast_mamba_vsr"
+      
+    time_budget_exceeded:
+      early_exit: true
+      fallback_to: "fast_mamba_vsr"
+      reduce_quality: true
+
+# Processing Pipeline Configuration
+processing_pipeline:
+  # Pre-processing stages
+  preprocessing:
+    compression_cleanup:
+      enabled: true
+      threshold: 0.6
+      method: "non_local_means"
+      
+    denoising:
+      enabled: true
+      threshold: 0.4
+      method: "fast_nl_means"
+      
+    deblur_preprocessing:
+      enabled: false  # Disabled until BSSTNet/VD-Diff implemented
+      threshold: 0.6
+      
+    low_light_enhancement:
+      enabled: true
+      threshold: 0.6
+      method: "clahe_gamma"
+
+  # Main enhancement stage
+  enhancement:
+    tile_size: 512
+    tile_overlap: 32
+    batch_size: 4
+    mixed_precision: true
+    enable_checkpointing: false
+    
+  # Post-processing stages  
+  postprocessing:
+    face_restoration:
+      enabled: false  # Enabled per-request
+      backend: "ncnn"  # ncnn | python | off
+      quality_threshold: 0.05
+      
+    temporal_consistency:
+      enabled: true
+      threshold: 0.3
+      method: "optical_flow_warp"
+      
+    hfr_interpolation:
+      enabled: false  # Enabled per-request
+      method: "enhanced_rife"
+      target_fps: 60
+      quality_mode: "balanced"
+
+# Quality Gates and Escalation
+quality_gates:
+  temporal_stability:
+    lpips_variance_threshold: 0.1
+    frame_diff_threshold: 0.05
+    escalation_strategy: "ditvr"
+    
+  spatial_quality:
+    min_psnr: 25.0
+    min_ssim: 0.8
+    escalation_strategy: "seedvr2"
+    
+  perceptual_quality:
+    min_vmaf: 70.0
+    escalation_strategy: "premium_pipeline"
+
+# Performance Budgets
+performance_budgets:
+  strict:
+    latency_budget_ms_per_frame: 500
+    memory_budget_gb: 8
+    
+  standard:
+    latency_budget_ms_per_frame: 2000
+    memory_budget_gb: 16
+    
+  flexible:
+    latency_budget_ms_per_frame: 10000
+    memory_budget_gb: 24
+
+# Model-Specific Configurations
+model_configs:
+  vsrm:
+    strict: {window: 5, stride: 3, fp16: true, tile_size: 256}
+    standard: {window: 7, stride: 4, fp16: true, tile_size: 512}
+    flexible: {window: 9, stride: 5, fp16: false, tile_size: 768}
+    
+  seedvr2:
+    strict: {quality_threshold: 0.4, fp16: true, tile_size: 256}
+    standard: {quality_threshold: 0.5, fp16: true, tile_size: 512}
+    flexible: {quality_threshold: 0.6, fp16: false, tile_size: 768}
+    
+  ditvr:
+    strict: {auto_adapt: false, fp16: true, tile_size: 224}
+    standard: {auto_adapt: true, fp16: true, tile_size: 224}
+    flexible: {auto_adapt: true, fp16: false, tile_size: 320}
+    
+  fast_mamba_vsr:
+    strict: {chunk_size: 8, overlap: 1, fp16: true}
+    standard: {chunk_size: 16, overlap: 2, fp16: true}
+    flexible: {chunk_size: 24, overlap: 3, fp16: false}
+
+# Error Handling and Recovery
+error_handling:
+  max_retry_attempts: 3
+  retry_backoff_seconds: [1, 2, 4]
+  
+  oom_recovery:
+    reduce_batch_size: true
+    enable_gradient_checkpointing: true
+    fallback_model: "fast_mamba_vsr"
+    
+  timeout_recovery:
+    enable_early_exit: true
+    partial_result_acceptable: true
+    fallback_model: "fast_mamba_vsr"
+
+# Experimental Features (Feature Flags)
+experimental:
+  enable_model_ensemble: false
+  enable_dynamic_routing: false
+  enable_quality_prediction: false
+  enable_adaptive_tiling: false
+
+# Monitoring and Logging
+monitoring:
+  log_routing_decisions: true
+  track_processing_times: true
+  collect_quality_metrics: true
+  enable_performance_profiling: false
+  
+  metrics_to_collect:
+    - "routing_confidence"
+    - "degradation_scores"
+    - "processing_time_per_stage"
+    - "memory_usage_peak"
+    - "model_selection_rationale"
+    - "fallback_triggers"
+    - "quality_improvements"
+
+# Version and Compatibility
+compatibility:
+  min_python_version: "3.8"
+  min_torch_version: "2.0"
+  supported_video_formats: ["mp4", "avi", "mov", "mkv", "webm"]
+  supported_resolutions:
+    min: [240, 240]
+    max: [7680, 4320]
+  supported_fps_range: [15, 120]

@@ -21,28 +21,129 @@ tags:
   - zerogpu
   - gpu-accelerated
 ---
-# 🏆 SOTA Video Enhancer - AI-Powered Video Enhancement
+# 🏆 SOTA Video Enhancer - Next-Generation AI Video Enhancement
 
-## 🚀 **PRODUCTION-READY VIDEO ENHANCEMENT WITH NEURAL NETWORKS**
+## 🚀 **ENTERPRISE-GRADE VIDEO ENHANCEMENT PLATFORM**
 
-This repository contains a complete, production-ready video enhancement pipeline powered by PyTorch neural networks with robust CPU fallbacks and professional-grade monitoring.
+Complete, production-ready video enhancement ecosystem powered by state-of-the-art AI models with comprehensive API, intelligent storage management, and enterprise monitoring.
 
-### ✨ **KEY FEATURES**
+### ✨ **PLATFORM FEATURES**
 
 | Feature | Description | Status |
 |---------|-------------|---------|
-| **Neural Enhancement** | PyTorch-based video upscaling | ✅ Active |
-| **CPU Compatibility** | Runs on any hardware | ✅ Active |
-| **Gradio Interface** | Professional web UI | ✅ Active |
-| **Health Monitoring** | Production-grade endpoints | ✅ Active |
-| **Graceful Fallbacks** | Robust error handling | ✅ Active |
-| **Docker Ready** | Containerized deployment | ✅ Active |
-| **Open Source** | MIT licensed | ✅ Active |
-| **HF Spaces** | One-click deployment | ✅ Active |
+| **🤖 SOTA AI Models** | VSRM, SeedVR2, DiTVR, FastMamba VSR | ✅ Active |
+| **📡 REST API** | Full OpenAPI with job management | ✅ Active |
+| **🎯 Smart Routing** | AI-powered degradation analysis & model selection | ✅ Active |
+| **💾 Storage Management** | Intelligent retention policies & cleanup | ✅ Active |
+| **🔄 Background Tasks** | Automated maintenance & health monitoring | ✅ Active |
+| **🧪 Comprehensive Testing** | Smoke tests with real videos & CI/CD | ✅ Active |
+| **🌐 Gradio Interface** | Professional web UI | ✅ Active |
+| **🐳 Docker Ready** | Production containerization | ✅ Active |
+| **⚡ CPU/GPU Support** | Runs anywhere with intelligent fallbacks | ✅ Active |
+| **🔒 Security** | Rate limiting, auth, input validation | ✅ Active |
 
 ---
 
-## 🎬 **DEMO & LIVE DEPLOYMENT**
+## 📡 **REST API & PROGRAMMATIC ACCESS**
+
+### **OpenAPI Documentation**
+Full interactive API documentation available at `/docs` when running the server.
+
+```bash
+# Start API server
+python api/main.py
+# Visit http://localhost:8000/docs for interactive API docs
+```
+
+### **Quick API Examples**
+
+**Basic Video Enhancement:**
+```bash
+curl -X POST "http://localhost:8000/api/v1/process/auto" \
+  -H "accept: application/json" \
+  -F "file=@input_video.mp4"
+```
+
+**Advanced Configuration:**
+```bash
+curl -X POST "http://localhost:8000/api/v1/process/auto" \
+  -H "accept: application/json" \
+  -F "file=@input_video.mp4" \
+  -F 'request={
+    "vsr_strategy": "seedvr2",
+    "latency_class": "flexible", 
+    "quality_tier": "high",
+    "enable_face_expert": true,
+    "target_resolution": "4K"
+  }'
+```
+
+**Job Management:**
+```bash
+# Check job status
+curl "http://localhost:8000/api/v1/process/job/{job_id}"
+
+# Download result
+curl "http://localhost:8000/api/v1/process/job/{job_id}/download" -o enhanced.mp4
+
+# List all jobs
+curl "http://localhost:8000/api/v1/process/jobs?status=completed"
+```
+
+**System Monitoring:**
+```bash
+# Health check
+curl "http://localhost:8000/api/v1/process/health"
+
+# Available strategies
+curl "http://localhost:8000/api/v1/process/strategies"
+
+# System metrics
+curl "http://localhost:8000/metrics"
+```
+
+### **Python SDK Usage**
+```python
+import requests
+import time
+
+# Upload video for processing
+with open("input.mp4", "rb") as f:
+    response = requests.post(
+        "http://localhost:8000/api/v1/process/auto",
+        files={"file": f},
+        data={"request": json.dumps({
+            "vsr_strategy": "auto",
+            "quality_tier": "balanced",
+            "enable_face_expert": True
+        })}
+    )
+
+job = response.json()
+print(f"Job started: {job['job_id']}")
+
+# Monitor progress
+while True:
+    status = requests.get(f"http://localhost:8000/api/v1/process/job/{job['job_id']}").json()
+    print(f"Progress: {status['progress']:.1f}% - {status['current_stage']}")
+    
+    if status['status'] == 'completed':
+        # Download result
+        result = requests.get(f"http://localhost:8000/api/v1/process/job/{job['job_id']}/download")
+        with open("enhanced.mp4", "wb") as f:
+            f.write(result.content)
+        print("✅ Enhancement completed!")
+        break
+    elif status['status'] == 'failed':
+        print(f"❌ Enhancement failed: {status['error_message']}")
+        break
+        
+    time.sleep(5)
+```
+
+---
+
+## 🌝 **DEMO & LIVE DEPLOYMENT**
 
 🌐 **Live Demo**: https://huggingface.co/spaces/mindburn/video-enhancer  
 🔧 **Health Status**: https://mindburn-video-enhancer.hf.space/health  
@@ -145,24 +246,51 @@ result = enhancer.process_task(task)
 
 ---
 
-## 🏗️ **ARCHITECTURE**
+## 🏗️ **SYSTEM ARCHITECTURE**
 
-### **Core Components**
+### **🎆 Core Processing Pipeline**
 
-1. **🔍 Degradation Router** - SOTA-aware analysis with latency class routing
-2. **🔥 VSRM** - Video Super-Resolution Mamba with recurrent processing
-3. **✨ SeedVR2** - Advanced diffusion-based video restoration
-4. **🎯 DiTVR** - Diffusion Transformer for zero-shot video enhancement
-5. **⚡ Fast Mamba VSR** - Lightning-fast Mamba-based super-resolution
-6. **👤 Face Restoration Expert** - Selective GFPGAN face enhancement
-7. **🎦 RIFE Interpolation** - High frame rate interpolation to 120 FPS
+```mermaid
+graph TB
+    A[Video Upload] --> B[Degradation Analysis]
+    B --> C[Strategy Selection]
+    C --> D{Model Router}
+    D --> E[VSRM - High Motion]
+    D --> F[SeedVR2 - Compression]
+    D --> G[DiTVR - Zero-shot]
+    D --> H[FastMamba - Real-time]
+    E --> I[Post-processing]
+    F --> I
+    G --> I
+    H --> I
+    I --> J[Storage Manager]
+    J --> K[Result Delivery]
+```
 
-### **Multi-Agent System**
+### **🤖 SOTA Model Components**
 
-- **🤖 Video Analyzer Agent** (DeepSeek-R1)
-- **🎨 Enhancement Agent** (FLUX-Reason)  
-- **📊 Quality Assessment Agent**
-- **🎯 Coordinator Agent** - Orchestrates the entire pipeline
+| Model | Purpose | Specialization | Latency |
+|-------|---------|----------------|----------|
+| **VSRM** | Video Super-Resolution Mamba | High-motion content, temporal consistency | Standard |
+| **SeedVR2** | Diffusion Video Restoration | Compression artifacts, mixed degradations | Flexible |
+| **DiTVR** | Transformer Zero-shot | Unknown degradations, adaptive enhancement | Standard |
+| **FastMamba VSR** | Lightweight Enhancement | Real-time processing, low-latency | Strict |
+
+### **📊 Intelligence Layer**
+
+- **🤖 Degradation Router** - AI-powered analysis with 12 degradation metrics
+- **🎯 Smart Strategy Selection** - Automatic model selection based on content
+- **💾 Intelligent Storage** - LRU cleanup with configurable retention policies
+- **🔄 Background Scheduler** - Automated maintenance and health monitoring
+- **📡 REST API Gateway** - OpenAPI with comprehensive job management
+
+### **🛡️ Production Infrastructure**
+
+- **⚙️ Configuration Management** - Environment-based model selection
+- **📊 Health Monitoring** - Real-time system metrics and alerts
+- **🔒 Security Layer** - Input validation, rate limiting, error handling
+- **💾 Data Persistence** - Configurable storage with automated cleanup
+- **🌐 API Layer** - RESTful endpoints with comprehensive documentation
 
 ---
 
@@ -282,20 +410,84 @@ curl http://localhost:7861/health
 
 ---
 
-## 🧪 **TESTING**
+## 🧪 **COMPREHENSIVE TESTING SUITE**
 
+### **🎦 Real Video Smoke Tests**
 ```bash
-# Run comprehensive SOTA model tests
+# End-to-end tests with actual video files
+python -m pytest tests/test_smoke_e2e.py -v
+
+# Test video file integrity and processing
+python -m pytest tests/test_smoke_e2e.py::TestSmokeE2E::test_video_file_integrity -v
+
+# Test degradation analysis on real content
+python -m pytest tests/test_smoke_e2e.py::TestSmokeE2E::test_degradation_router_analysis -v
+```
+
+### **🤖 SOTA Model Testing**
+```bash
+# Comprehensive model handler tests
 python -m pytest tests/test_sota_models_comprehensive.py -v
 
-# Test agent infrastructure
-python -m pytest tests/test_agents.py -v
+# Test specific models
+python -m pytest tests/test_sota_models_comprehensive.py::TestVSRMHandler -v
+python -m pytest tests/test_sota_models_comprehensive.py::TestSeedVR2Handler -v
 
-# Validate model handlers
-python tests/test_model_handlers.py
+# Configuration validation
+python -m pytest tests/test_sota_models_comprehensive.py::TestSOTAModelConfiguration -v
+```
 
-# Run deployment validation
-python validate_deployment.py --health-check --smoke-test
+### **📡 API Testing**
+```bash
+# Test REST API endpoints
+python -c "
+from api.main import app
+from fastapi.testclient import TestClient
+
+client = TestClient(app)
+response = client.get('/health')
+print(f'API Health: {response.status_code} - {response.json()}')
+"
+
+# Test API import and initialization
+python -c "from api.v1.process_endpoints import router; print('✅ API endpoints ready')"
+```
+
+### **🔄 CI/CD Pipeline**
+Comprehensive GitHub Actions workflow tests:
+
+- **✅ Code Quality**: Black, isort, flake8, mypy
+- **✅ Multi-Python**: Tests across Python 3.9, 3.10, 3.11
+- **✅ Integration Tests**: Real video processing with multiple content types
+- **✅ Docker Builds**: Container validation and testing
+- **✅ Security Scans**: Dependency and code security analysis
+
+### **📊 System Validation**
+```bash
+# Full system health check
+python validate_deployment.py --mode ci
+
+# Storage system testing
+python -c "
+from utils.storage_manager import StorageManager
+import asyncio
+
+async def test():
+    manager = StorageManager()
+    usage = await manager.get_storage_usage()
+    print(f'✅ Storage: {usage[\"file_count\"]} files, {usage[\"total_gb\"]:.2f} GB')
+    return await manager.verify_integrity()
+
+result = asyncio.run(test())
+print(f'✅ Integrity: {result[\"verified\"]} verified, {result[\"missing\"]} missing')
+"
+
+# Background scheduler testing
+python -c "
+from utils.background_scheduler import get_scheduler_status
+status = get_scheduler_status()
+print(f'✅ Scheduler: {status[\"task_count\"]} tasks configured')
+"
 ```
 
 ---
