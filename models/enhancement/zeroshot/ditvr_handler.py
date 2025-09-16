@@ -235,11 +235,14 @@ class DegradationEncoder(nn.Module):
         blur_type = degradation_params.get('blur_type', 0)
         quality = degradation_params.get('quality', 0.8)
         
-        # Encode each component
-        type_embed = self.degradation_embeddings(torch.tensor(deg_type))
-        noise_embed = self.noise_encoder(torch.tensor([[noise_level]]))
-        blur_embed = self.blur_encoder(torch.tensor([[blur_sigma, blur_type]]))
-        comp_embed = self.compression_encoder(torch.tensor([[quality]]))
+        # Get device from the embeddings for consistency
+        device = next(self.degradation_embeddings.parameters()).device
+        
+        # Encode each component with proper device placement
+        type_embed = self.degradation_embeddings(torch.tensor(deg_type, device=device))
+        noise_embed = self.noise_encoder(torch.tensor([[noise_level]], device=device))
+        blur_embed = self.blur_encoder(torch.tensor([[blur_sigma, blur_type]], device=device))
+        comp_embed = self.compression_encoder(torch.tensor([[quality]], device=device))
         
         # Combine embeddings
         combined = torch.cat([type_embed, noise_embed.squeeze(0), 
