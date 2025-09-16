@@ -449,23 +449,24 @@ class DegradationRouter:
             # Fallback to other temporal models
             return self._get_fallback_model(['vsrm'])
         
-        # Flexible latency: prefer quality
+        # Flexible latency: prefer stable quality (VSRM first due to stability)
         if latency_class == 'flexible':
-            if allow_diffusion and self.available_models.get('seedvr2', False):
-                return 'seedvr2'
+            if self.available_models.get('vsrm', False):
+                return 'vsrm'  # Stable and high quality
             elif allow_zero_shot and self.available_models.get('ditvr', False):
                 return 'ditvr' 
-            elif self.available_models.get('vsrm', False):
-                return 'vsrm'
+            elif allow_diffusion and self.available_models.get('seedvr2', False):
+                return 'seedvr2'
             return self._get_fallback_model([])
         
-        # Standard latency: balanced approach
-        if unknown_deg_score > 0.4 and allow_zero_shot and self.available_models.get('ditvr', False):
+        # Standard latency: balanced approach - prioritize stable VSRM as default
+        # VSRM is more stable and doesn't have embedding dimension issues
+        if self.available_models.get('vsrm', False):
+            return 'vsrm'  # Default SOTA choice - stable and reliable
+        elif unknown_deg_score > 0.4 and allow_zero_shot and self.available_models.get('ditvr', False):
             return 'ditvr'
         elif (compression_score > 0.5 or blur_score > 0.5) and allow_diffusion and self.available_models.get('seedvr2', False):
             return 'seedvr2'
-        elif self.available_models.get('vsrm', False):
-            return 'vsrm'  # Default SOTA choice
         else:
             return self._get_fallback_model([])  # Any available model
     

@@ -220,8 +220,20 @@ class SpatialTemporalMamba(nn.Module):
         # Temporal Mamba (process across frames)
         self.temporal_mamba = EAMambaBlock(dim, d_state, d_conv)
         
-        # Cross-frame attention for alignment
-        self.cross_attn = nn.MultiheadAttention(dim, num_heads=8, batch_first=True)
+        # Cross-frame attention for alignment with dimension compatibility
+        # Ensure embed_dim is divisible by num_heads
+        self.embed_dim = max(64, ((dim + 7) // 8) * 8)  # Round up to nearest multiple of 8
+        self.num_heads = min(8, self.embed_dim // 8)  # Ensure at least 8 dims per head
+        
+        # Dimension projection if needed
+        if dim != self.embed_dim:
+            self.attn_proj = nn.Linear(dim, self.embed_dim)
+            self.attn_unproj = nn.Linear(self.embed_dim, dim)
+        else:
+            self.attn_proj = nn.Identity()
+            self.attn_unproj = nn.Identity()
+        
+        self.cross_attn = nn.MultiheadAttention(self.embed_dim, num_heads=self.num_heads, batch_first=True)
         self.norm_cross = nn.LayerNorm(dim)
     
     def forward(self, x):
@@ -250,10 +262,14 @@ class SpatialTemporalMamba(nn.Module):
             for w in range(W):
                 pixel_seq = spatial_features[:, :, h, w, :]  # (B, T, C)
                 
-                # Apply cross-frame attention
+                # Apply cross-frame attention with dimension projection
                 pixel_seq_norm = self.norm_cross(pixel_seq)
-                attended, _ = self.cross_attn(pixel_seq_norm, pixel_seq_norm, pixel_seq_norm)
-                pixel_seq = pixel_seq + attended
+                # Project to compatible dimension for attention
+                pixel_seq_proj = self.attn_proj(pixel_seq_norm)
+                attended, _ = self.cross_attn(pixel_seq_proj, pixel_seq_proj, pixel_seq_proj)
+                # Project back and add residual
+                attended_back = self.attn_unproj(attended)
+                pixel_seq = pixel_seq + attended_back
                 
                 # Apply temporal Mamba
                 pixel_feat = self.temporal_mamba(pixel_seq)  # (B, T, C)

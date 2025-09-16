@@ -55,8 +55,20 @@ class AttentiveSSM(nn.Module):
         self.A_log = nn.Parameter(torch.randn(d_inner, d_state))
         self.D = nn.Parameter(torch.randn(d_inner))
         
-        # Attention for adaptive selection
-        self.attention = nn.MultiheadAttention(d_inner, num_heads=8, batch_first=True)
+        # Attention for adaptive selection with dimension compatibility
+        # Ensure embed_dim is divisible by num_heads
+        self.embed_dim = max(64, ((d_inner + 7) // 8) * 8)  # Round up to nearest multiple of 8
+        self.num_heads = min(8, self.embed_dim // 8)  # Ensure at least 8 dims per head
+        
+        # Dimension projection if needed
+        if d_inner != self.embed_dim:
+            self.attn_proj = nn.Linear(d_inner, self.embed_dim)
+            self.attn_unproj = nn.Linear(self.embed_dim, d_inner)
+        else:
+            self.attn_proj = nn.Identity()
+            self.attn_unproj = nn.Identity()
+        
+        self.attention = nn.MultiheadAttention(self.embed_dim, num_heads=self.num_heads, batch_first=True)
         self.norm_attn = nn.LayerNorm(d_inner)
     
     def forward(self, x):
@@ -75,10 +87,14 @@ class AttentiveSSM(nn.Module):
         # Flatten for attention
         x_flat = x_ssm.view(B, H*W, -1)
         
-        # Self-attention for adaptive processing
-        x_attended, _ = self.attention(x_flat, x_flat, x_flat)
-        x_attended = self.norm_attn(x_attended)
-        x_ssm = x_flat + x_attended  # Residual
+        # Self-attention for adaptive processing with dimension projection
+        # Project to compatible dimension for attention
+        x_proj = self.attn_proj(x_flat)
+        x_attended, _ = self.attention(x_proj, x_proj, x_proj)
+        # Project back and apply layer norm
+        x_attended_back = self.attn_unproj(x_attended)
+        x_attended_norm = self.norm_attn(x_attended_back)
+        x_ssm = x_flat + x_attended_norm  # Residual
         
         # Reshape back
         x_ssm = x_ssm.view(B, H, W, -1)

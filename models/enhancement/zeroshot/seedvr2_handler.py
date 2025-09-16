@@ -138,10 +138,23 @@ class TemporalConsistencyModule(nn.Module):
         self.channels = channels
         self.num_frames = num_frames
         
-        # Temporal attention
+        # Ensure embed_dim is divisible by num_heads
+        # Project to a dimension that's divisible by the number of heads
+        self.embed_dim = max(64, ((channels + 7) // 8) * 8)  # Round up to nearest multiple of 8
+        self.num_heads = min(8, self.embed_dim // 8)  # Ensure at least 8 dims per head
+        
+        # Channel projection to compatible dimension
+        if channels != self.embed_dim:
+            self.channel_proj = nn.Linear(channels, self.embed_dim)
+            self.channel_unproj = nn.Linear(self.embed_dim, channels)
+        else:
+            self.channel_proj = nn.Identity()
+            self.channel_unproj = nn.Identity()
+        
+        # Temporal attention with compatible dimensions
         self.temporal_attn = nn.MultiheadAttention(
-            embed_dim=channels,
-            num_heads=8,
+            embed_dim=self.embed_dim,
+            num_heads=self.num_heads,
             batch_first=True
         )
         
@@ -170,10 +183,14 @@ class TemporalConsistencyModule(nn.Module):
         # Estimate optical flow between consecutive frames
         flows = self.flow_estimator(reference)
         
-        # Apply temporal attention
+        # Apply temporal attention with channel projection
         x_flat = x.permute(0, 2, 3, 4, 1).reshape(B * T, H * W, C)
-        attn_out, _ = self.temporal_attn(x_flat, x_flat, x_flat)
-        x_attn = attn_out.reshape(B, T, H, W, C).permute(0, 4, 1, 2, 3)
+        # Project to compatible dimension for attention
+        x_proj = self.channel_proj(x_flat)
+        attn_out, _ = self.temporal_attn(x_proj, x_proj, x_proj)
+        # Project back to original channel dimension
+        x_back = self.channel_unproj(attn_out)
+        x_attn = x_back.reshape(B, T, H, W, C).permute(0, 4, 1, 2, 3)
         
         # Warp and fuse with flow information
         warped_frames = self._warp_with_flow(x, flows)
