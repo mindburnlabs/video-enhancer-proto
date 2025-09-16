@@ -33,6 +33,9 @@ from pathlib import Path
 import logging
 from typing import Optional, Dict
 
+# Apply torchvision compatibility fix before importing realesrgan
+from utils.torchvision_compatibility import patch_realesrgan_import
+
 logger = logging.getLogger(__name__)
 
 class RealESRGANFallback:
@@ -40,9 +43,16 @@ class RealESRGANFallback:
         self.device = device
         self.model_name = model_name
         self.scale = scale
-        # Lazy import to reduce app startup overhead
-        from realesrgan import RealESRGANer
+        
+        # Apply compatibility patch and lazy import to reduce app startup overhead
         try:
+            # Ensure compatibility fix is applied
+            patch_success = patch_realesrgan_import()
+            if not patch_success:
+                logger.warning("⚠️ TorchVision compatibility fix failed, attempting direct import...")
+            
+            from realesrgan import RealESRGANer
+            
             self.upsampler = RealESRGANer(
                 scale=4,
                 model_path=None,  # auto-download
@@ -53,8 +63,17 @@ class RealESRGANFallback:
                 half=(device == 'cuda')
             )
             logger.info(f"✅ Real-ESRGAN initialized: {self.model_name}")
+            
+        except ImportError as e:
+            if "functional_tensor" in str(e):
+                logger.error(f"❌ Real-ESRGAN functional_tensor compatibility issue: {e}")
+                logger.info("💡 This is a known torchvision compatibility issue. The main video processing still works.")
+            else:
+                logger.error(f"❌ Real-ESRGAN import failed: {e}")
+            raise
+            
         except Exception as e:
-            logger.error(f"Real-ESRGAN initialization failed: {e}")
+            logger.error(f"❌ Real-ESRGAN initialization failed: {e}")
             raise
 
     def enhance_video(self, input_path: str, output_path: str) -> Dict:

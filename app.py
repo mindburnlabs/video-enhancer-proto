@@ -83,6 +83,15 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+# Apply torchvision compatibility fix early
+try:
+    from utils.torchvision_compatibility import apply_torchvision_compatibility_fix
+    apply_torchvision_compatibility_fix()
+except ImportError:
+    logger.warning("⚠️ TorchVision compatibility module not available")
+except Exception as e:
+    logger.warning(f"⚠️ TorchVision compatibility fix failed: {e}")
+
 # Safe imports with fallbacks
 try:
     import torch
@@ -1398,10 +1407,35 @@ try:
                 if eng.startswith('zero'):
                     ok, msg = enhancer.process_video(str(in_path), str(out_path), target_fps)
                 elif eng.startswith('frame'):
-                    from models.enhancement.frame.realesrgan_fallback import RealESRGANFallback
-                    up = RealESRGANFallback(device='cuda' if CUDA_AVAILABLE else 'cpu', scale=2)
-                    stats = up.enhance_video(str(in_path), str(out_path))
-                    ok, msg = True, f"✅ Real-ESRGAN upscaling completed: {stats}"
+                    # Try Real-ESRGAN first, fallback to BasicUpscaler if it fails
+                    try:
+                        from models.enhancement.frame.realesrgan_fallback import RealESRGANFallback
+                        up = RealESRGANFallback(device='cuda' if CUDA_AVAILABLE else 'cpu', scale=2)
+                        stats = up.enhance_video(str(in_path), str(out_path))
+                        ok, msg = True, f"✅ Real-ESRGAN upscaling completed: {stats}"
+                        
+                    except ImportError as e:
+                        if "functional_tensor" in str(e):
+                            logger.warning(f"⚠️ Real-ESRGAN unavailable, using BasicUpscaler fallback: {e}")
+                            try:
+                                from models.enhancement.frame.basic_upscaler_fallback import BasicUpscalerFallback
+                                up = BasicUpscalerFallback(device='cpu', model_name='LANCZOS', scale=2)
+                                stats = up.enhance_video(str(in_path), str(out_path))
+                                ok, msg = True, f"✅ BasicUpscaler (fallback) completed: {stats}"
+                            except Exception as fallback_e:
+                                ok, msg = False, f"❌ BasicUpscaler fallback failed: {fallback_e}"
+                        else:
+                            ok, msg = False, f"❌ Real-ESRGAN import failed: {e}"
+                            
+                    except Exception as e:
+                        logger.warning(f"⚠️ Real-ESRGAN processing failed, trying BasicUpscaler: {e}")
+                        try:
+                            from models.enhancement.frame.basic_upscaler_fallback import BasicUpscalerFallback
+                            up = BasicUpscalerFallback(device='cpu', model_name='LANCZOS', scale=2)
+                            stats = up.enhance_video(str(in_path), str(out_path))
+                            ok, msg = True, f"✅ BasicUpscaler (fallback after Real-ESRGAN failure) completed: {stats}"
+                        except Exception as fallback_e:
+                            ok, msg = False, f"❌ Both Real-ESRGAN and BasicUpscaler failed: {e} | {fallback_e}"
                 else:  # sota
                     ok, msg = _run_sota_pipeline(str(in_path), str(out_path), target_fps, latency, enable_face, enable_hfr)
 
