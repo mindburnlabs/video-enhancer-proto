@@ -1,40 +1,39 @@
 {
-  "passed": [],
-  "failed": [
-    {
-      "test": "basic_functionality",
-      "reason": "No module named 'torch'"
-    },
-    {
-      "test": "app_initialization",
-      "reason": "No module named 'gradio'"
-    },
-    {
-      "test": "gradio_interface",
-      "reason": "No module named 'gradio'"
-    },
-    {
-      "test": "video_processing_pipeline",
-      "reason": "No module named 'gradio'"
-    },
-    {
-      "test": "sota_pipeline",
-      "reason": "No module named 'gradio'"
-    },
-    {
-      "test": "error_handling",
-      "reason": "No module named 'gradio'"
-    },
-    {
-      "test": "demo_functionality",
-      "reason": "No module named 'gradio'"
-    },
-    {
-      "test": "memory_usage",
-      "reason": "No module named 'psutil'"
-    }
+  "passed": [
+    "core_imports",
+    "pytorch_operations",
+    "opencv_operations",
+    "app_initialization",
+    "sota_imports",
+    "gradio_interface_creation",
+    "gradio_basic_functionality",
+    "video_processing_pipeline",
+    "sota_pipeline",
+    "error_handling_none_input",
+    "error_handling_missing_file",
+    "demo_functionality",
+    "memory_usage"
   ],
+  "failed": [],
   "warnings": [],
-  "performance": {},
-  "environment": {}
+  "performance": {
+    "video_processing_time": 4.287343263626099,
+    "sota_processing_time": 20.148268222808838,
+    "demo_time": 20.8443500995636,
+    "memory_usage_mb": {
+      "initial": 4372.95,
+      "final": 4373.47,
+      "increase": 0.52
+    }
+  },
+  "environment": {
+    "python_version": "3.12.11 (main, Aug 28 2025, 17:00:08) [Clang 20.1.4 ]",
+    "pytorch_version": "2.8.0",
+    "opencv_version": "4.12.0",
+    "cpu_count": 16,
+    "memory_gb": 128.0,
+    "cuda_available": false,
+    "huggingface_space": false,
+    "zerogpu_available": false
+  }
 }

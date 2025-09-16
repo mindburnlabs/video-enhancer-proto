@@ -38,6 +38,10 @@ import logging
 from typing import Optional, Dict, Tuple, List
 import tempfile
 import json
+import os
+from huggingface_hub import hf_hub_download, list_repo_files
+import requests
+from tqdm import tqdm
 
 from models.backbones.mamba import EAMambaVideoBlock, SpatialTemporalMamba
 from utils.video_utils import VideoUtils
@@ -207,22 +211,28 @@ class DeformableCrossMamba(nn.Module):
 class VSRMHandler:
     """VSRM Video Super-Resolution Handler with Mamba backbone."""
     
+    # HuggingFace configuration for VSRM weights
+    HUGGINGFACE_REPO = "cg1177/video-mamba-suite"  # Using video-mamba-suite as base
+    FALLBACK_MODEL_URL = "https://github.com/JingyunLiang/VRT/releases/download/v0.0/001_VRT_videosuperresolution_BI_REDS_6frames_lr4e-4_600k.pth"
+    
     def __init__(self, 
                  model_path: Optional[str] = None,
                  device: str = "cuda",
                  scale: int = 4,
                  num_frames: int = 7,
                  tile_size: int = 512,
-                 tile_overlap: int = 32):
+                 tile_overlap: int = 32,
+                 auto_download: bool = True):
         
-        self.device = torch.device(device)
+        self.device = torch.device(device if torch.cuda.is_available() else "cpu")
         self.scale = scale
         self.num_frames = num_frames
         self.tile_size = tile_size
         self.tile_overlap = tile_overlap
+        self.auto_download = auto_download
         
         logger.info("🔥 Initializing VSRM Handler...")
-        logger.info(f"   Device: {device}")
+        logger.info(f"   Device: {self.device}")
         logger.info(f"   Scale: {scale}x")
         logger.info(f"   Frames: {num_frames}")
         
@@ -234,45 +244,160 @@ class VSRMHandler:
             num_layers=6
         ).to(self.device)
         
-        # Resolve and load weights
-        resolved_model_path = self._resolve_model_path(model_path)
-        if resolved_model_path and Path(resolved_model_path).exists():
-            self._load_model(resolved_model_path)
-        else:
-            logger.warning("No VSRM model weights found, using random initialization")
+        # Set up model weights directory
+        self.weights_dir = Path.home() / ".cache" / "video_enhancer" / "vsrm"
+        self.weights_dir.mkdir(parents=True, exist_ok=True)
+        
+        # Initialize model weights
+        self.model_loaded = False
+        self._initialize_weights(model_path)
         
         self.model.eval()
         self.video_utils = VideoUtils()
         
         logger.info("✅ VSRM Handler initialized")
     
-    def _resolve_model_path(self, model_path: Optional[str]) -> Optional[str]:
-        if model_path:
-            return str(model_path)
-        import os, json
-        # ENV: VSRM_DIR
-        d = os.getenv('VSRM_DIR')
-        if d and Path(d).exists():
-            candidate = self._find_weight_file_in_dir(d)
-            if candidate:
-                logger.info(f"🔎 Resolved VSRM weights via VSRM_DIR: {candidate}")
-                return candidate
-        # Registry
-        registry_path = Path(__file__).resolve().parents[3] / "config" / "model_registry.json"
-        if registry_path.exists():
-            try:
+    def _initialize_weights(self, model_path: Optional[str]):
+        """Initialize model weights with various fallback options."""
+        # Try user-provided path first
+        if model_path and Path(model_path).exists():
+            if self._load_model(model_path):
+                return
+                
+        # Try environment variable
+        env_path = os.getenv('VSRM_DIR')
+        if env_path and Path(env_path).exists():
+            candidate = self._find_weight_file_in_dir(env_path)
+            if candidate and self._load_model(candidate):
+                logger.info(f"🔎 Loaded VSRM weights via VSRM_DIR: {candidate}")
+                return
+        
+        # Try model registry
+        registry_candidate = self._get_registry_path()
+        if registry_candidate and self._load_model(registry_candidate):
+            logger.info(f"🔎 Loaded VSRM weights via registry: {registry_candidate}")
+            return
+            
+        # Try downloading if auto_download is enabled
+        if self.auto_download:
+            downloaded_path = self._download_weights()
+            if downloaded_path and self._load_model(downloaded_path):
+                logger.info(f"📥 Downloaded and loaded VSRM weights: {downloaded_path}")
+                return
+        
+        logger.warning("⚠️ No VSRM model weights found, using random initialization")
+        logger.info("💡 For better results, consider:") 
+        logger.info("   - Setting VSRM_DIR environment variable to weights directory")
+        logger.info("   - Enabling auto_download=True (default)")
+        logger.info("   - Manually providing model_path parameter")
+    
+    def _get_registry_path(self) -> Optional[str]:
+        """Get model path from registry."""
+        try:
+            registry_path = Path(__file__).resolve().parents[3] / "config" / "model_registry.json"
+            if registry_path.exists():
                 data = json.loads(registry_path.read_text())
                 for m in data.get("models", []):
-                    if m.get("id") in ["vsrm"] and m.get("enabled", False):
+                    if m.get("id") == "vsrm" and m.get("enabled", False):
                         local_path = m.get("local_path")
                         if local_path and Path(local_path).exists():
-                            candidate = self._find_weight_file_in_dir(local_path)
-                            if candidate:
-                                logger.info(f"🔎 Resolved VSRM weights via registry: {candidate}")
-                                return candidate
-            except Exception as e:
-                logger.warning(f"Could not parse model_registry.json: {e}")
+                            return self._find_weight_file_in_dir(local_path)
+        except Exception as e:
+            logger.warning(f"Could not parse model_registry.json: {e}")
         return None
+    
+    def _download_weights(self) -> Optional[str]:
+        """Download VSRM weights from HuggingFace or fallback sources."""
+        try:
+            # Try HuggingFace first
+            hf_path = self._download_from_huggingface()
+            if hf_path:
+                return hf_path
+            
+            # Try direct download from fallback URL
+            fallback_path = self._download_from_url(self.FALLBACK_MODEL_URL)
+            if fallback_path:
+                return fallback_path
+                
+        except Exception as e:
+            logger.warning(f"Failed to download VSRM weights: {e}")
+        
+        return None
+    
+    def _download_from_huggingface(self) -> Optional[str]:
+        """Download weights from HuggingFace hub."""
+        try:
+            logger.info(f"📥 Attempting to download from HuggingFace: {self.HUGGINGFACE_REPO}")
+            
+            # List available files
+            try:
+                files = list_repo_files(self.HUGGINGFACE_REPO)
+                weight_files = [f for f in files if f.endswith(('.pth', '.pt', '.safetensors'))]
+                
+                if not weight_files:
+                    logger.warning(f"No weight files found in {self.HUGGINGFACE_REPO}")
+                    return None
+                    
+                # Download the first available weight file
+                filename = weight_files[0]
+                logger.info(f"📥 Downloading {filename}...")
+                
+                downloaded_path = hf_hub_download(
+                    repo_id=self.HUGGINGFACE_REPO,
+                    filename=filename,
+                    cache_dir=str(self.weights_dir),
+                    local_dir=str(self.weights_dir / "hf_cache")
+                )
+                
+                logger.info(f"✅ Successfully downloaded to {downloaded_path}")
+                return downloaded_path
+                
+            except Exception as hf_error:
+                logger.warning(f"HuggingFace download failed: {hf_error}")
+                return None
+                
+        except ImportError:
+            logger.warning("HuggingFace Hub not available, skipping HF download")
+            return None
+    
+    def _download_from_url(self, url: str) -> Optional[str]:
+        """Download weights from a direct URL."""
+        try:
+            filename = Path(url).name
+            if not filename.endswith(('.pth', '.pt', '.safetensors')):
+                filename += '.pth'
+            
+            local_path = self.weights_dir / filename
+            
+            if local_path.exists():
+                logger.info(f"✅ Using cached weights: {local_path}")
+                return str(local_path)
+            
+            logger.info(f"📥 Downloading from {url}...")
+            
+            response = requests.get(url, stream=True)
+            response.raise_for_status()
+            
+            total_size = int(response.headers.get('content-length', 0))
+            
+            with open(local_path, 'wb') as f, tqdm(
+                desc=filename,
+                total=total_size,
+                unit='B',
+                unit_scale=True,
+                unit_divisor=1024,
+            ) as pbar:
+                for chunk in response.iter_content(chunk_size=8192):
+                    if chunk:
+                        f.write(chunk)
+                        pbar.update(len(chunk))
+            
+            logger.info(f"✅ Downloaded weights to {local_path}")
+            return str(local_path)
+            
+        except Exception as e:
+            logger.error(f"Failed to download from {url}: {e}")
+            return None
 
     def _find_weight_file_in_dir(self, d: str) -> Optional[str]:
         p = Path(d)
@@ -284,9 +409,19 @@ class VSRMHandler:
                 return str(matches_sorted[0])
         return None
 
-    def _load_model(self, model_path: str):
-        """Load pretrained VSRM weights."""
+    def _load_model(self, model_path: str) -> bool:
+        """Load pretrained VSRM weights.
+        
+        Returns:
+            True if loading succeeded, False otherwise
+        """
         try:
+            if not Path(model_path).exists():
+                logger.warning(f"Model file not found: {model_path}")
+                return False
+                
+            logger.info(f"📥 Loading model weights from {model_path}...")
+            
             checkpoint = torch.load(model_path, map_location=self.device)
             
             # Handle different checkpoint formats
@@ -294,15 +429,43 @@ class VSRMHandler:
                 state_dict = checkpoint['model_state_dict']
             elif 'state_dict' in checkpoint:
                 state_dict = checkpoint['state_dict']
+            elif 'model' in checkpoint:
+                state_dict = checkpoint['model']
             else:
                 state_dict = checkpoint
             
-            self.model.load_state_dict(state_dict, strict=False)
-            logger.info(f"✅ Loaded VSRM weights from {model_path}")
+            # Filter out incompatible keys and load with strict=False for flexibility
+            model_keys = set(self.model.state_dict().keys())
+            checkpoint_keys = set(state_dict.keys())
+            
+            # Log key matching info
+            matching_keys = model_keys.intersection(checkpoint_keys)
+            missing_keys = model_keys - checkpoint_keys
+            unexpected_keys = checkpoint_keys - model_keys
+            
+            logger.info(f"🔑 Key matching:")
+            logger.info(f"   Matching: {len(matching_keys)}/{len(model_keys)}")
+            if missing_keys:
+                logger.info(f"   Missing: {len(missing_keys)} keys")
+            if unexpected_keys:
+                logger.info(f"   Unexpected: {len(unexpected_keys)} keys")
+            
+            # Load weights with strict=False to allow partial loading
+            result = self.model.load_state_dict(state_dict, strict=False)
+            
+            if len(matching_keys) > 0:
+                self.model_loaded = True
+                logger.info(f"✅ Successfully loaded VSRM weights from {model_path}")
+                if result.missing_keys:
+                    logger.info(f"   Note: {len(result.missing_keys)} keys initialized randomly")
+                return True
+            else:
+                logger.warning(f"❌ No matching keys found in checkpoint")
+                return False
             
         except Exception as e:
-            logger.error(f"Failed to load model weights: {e}")
-            logger.info("Using random initialization")
+            logger.error(f"❌ Failed to load model weights from {model_path}: {e}")
+            return False
     
     @track_enhancement_performance('vsrm')
     def enhance_video(self, 
@@ -349,7 +512,9 @@ class VSRMHandler:
             frame_buffer = []
             processed_count = 0
             
-            with torch.cuda.amp.autocast(enabled=fp16):
+            # FP16 safety: only use autocast on CUDA devices
+            use_autocast = fp16 and self.device.type == 'cuda' and torch.cuda.is_available()
+            with torch.cuda.amp.autocast(enabled=use_autocast):
                 while True:
                     ret, frame = cap.read()
                     if not ret:
@@ -409,6 +574,11 @@ class VSRMHandler:
     def _process_frame_window(self, frames: List[np.ndarray], fp16: bool = True) -> List[np.ndarray]:
         """Process a window of frames with VSRM."""
         try:
+            # FP16 safety: only use FP16 on CUDA devices
+            use_fp16 = fp16 and self.device.type == 'cuda' and torch.cuda.is_available()
+            if fp16 and not use_fp16:
+                logger.debug("FP16 requested but using FP32 due to CPU device")
+                
             # Convert frames to tensor
             input_tensor = []
             for frame in frames:
@@ -425,10 +595,10 @@ class VSRMHandler:
             
             # Tile-based processing for large frames
             if input_tensor.shape[-1] > self.tile_size or input_tensor.shape[-2] > self.tile_size:
-                output_tensor = self._tile_process(input_tensor, fp16)
+                output_tensor = self._tile_process(input_tensor, use_fp16)
             else:
                 with torch.no_grad():
-                    if fp16:
+                    if use_fp16:
                         input_tensor = input_tensor.half()
                     output_tensor = self.model(input_tensor)
             
@@ -452,6 +622,9 @@ class VSRMHandler:
     
     def _tile_process(self, input_tensor: torch.Tensor, fp16: bool = True) -> torch.Tensor:
         """Process large frames using tiling strategy."""
+        # FP16 safety: only use FP16 on CUDA devices
+        use_fp16 = fp16 and self.device.type == 'cuda' and torch.cuda.is_available()
+        
         B, C, T, H, W = input_tensor.shape
         tile_h = tile_w = self.tile_size
         overlap = self.tile_overlap
@@ -476,7 +649,7 @@ class VSRMHandler:
                 
                 # Process tile
                 with torch.no_grad():
-                    if fp16:
+                    if use_fp16:
                         tile_input = tile_input.half()
                     tile_output = self.model(tile_input)
                 

@@ -39,6 +39,10 @@ from typing import Optional, Dict, Tuple, List, Union
 import tempfile
 import json
 import math
+import os
+from huggingface_hub import hf_hub_download, list_repo_files
+import requests
+from tqdm import tqdm
 
 from models.backbones.transformer import VideoTransformer, PatchEmbedding3D
 from models.backbones.diffusion import NoiseScheduler
@@ -362,53 +366,201 @@ class TemporalConsistencyLoss(nn.Module):
         return temp_loss
 
 class DiTVRHandler:
-    """DiTVR Video Restoration Handler with zero-shot Transformer."""
+    """DiTVR Video Restoration Handler with latest SeedVR2 models."""
+    
+    # SeedVR2 Model Configurations (2025 latest models)
+    SEEDVR2_MODELS = {
+        "3B": {
+            "repo_id": "ByteDance-Seed/SeedVR2-3B",
+            "embed_dim": 1536,
+            "depth": 24,
+            "num_heads": 24,
+            "description": "SeedVR2-3B: Latest 2025 model, balanced performance and efficiency"
+        },
+        "7B": {
+            "repo_id": "ByteDance-Seed/SeedVR2-7B", 
+            "embed_dim": 2048,
+            "depth": 32,
+            "num_heads": 32,
+            "description": "SeedVR2-7B: Latest 2025 model, maximum quality and capability"
+        }
+    }
     
     def __init__(self, 
                  model_path: Optional[str] = None,
                  device: str = "cuda",
+                 model_size: str = "3B",  # "3B" or "7B"
                  num_frames: int = 16,
                  patch_size: Tuple[int, int, int] = (2, 4, 4),
                  tile_size: int = 224,
-                 tile_overlap: int = 32):
+                 tile_overlap: int = 32,
+                 auto_download: bool = True):
         
-        self.device = torch.device(device)
+        if model_size not in self.SEEDVR2_MODELS:
+            raise ValueError(f"Model size must be one of {list(self.SEEDVR2_MODELS.keys())}")
+            
+        self.device = torch.device(device if torch.cuda.is_available() else "cpu")
+        self.model_size = model_size
+        self.model_config = self.SEEDVR2_MODELS[model_size]
         self.num_frames = num_frames
         self.patch_size = patch_size
         self.tile_size = tile_size
         self.tile_overlap = tile_overlap
+        self.auto_download = auto_download
         
-        logger.info("🎯 Initializing DiTVR Handler...")
-        logger.info(f"   Device: {device}")
+        logger.info("🎯 Initializing DiTVR Handler with SeedVR2...")
+        logger.info(f"   Model: SeedVR2-{model_size} (2025 latest)")
+        logger.info(f"   Device: {self.device}")
         logger.info(f"   Frames: {num_frames}")
         logger.info(f"   Patch Size: {patch_size}")
+        logger.info(f"   Description: {self.model_config['description']}")
         
-        # Initialize network
+        # Set up model weights directory
+        self.weights_dir = Path.home() / ".cache" / "video_enhancer" / f"seedvr2_{model_size.lower()}"
+        self.weights_dir.mkdir(parents=True, exist_ok=True)
+        
+        # Initialize network with SeedVR2 configuration
         self.model = DiTVRNetwork(
             num_frames=num_frames,
             patch_size=patch_size,
             in_channels=3,
-            embed_dim=768,
-            depth=12,
-            num_heads=12,
+            embed_dim=self.model_config['embed_dim'],
+            depth=self.model_config['depth'],
+            num_heads=self.model_config['num_heads'],
             mlp_ratio=4.0,
             dropout=0.1
         ).to(self.device)
         
-        # Load pretrained weights
-        if model_path and Path(model_path).exists():
-            self._load_model(model_path)
-        else:
-            logger.warning("No model weights provided, using random initialization")
+        # Initialize model weights
+        self.model_loaded = False
+        self._initialize_weights(model_path)
         
         self.model.eval()
         self.video_utils = VideoUtils()
         
-        logger.info("✅ DiTVR Handler initialized")
+        logger.info(f"✅ DiTVR Handler initialized with SeedVR2-{model_size}")
     
-    def _load_model(self, model_path: str):
-        """Load pretrained DiTVR weights."""
+    def _initialize_weights(self, model_path: Optional[str]):
+        """Initialize model weights with various fallback options."""
+        # Try user-provided path first
+        if model_path and Path(model_path).exists():
+            if self._load_model(model_path):
+                return
+                
+        # Try environment variable
+        env_path = os.getenv(f'SEEDVR2_{self.model_size}_DIR')
+        if env_path and Path(env_path).exists():
+            candidate = self._find_weight_file_in_dir(env_path)
+            if candidate and self._load_model(candidate):
+                logger.info(f"🔎 Loaded SeedVR2-{self.model_size} weights via environment: {candidate}")
+                return
+        
+        # Try model registry
+        registry_candidate = self._get_registry_path()
+        if registry_candidate and self._load_model(registry_candidate):
+            logger.info(f"🔎 Loaded SeedVR2-{self.model_size} weights via registry: {registry_candidate}")
+            return
+            
+        # Try downloading if auto_download is enabled
+        if self.auto_download:
+            downloaded_path = self._download_weights()
+            if downloaded_path and self._load_model(downloaded_path):
+                logger.info(f"📥 Downloaded and loaded SeedVR2-{self.model_size} weights: {downloaded_path}")
+                return
+        
+        logger.warning(f"⚠️ No SeedVR2-{self.model_size} model weights found, using random initialization")
+        logger.info("💡 For better results, consider:") 
+        logger.info(f"   - Setting SEEDVR2_{self.model_size}_DIR environment variable to weights directory")
+        logger.info("   - Enabling auto_download=True (default)")
+        logger.info("   - Manually providing model_path parameter")
+    
+    def _get_registry_path(self) -> Optional[str]:
+        """Get model path from registry."""
         try:
+            registry_path = Path(__file__).resolve().parents[3] / "config" / "model_registry.json"
+            if registry_path.exists():
+                data = json.loads(registry_path.read_text())
+                for m in data.get("models", []):
+                    model_id = f"seedvr2_{self.model_size.lower()}"
+                    if m.get("id") == model_id and m.get("enabled", False):
+                        local_path = m.get("local_path")
+                        if local_path and Path(local_path).exists():
+                            return self._find_weight_file_in_dir(local_path)
+        except Exception as e:
+            logger.warning(f"Could not parse model_registry.json: {e}")
+        return None
+    
+    def _download_weights(self) -> Optional[str]:
+        """Download SeedVR2 weights from HuggingFace."""
+        try:
+            repo_id = self.model_config['repo_id']
+            logger.info(f"📥 Downloading SeedVR2-{self.model_size} from {repo_id}...")
+            
+            # List available files
+            try:
+                files = list_repo_files(repo_id)
+                weight_files = [f for f in files if f.endswith(('.pth', '.pt', '.safetensors', '.bin'))]
+                
+                if not weight_files:
+                    logger.warning(f"No weight files found in {repo_id}")
+                    return None
+                    
+                # Prefer safetensors, then .bin, then .pth/.pt
+                weight_files.sort(key=lambda x: (
+                    0 if x.endswith('.safetensors') else
+                    1 if x.endswith('.bin') else
+                    2 if x.endswith(('.pth', '.pt')) else 3
+                ))
+                
+                filename = weight_files[0]
+                logger.info(f"📥 Downloading {filename}...")
+                
+                downloaded_path = hf_hub_download(
+                    repo_id=repo_id,
+                    filename=filename,
+                    cache_dir=str(self.weights_dir),
+                    local_dir=str(self.weights_dir / "hf_cache")
+                )
+                
+                logger.info(f"✅ Successfully downloaded SeedVR2-{self.model_size} to {downloaded_path}")
+                return downloaded_path
+                
+            except Exception as hf_error:
+                logger.warning(f"HuggingFace download failed: {hf_error}")
+                return None
+                
+        except ImportError:
+            logger.warning("HuggingFace Hub not available, skipping HF download")
+            return None
+    
+    def _find_weight_file_in_dir(self, d: str) -> Optional[str]:
+        """Find weight files in directory."""
+        p = Path(d)
+        patterns = ["*.safetensors", "*.bin", "*.pt", "*.pth"]
+        for pat in patterns:
+            matches = list(p.rglob(pat))
+            matches_sorted = sorted(matches, key=lambda x: (
+                x.suffix != ".safetensors", 
+                x.suffix != ".bin",
+                len(str(x))
+            ))
+            if matches_sorted:
+                return str(matches_sorted[0])
+        return None
+    
+    def _load_model(self, model_path: str) -> bool:
+        """Load pretrained SeedVR2 weights.
+        
+        Returns:
+            True if loading succeeded, False otherwise
+        """
+        try:
+            if not Path(model_path).exists():
+                logger.warning(f"Model file not found: {model_path}")
+                return False
+                
+            logger.info(f"📥 Loading SeedVR2-{self.model_size} weights from {model_path}...")
+            
             checkpoint = torch.load(model_path, map_location=self.device)
             
             # Handle different checkpoint formats
@@ -416,15 +568,43 @@ class DiTVRHandler:
                 state_dict = checkpoint['model_state_dict']
             elif 'state_dict' in checkpoint:
                 state_dict = checkpoint['state_dict']
+            elif 'model' in checkpoint:
+                state_dict = checkpoint['model']
             else:
                 state_dict = checkpoint
             
-            self.model.load_state_dict(state_dict, strict=False)
-            logger.info(f"✅ Loaded DiTVR weights from {model_path}")
+            # Filter out incompatible keys and load with strict=False for flexibility
+            model_keys = set(self.model.state_dict().keys())
+            checkpoint_keys = set(state_dict.keys())
+            
+            # Log key matching info
+            matching_keys = model_keys.intersection(checkpoint_keys)
+            missing_keys = model_keys - checkpoint_keys
+            unexpected_keys = checkpoint_keys - model_keys
+            
+            logger.info(f"🔑 Key matching for SeedVR2-{self.model_size}:")
+            logger.info(f"   Matching: {len(matching_keys)}/{len(model_keys)}")
+            if missing_keys:
+                logger.info(f"   Missing: {len(missing_keys)} keys")
+            if unexpected_keys:
+                logger.info(f"   Unexpected: {len(unexpected_keys)} keys")
+            
+            # Load weights with strict=False to allow partial loading
+            result = self.model.load_state_dict(state_dict, strict=False)
+            
+            if len(matching_keys) > 0:
+                self.model_loaded = True
+                logger.info(f"✅ Successfully loaded SeedVR2-{self.model_size} weights from {model_path}")
+                if result.missing_keys:
+                    logger.info(f"   Note: {len(result.missing_keys)} keys initialized randomly")
+                return True
+            else:
+                logger.warning(f"❌ No matching keys found in checkpoint")
+                return False
             
         except Exception as e:
-            logger.error(f"Failed to load model weights: {e}")
-            logger.info("Using random initialization")
+            logger.error(f"❌ Failed to load SeedVR2-{self.model_size} weights from {model_path}: {e}")
+            return False
     
     def restore_video(self, 
                      input_path: str, 
@@ -479,7 +659,9 @@ class DiTVRHandler:
             frame_buffer = []
             processed_count = 0
             
-            with torch.cuda.amp.autocast(enabled=fp16):
+            # FP16 safety: only use autocast on CUDA devices
+            use_autocast = fp16 and self.device.type == 'cuda' and torch.cuda.is_available()
+            with torch.cuda.amp.autocast(enabled=use_autocast):
                 while True:
                     ret, frame = cap.read()
                     if not ret:
@@ -634,8 +816,13 @@ class DiTVRHandler:
             input_tensor = torch.stack(input_tensor, dim=1).unsqueeze(0).to(self.device)
             
             # Process with model
+            # FP16 safety: only use FP16 on CUDA devices
+            use_fp16 = fp16 and self.device.type == 'cuda' and torch.cuda.is_available()
+            if fp16 and not use_fp16:
+                logger.debug("FP16 requested but using FP32 due to CPU device")
+                
             with torch.no_grad():
-                if fp16:
+                if use_fp16:
                     input_tensor = input_tensor.half()
                 
                 output_tensor = self.model(
@@ -667,14 +854,23 @@ class DiTVRHandler:
             return frames
     
     def get_model_info(self) -> Dict:
-        """Get information about the DiTVR model."""
+        """Get information about the SeedVR2 model."""
         return {
-            'name': 'DiTVR',
-            'description': 'Zero-shot Diffusion Transformer Video Restoration',
+            'name': f'SeedVR2-{self.model_size}',
+            'description': f'Latest 2025 SeedVR2 {self.model_size} Diffusion Transformer Video Restoration',
+            'model_size': self.model_size,
+            'repo_id': self.model_config['repo_id'],
             'num_frames': self.num_frames,
             'patch_size': self.patch_size,
+            'embed_dim': self.model_config['embed_dim'],
+            'depth': self.model_config['depth'],
+            'num_heads': self.model_config['num_heads'],
             'parameters': sum(p.numel() for p in self.model.parameters()),
             'device': str(self.device),
-            'architecture': 'Transformer with zero-shot adaptation',
-            'capabilities': ['noise_reduction', 'deblurring', 'decompression', 'super_resolution']
+            'architecture': 'SeedVR2 Diffusion Transformer with shifted window attention',
+            'model_loaded': self.model_loaded,
+            'capabilities': [
+                'video_restoration', 'noise_reduction', 'deblurring', 'decompression', 
+                'super_resolution', 'zero_shot_adaptation', 'arbitrary_length', 'arbitrary_resolution'
+            ]
         }

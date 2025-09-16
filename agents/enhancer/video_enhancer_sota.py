@@ -48,6 +48,8 @@ from models.enhancement.vsr.vsrm_handler import VSRMHandler
 from models.enhancement.zeroshot.seedvr2_handler import SeedVR2Handler
 from models.enhancement.zeroshot.ditvr_handler import DiTVRHandler
 from models.enhancement.vsr.fast_mamba_vsr_handler import FastMambaVSRHandler
+from models.enhancement.vsr.realesrgan_handler import RealESRGANHandler
+from models.interpolation.rife_handler import RIFEHandler
 
 logger = logging.getLogger(__name__)
 
@@ -80,6 +82,8 @@ class VideoEnhancementAgent(BaseVideoProcessingAgent):
         self.seedvr2_handler = SeedVR2Handler(device=device)
         self.ditvr_handler = DiTVRHandler(device=device)
         self.fast_mamba_handler = FastMambaVSRHandler(device=device)
+        self.realesrgan_handler = RealESRGANHandler(device=device)
+        self.rife_handler = RIFEHandler(device=device)
         self.device = device
         
         # Enhancement configuration
@@ -97,7 +101,9 @@ class VideoEnhancementAgent(BaseVideoProcessingAgent):
             'high_quality': 'vsrm',
             'fast_processing': 'fast_mamba_vsr',
             'restoration': 'seedvr2',
-            'unknown_degradation': 'ditvr'
+            'unknown_degradation': 'ditvr',
+            'super_resolution': 'realesrgan',
+            'frame_interpolation': 'rife'
         }
         
         # Enhancement statistics
@@ -105,7 +111,10 @@ class VideoEnhancementAgent(BaseVideoProcessingAgent):
             'total_enhancements': 0,
             'successful_enhancements': 0,
             'failed_enhancements': 0,
-            'model_usage': {'vsrm': 0, 'seedvr2': 0, 'ditvr': 0, 'fast_mamba_vsr': 0},
+            'model_usage': {
+                'vsrm': 0, 'seedvr2': 0, 'ditvr': 0, 'fast_mamba_vsr': 0,
+                'realesrgan': 0, 'rife': 0
+            },
             'average_processing_time': 0.0,
             'total_frames_processed': 0
         }
@@ -279,10 +288,19 @@ class VideoEnhancementAgent(BaseVideoProcessingAgent):
         quality_score = analysis_result.get('quality_score', 0.5)
         motion_intensity = analysis_result.get('motion_intensity', 0.5)
         degradation_type = analysis_result.get('degradation_type', 'unknown')
+        task_type = analysis_result.get('task_type', 'enhancement')
+        
+        # Frame interpolation request
+        if task_type == 'interpolation' or user_preferences.get('interpolation', False):
+            return 'rife'
         
         # Low quality videos need restoration
         if quality_score < 0.4:
             return 'seedvr2'
+        
+        # Super-resolution focused tasks
+        if task_type == 'super_resolution' or user_preferences.get('super_resolution', False):
+            return 'realesrgan'
         
         # Unknown degradation needs zero-shot capability
         if degradation_type == 'unknown' or degradation_type not in ['blur', 'noise', 'compression']:
@@ -292,8 +310,8 @@ class VideoEnhancementAgent(BaseVideoProcessingAgent):
         if motion_intensity > 0.7:
             return 'vsrm'
         
-        # Default to VSRM for general super-resolution
-        return 'vsrm'
+        # Default to Real-ESRGAN for general super-resolution (reliable weights)
+        return 'realesrgan'
     
     async def _execute_sota_enhancement(self, video_path: str, output_path: str, 
                                       model_name: str, analysis_result: Dict[str, Any]) -> Dict[str, Any]:
@@ -331,6 +349,19 @@ class VideoEnhancementAgent(BaseVideoProcessingAgent):
                 fp16=True
             )
         
+        elif model_name == 'realesrgan':
+            return self.realesrgan_handler.restore_video(
+                input_path=video_path,
+                output_path=output_path
+            )
+        
+        elif model_name == 'rife':
+            return self.rife_handler.interpolate_video(
+                input_path=video_path,
+                output_path=output_path,
+                interpolation_factor=2
+            )
+        
         else:
             raise ValueError(f"Unknown model: {model_name}")
     
@@ -347,7 +378,9 @@ class VideoEnhancementAgent(BaseVideoProcessingAgent):
                 'vsrm': self.vsrm_handler.get_model_info(),
                 'seedvr2': self.seedvr2_handler.get_model_info(),
                 'ditvr': self.ditvr_handler.get_model_info(),
-                'fast_mamba_vsr': self.fast_mamba_handler.get_model_info()
+                'fast_mamba_vsr': self.fast_mamba_handler.get_model_info(),
+                'realesrgan': self.realesrgan_handler.get_model_info(),
+                'rife': self.rife_handler.get_model_info()
             },
             'agent_capabilities': self.capabilities.__dict__
         }

@@ -12,6 +12,24 @@
       "notes": "Primary restoration backbone (quality)"
     },
     {
+      "id": "realesrgan",
+      "name": "Real-ESRGAN",
+      "repo": "https://huggingface.co/ai-forever/Real-ESRGAN",
+      "license": "bsd-3-clause",
+      "local_path": "models/weights/RealESRGAN",
+      "enabled": true,
+      "notes": "Practical super-resolution with downloadable weights"
+    },
+    {
+      "id": "rife",
+      "name": "RIFE",
+      "repo": "https://github.com/hzwer/Practical-RIFE",
+      "license": "apache-2.0",
+      "local_path": "models/weights/RIFE",
+      "enabled": true,
+      "notes": "Frame interpolation with downloadable weights"
+    },
+    {
       "id": "seedvr2_7b",
       "name": "SeedVR2-7B",
       "repo": "https://huggingface.co/ByteDance-Seed/SeedVR2-7B",

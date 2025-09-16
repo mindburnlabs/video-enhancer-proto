@@ -281,6 +281,86 @@ class SpatialTemporalMamba(nn.Module):
         
         return temporal_features
 
+class BiMambaLayer(nn.Module):
+    """Bidirectional Mamba layer for enhanced temporal modeling."""
+    
+    def __init__(self, dim, state_size=16, num_groups=8, efficient=True):
+        super().__init__()
+        self.dim = dim
+        self.state_size = state_size
+        self.num_groups = num_groups
+        self.efficient = efficient
+        
+        # Forward and backward Mamba blocks
+        self.forward_mamba = EAMambaBlock(
+            dim=dim,
+            d_state=state_size,
+            expand=2 if efficient else 4
+        )
+        
+        self.backward_mamba = EAMambaBlock(
+            dim=dim,
+            d_state=state_size,
+            expand=2 if efficient else 4
+        )
+        
+        # Fusion layer
+        self.fusion = nn.Sequential(
+            nn.LayerNorm(dim * 2),
+            nn.Linear(dim * 2, dim),
+            nn.GELU(),
+            nn.Linear(dim, dim)
+        )
+        
+        # Group normalization for stability
+        self.group_norm = nn.GroupNorm(num_groups, dim)
+        
+    def forward(self, x):
+        """Bidirectional processing with temporal fusion.
+        
+        Args:
+            x: Input tensor of shape (B, C, T, H, W)
+            
+        Returns:
+            Output tensor of same shape
+        """
+        B, C, T, H, W = x.shape
+        
+        # Flatten spatial dimensions for processing
+        x_flat = x.view(B, C, T, H * W).permute(0, 2, 3, 1)  # (B, T, H*W, C)
+        x_flat = x_flat.contiguous().view(B * T, H * W, C)
+        
+        # Forward pass
+        forward_out = self.forward_mamba(x_flat)  # (B*T, H*W, C)
+        
+        # Backward pass (reverse temporal order)
+        x_flat_reversed = x_flat.view(B, T, H * W, C)
+        x_flat_reversed = torch.flip(x_flat_reversed, dims=[1])  # Reverse time
+        x_flat_reversed = x_flat_reversed.contiguous().view(B * T, H * W, C)
+        
+        backward_out = self.backward_mamba(x_flat_reversed)  # (B*T, H*W, C)
+        
+        # Reverse back the backward output
+        backward_out = backward_out.view(B, T, H * W, C)
+        backward_out = torch.flip(backward_out, dims=[1])
+        backward_out = backward_out.contiguous().view(B * T, H * W, C)
+        
+        # Fuse forward and backward features
+        fused = torch.cat([forward_out, backward_out], dim=-1)  # (B*T, H*W, 2*C)
+        fused = self.fusion(fused)  # (B*T, H*W, C)
+        
+        # Reshape back to original format
+        output = fused.view(B, T, H * W, C).permute(0, 3, 1, 2)  # (B, C, T, H*W)
+        output = output.view(B, C, T, H, W)
+        
+        # Apply group normalization
+        output = output.permute(0, 2, 1, 3, 4)  # (B, T, C, H, W)
+        output = output.contiguous().view(B * T, C, H, W)
+        output = self.group_norm(output)
+        output = output.view(B, T, C, H, W).permute(0, 2, 1, 3, 4)  # Back to (B, C, T, H, W)
+        
+        return output
+
 class EAMambaVideoBlock(nn.Module):
     """Complete EAMamba video processing block."""
     

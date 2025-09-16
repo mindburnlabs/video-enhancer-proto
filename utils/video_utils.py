@@ -74,8 +74,18 @@ class VideoUtils:
             }
             
             # Calculate additional metrics
-            if metadata['duration'] > 0:
+            if metadata['duration'] > 0 and metadata['fps'] > 0:
                 metadata['total_frames'] = int(metadata['fps'] * metadata['duration'])
+                metadata['frame_count'] = metadata['total_frames']  # Alias for consistency
+            else:
+                metadata['total_frames'] = 0
+                metadata['frame_count'] = 0
+                
+            # Try to get frame count from nb_frames if available
+            nb_frames = video_stream.get('nb_frames')
+            if nb_frames and str(nb_frames).isdigit():
+                metadata['frame_count'] = int(nb_frames)
+                metadata['total_frames'] = int(nb_frames)
             
             return metadata
             
@@ -98,16 +108,19 @@ class VideoUtils:
         try:
             cap = cv2.VideoCapture(video_path)
             
+            frame_count = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
             metadata = {
-                'duration': cap.get(cv2.CAP_PROP_FRAME_COUNT) / cap.get(cv2.CAP_PROP_FPS),
+                'duration': frame_count / cap.get(cv2.CAP_PROP_FPS) if cap.get(cv2.CAP_PROP_FPS) > 0 else 0,
                 'width': int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)),
                 'height': int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT)),
                 'fps': cap.get(cv2.CAP_PROP_FPS),
-                'total_frames': int(cap.get(cv2.CAP_PROP_FRAME_COUNT)),
+                'total_frames': frame_count,
+                'frame_count': frame_count,  # Alias for consistency
                 'codec': 'unknown',
                 'format': 'unknown',
                 'bitrate': 0,
-                'file_size': os.path.getsize(video_path) if os.path.exists(video_path) else 0
+                'file_size': os.path.getsize(video_path) if os.path.exists(video_path) else 0,
+                'pixel_format': 'unknown'
             }
             
             cap.release()
@@ -117,8 +130,8 @@ class VideoUtils:
             self.logger.error(f"OpenCV metadata extraction failed: {e}")
             return {
                 'duration': 0, 'width': 0, 'height': 0, 'fps': 30,
-                'total_frames': 0, 'codec': 'unknown', 'format': 'unknown',
-                'bitrate': 0, 'file_size': 0
+                'total_frames': 0, 'frame_count': 0, 'codec': 'unknown', 'format': 'unknown',
+                'bitrate': 0, 'file_size': 0, 'pixel_format': 'unknown'
             }
     
     def extract_audio(self, video_path: str, audio_path: str, sample_rate: int = 16000) -> bool:
