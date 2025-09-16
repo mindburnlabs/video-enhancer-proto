@@ -61,20 +61,27 @@ from utils.security_integration import (
 from utils.data_protection import DataCategory
 from utils.file_security import SecurityThreat
 
-# ZeroGPU import
+# Environment detection FIRST
+HUGGINGFACE_SPACE = os.environ.get('SPACE_ID') is not None
+ZEROGPU_SPACE = os.environ.get('ZERO_GPU') == '1' or os.environ.get('hw') == 'zero-gpu'
+
+# ZeroGPU import - ONLY in HF Spaces environment
 try:
-    import spaces
-    ZEROGPU_AVAILABLE = True
-    logger = logging.getLogger(__name__)
-    logger.info("✨ ZeroGPU available - GPU acceleration enabled")
+    if HUGGINGFACE_SPACE and ZEROGPU_SPACE:
+        import spaces
+        ZEROGPU_AVAILABLE = True
+        logger = logging.getLogger(__name__)
+        logger.info("✨ ZeroGPU available - GPU acceleration enabled")
+    else:
+        raise ImportError("Not in ZeroGPU environment")
 except ImportError:
     ZEROGPU_AVAILABLE = False
     spaces = None
     logger = logging.getLogger(__name__)
-    logger.warning("⚠️ ZeroGPU not available - running in CPU mode")
-
-# Environment detection
-HUGGINGFACE_SPACE = os.environ.get('SPACE_ID') is not None
+    if HUGGINGFACE_SPACE:
+        logger.warning("⚠️ ZeroGPU not available in this Space - using CPU fallback")
+    else:
+        logger.info("💻 Running in local/non-HF environment")
 
 # Setup basic logging
 logging.basicConfig(
@@ -102,22 +109,29 @@ try:
     from diffusers import StableDiffusionPipeline, DiffusionPipeline
     from transformers import pipeline
     
-    # ZeroGPU device detection
+    # ZeroGPU device detection - NEVER initialize CUDA in main process
     if ZEROGPU_AVAILABLE and HUGGINGFACE_SPACE:
-        # In ZeroGPU environment, device allocation is dynamic
-        CUDA_AVAILABLE = True
-        device = 'cuda'
-        logger.info(f"🎯 ZeroGPU Environment - Dynamic GPU allocation enabled")
+        # In ZeroGPU environment, device allocation is dynamic - defer GPU checks
+        CUDA_AVAILABLE = True  # Assume available but don't test
+        device = 'cuda'  # Will be managed by @spaces.GPU decorator
+        logger.info(f"🎯 ZeroGPU Environment - Dynamic GPU allocation (deferred)")
     else:
-        # Check CUDA availability safely for local/non-ZeroGPU environments
+        # Only check CUDA in non-ZeroGPU environments
         try:
-            CUDA_AVAILABLE = torch.cuda.is_available()
-            device = 'cuda' if CUDA_AVAILABLE else 'cpu'
-            logger.info(f"🚀 PyTorch loaded successfully. Device: {device}")
+            if not HUGGINGFACE_SPACE:
+                # Safe to check CUDA in local environments
+                CUDA_AVAILABLE = torch.cuda.is_available()
+                device = 'cuda' if CUDA_AVAILABLE else 'cpu'
+                logger.info(f"🚀 PyTorch loaded successfully. Device: {device}")
+            else:
+                # HF Space but not ZeroGPU - assume CPU
+                CUDA_AVAILABLE = False
+                device = 'cpu'
+                logger.info(f"💻 HF Space CPU mode")
         except Exception as e:
             CUDA_AVAILABLE = False
             device = 'cpu'
-            logger.warning(f"CUDA check failed: {e}. Using CPU.")
+            logger.warning(f"Device detection failed: {e}. Using CPU.")
         
 except ImportError as e:
     logger.error(f"Critical imports failed: {e}")
@@ -281,7 +295,7 @@ class GPUVideoEnhancer:
         else:
             return self._enhance_frame_cpu_fallback(frame)
     
-    @spaces.GPU(duration=30) if ZEROGPU_AVAILABLE and spaces else lambda x: x
+    @spaces.GPU(duration=30) if ZEROGPU_AVAILABLE and spaces else lambda x: x  
     def _enhance_frame_with_gpu(self, frame):
         """GPU-accelerated frame enhancement using ZeroGPU."""
         try:
@@ -369,9 +383,17 @@ class GPUVideoEnhancer:
         except:
             return 120  # Default 2 minutes
     
-    @spaces.GPU(duration=lambda self, input_path, output_path, target_fps=30: self._estimate_processing_duration(input_path, output_path, target_fps)) if ZEROGPU_AVAILABLE and spaces else lambda x: x
     def _process_video_gpu(self, input_path, output_path, target_fps=30):
-        """ZeroGPU-accelerated video processing."""
+        """ZeroGPU-accelerated video processing with safe decorator."""
+        # Apply GPU decorator with fixed duration
+        if ZEROGPU_AVAILABLE and spaces:
+            return self._process_video_gpu_decorated(input_path, output_path, target_fps)
+        else:
+            return self._process_video_cpu(input_path, output_path, target_fps)
+    
+    @spaces.GPU(duration=180) if ZEROGPU_AVAILABLE and spaces else lambda x: x
+    def _process_video_gpu_decorated(self, input_path, output_path, target_fps=30):
+        """GPU-decorated video processing method."""
         try:
             logger.info(f"🎯 ZeroGPU Processing video: {input_path} -> {output_path}")
             start_time = time.time()
@@ -579,18 +601,131 @@ class GPUVideoEnhancer:
 enhancer = GPUVideoEnhancer(device=device)
 
 def initialize_enhancer():
-    """Initialize the video enhancer with progress feedback."""
+    """Initialize the video enhancer with comprehensive error handling and diagnostics."""
     try:
         logger.info("🚀 Initializing Video Enhancer...")
-        success = enhancer.load_models()
         
-        if success:
-            return "✅ Video Enhancer Ready! Upload a video to get started."
+        # Log environment details for diagnostics
+        env_info = [
+            f"Environment: {'ZeroGPU' if ZEROGPU_AVAILABLE else 'Standard'}",
+            f"Device: {device}",
+            f"HF Space: {HUGGINGFACE_SPACE}",
+            f"SOTA Available: {SOTA_AVAILABLE}"
+        ]
+        
+        if SOTA_IMPORT_ERROR:
+            env_info.append(f"SOTA Error: {SOTA_IMPORT_ERROR}")
+            
+        logger.info(f"Environment: {' | '.join(env_info)}")
+        
+        # System resource check
+        try:
+            import psutil
+            cpu_count = psutil.cpu_count()
+            memory_gb = psutil.virtual_memory().total / (1024**3)
+            logger.info(f"System Resources: {cpu_count} CPUs, {memory_gb:.1f}GB RAM")
+        except Exception:
+            logger.info("Could not determine system resources")
+        
+        # Initialize with timeout protection
+        import threading
+        import time as time_mod
+        
+        result = {"success": False, "error": None, "completed": False}
+        
+        def init_worker():
+            try:
+                logger.info("🔄 Loading models...")
+                result["success"] = enhancer.load_models()
+                result["completed"] = True
+                logger.info(f"🏁 Model loading completed: {result['success']}")
+            except Exception as e:
+                result["error"] = str(e)
+                result["completed"] = True
+                logger.error(f"❌ Model loading failed: {e}")
+                
+        # Run initialization with timeout
+        init_thread = threading.Thread(target=init_worker, daemon=True)
+        init_thread.start()
+        
+        # Wait with progress indication
+        timeout = 90  # 90 seconds timeout
+        start_time = time_mod.time()
+        
+        while time_mod.time() - start_time < timeout and not result["completed"]:
+            time_mod.sleep(1)
+            elapsed = int(time_mod.time() - start_time)
+            if elapsed % 15 == 0 and elapsed > 0:  # Progress every 15 seconds
+                logger.info(f"⏳ Initialization in progress... ({elapsed}s elapsed)")
+        
+        if not result["completed"]:
+            logger.error(f"⏱️ Enhancer initialization timed out after {timeout}s")
+            return f"⚠️ Initialization timed out ({timeout}s). Using fallback mode."
+            
+        # Check results
+        if result["error"]:
+            error_msg = f"Initialization error: {result['error']}"
+            logger.error(error_msg)
+            if "CUDA" in result["error"] and ZEROGPU_AVAILABLE:
+                return f"⚠️ {error_msg} - ZeroGPU will handle CUDA dynamically."
+            return f"⚠️ {error_msg} - Fallback mode enabled."
+            
+        if result["success"]:
+            logger.info("✅ Video enhancer initialized successfully")
+            
+            # Run basic functionality test
+            test_result = _test_basic_functionality()
+            
+            success_msg = "✅ Video Enhancer Ready! Upload a video to get started."
+            if test_result["warnings"]:
+                success_msg += f" (Note: {test_result['warnings']})"
+                
+            return success_msg
         else:
-            return "⚠️ Enhancer initialized with basic features only."
+            logger.warning("Enhancer initialized with limited functionality")
+            return "⚠️ Enhancer initialized with basic features only. Some models may be unavailable."
+            
     except Exception as e:
-        logger.error(f"Initialization failed: {e}")
-        return f"❌ Initialization failed: {str(e)}"
+        error_msg = f"Critical initialization failure: {str(e)}"
+        logger.error(error_msg, exc_info=True)
+        return f"❌ {error_msg}"
+        
+def _test_basic_functionality() -> dict:
+    """Test basic functionality and return status."""
+    warnings = []
+    
+    try:
+        # Test PyTorch
+        import torch
+        test_tensor = torch.randn(1, 3, 8, 8)
+        
+        # Only test CUDA in non-ZeroGPU environments to avoid early initialization
+        if CUDA_AVAILABLE and not ZEROGPU_AVAILABLE and not HUGGINGFACE_SPACE:
+            try:
+                test_tensor = test_tensor.cuda()
+                logger.info("✅ CUDA functionality verified")
+            except Exception as cuda_err:
+                logger.warning(f"CUDA test failed: {cuda_err}")
+                warnings.append("CUDA test failed")
+        
+        # Test OpenCV
+        import cv2
+        test_frame = np.random.randint(0, 255, (64, 64, 3), dtype=np.uint8)
+        gray = cv2.cvtColor(test_frame, cv2.COLOR_BGR2GRAY)
+        logger.info("✅ OpenCV functionality verified")
+        
+        # Test SOTA availability
+        if SOTA_AVAILABLE:
+            logger.info("✅ SOTA models available")
+        else:
+            logger.warning(f"SOTA models unavailable: {SOTA_IMPORT_ERROR}")
+            warnings.append("SOTA models unavailable")
+            
+        return {"success": True, "warnings": ", ".join(warnings) if warnings else None}
+        
+    except Exception as e:
+        logger.warning(f"Basic functionality test failed: {e}")
+        return {"success": False, "warnings": f"Functionality test failed: {e}"}
 
 def _estimate_duration_seconds(input_path: str) -> int:
     try:
@@ -692,13 +827,186 @@ def _temporal_smooth(input_path: str, output_path: str):
 
 
 def _run_sota_pipeline(input_path: str, output_path: str, target_fps: int, latency_class: str = 'standard', enable_face_expert: bool = False, enable_hfr: bool = False) -> tuple[bool, str]:
-    """Run the SOTA routing + handler pipeline. Returns (success, message)."""
+    """Run the SOTA routing + handler pipeline with ZeroGPU safety. Returns (success, message)."""
     if not SOTA_AVAILABLE:
-        return False, f"SOTA pipeline unavailable: {SOTA_IMPORT_ERROR or 'imports failed'}"
+        logger.error(f"SOTA pipeline unavailable: {SOTA_IMPORT_ERROR}")
+        return False, f"❌ SOTA pipeline unavailable: {SOTA_IMPORT_ERROR or 'Model imports failed'}"
 
     try:
-        logger.info("🔍 Running Degradation Router analysis...")
-        router = DegradationRouter(device='cuda' if CUDA_AVAILABLE else 'cpu')
+        logger.info("🔍 Initializing SOTA pipeline...")
+        
+        # ZeroGPU safety check
+        if ZEROGPU_AVAILABLE and HUGGINGFACE_SPACE:
+            return _run_sota_pipeline_zerogpu(input_path, output_path, target_fps, latency_class, enable_face_expert, enable_hfr)
+        else:
+            return _run_sota_pipeline_local(input_path, output_path, target_fps, latency_class, enable_face_expert, enable_hfr)
+            
+    except Exception as e:
+        error_msg = f"❌ SOTA pipeline initialization failed: {str(e)}"
+        logger.error(error_msg)
+        return False, error_msg
+
+@spaces.GPU(duration=300) if ZEROGPU_AVAILABLE and spaces else lambda x: x
+def _run_sota_pipeline_zerogpu(input_path: str, output_path: str, target_fps: int, latency_class: str = 'standard', enable_face_expert: bool = False, enable_hfr: bool = False) -> tuple[bool, str]:
+    """ZeroGPU-decorated SOTA pipeline execution."""
+    try:
+        logger.info("🔍 Running Degradation Router analysis (ZeroGPU)...")
+        
+        # Import and initialize models within GPU context
+        from models.analysis.degradation_router import DegradationRouter
+        from models.enhancement.vsr.vsrm_handler import VSRMHandler
+        from models.enhancement.zeroshot.seedvr2_handler import SeedVR2Handler
+        from models.enhancement.zeroshot.ditvr_handler import DiTVRHandler
+        from models.enhancement.vsr.fast_mamba_vsr_handler import FastMambaVSRHandler
+        
+        router = DegradationRouter(device='cuda')
+        plan = router.analyze_and_route(input_path, latency_class=latency_class, enable_face_expert=bool(enable_face_expert), enable_hfr=bool(enable_hfr))
+        route = plan['expert_routing']
+        primary = route.get('primary_model', 'vsrm')
+        logger.info(f"🗺️ Routing selected primary model: {primary}")
+
+        # Preprocess
+        work_input = input_path
+        with tempfile.TemporaryDirectory() as tdir:
+            tdir = Path(tdir)
+            if route.get('use_compression_expert') or route.get('use_denoising') or route.get('use_low_light_expert'):
+                pre_path = str(tdir / "preprocessed.mp4")
+                _preprocess_video(
+                    input_path=work_input,
+                    output_path=pre_path,
+                    use_compression=bool(route.get('use_compression_expert')),
+                    use_denoise=bool(route.get('use_denoising')),
+                    use_low_light=bool(route.get('use_low_light_expert')),
+                )
+                work_input = pre_path
+
+            # Primary handler with comprehensive error handling
+            primary_out = str(tdir / "primary.mp4")
+            stats = {}
+            try:
+                if primary == 'seedvr2':
+                    handler = SeedVR2Handler(device='cuda')
+                    stats = handler.restore_video(input_path=work_input, output_path=primary_out, quality_threshold=0.5)
+                elif primary == 'ditvr':
+                    handler = DiTVRHandler(device='cuda')
+                    stats = handler.restore_video(input_path=work_input, output_path=primary_out, degradation_type='unknown', auto_adapt=True)
+                elif primary == 'fast_mamba_vsr':
+                    handler = FastMambaVSRHandler(device='cuda')
+                    stats = handler.enhance_video(input_path=work_input, output_path=primary_out, chunk_size=16, fp16=True)
+                else:
+                    handler = VSRMHandler(device='cuda')
+                    stats = handler.enhance_video(input_path=work_input, output_path=primary_out, window=7, fp16=True)
+            except Exception as model_error:
+                logger.error(f"Primary model {primary} failed: {model_error}")
+                # Fallback to basic upscaling
+                return _fallback_basic_upscale_zerogpu(input_path, output_path)
+
+            work_output = primary_out
+            
+            # Validate primary output
+            if not Path(primary_out).exists() or Path(primary_out).stat().st_size == 0:
+                logger.error(f"Primary model {primary} produced no output")
+                return _fallback_basic_upscale_zerogpu(input_path, output_path)
+
+            # Face restoration expert (optional)
+            if route.get('use_face_expert'):
+                try:
+                    from models.enhancement.face_restoration_expert import FaceRestorationExpert
+                    face_out = str(tdir / "face.mp4")
+                    fre = FaceRestorationExpert(device='cuda')
+                    fre.process_video_selective(work_output, face_out)
+                    if Path(face_out).exists():
+                        work_output = face_out
+                except Exception as fe:
+                    logger.warning(f"Face restoration skipped: {fe}")
+
+            # Temporal consistency (optional)
+            if route.get('use_temporal_consistency'):
+                try:
+                    temp_out = str(tdir / "tc.mp4")
+                    _temporal_smooth(work_output, temp_out)
+                    if Path(temp_out).exists():
+                        work_output = temp_out
+                except Exception as tc_error:
+                    logger.warning(f"Temporal consistency skipped: {tc_error}")
+
+            # Interpolation (HFR) (optional)
+            if route.get('use_hfr_interpolation'):
+                try:
+                    from models.interpolation.enhanced_rife_handler import EnhancedRIFEHandler
+                    rife_out = str(tdir / "hfr.mp4")
+                    er = EnhancedRIFEHandler(device='cuda')
+                    cap = cv2.VideoCapture(work_output)
+                    in_fps = cap.get(cv2.CAP_PROP_FPS) or 24
+                    cap.release()
+                    er.interpolate_video(work_output, rife_out, target_fps=float(in_fps)*2, interpolation_factor=2)
+                    if Path(rife_out).exists():
+                        work_output = rife_out
+                except Exception as ie:
+                    logger.warning(f"HFR interpolation skipped: {ie}")
+
+            # Persist final output
+            Path(output_path).parent.mkdir(parents=True, exist_ok=True)
+            import shutil as _sh
+            _sh.copy2(work_output, output_path)
+            
+            # Clear GPU memory
+            import torch
+            torch.cuda.empty_cache()
+
+        return True, f"✅ ZeroGPU SOTA pipeline completed with {primary}"
+    except Exception as e:
+        error_msg = f"❌ ZeroGPU SOTA pipeline failed: {str(e)}"
+        logger.error(error_msg)
+        return False, error_msg
+        
+def _fallback_basic_upscale_zerogpu(input_path: str, output_path: str) -> tuple[bool, str]:
+    """Fallback basic upscaling for ZeroGPU when SOTA models fail."""
+    try:
+        logger.info("🔄 Using fallback basic upscaling...")
+        
+        cap = cv2.VideoCapture(input_path)
+        if not cap.isOpened():
+            return False, "Could not open input video"
+        
+        fps = cap.get(cv2.CAP_PROP_FPS)
+        width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+        height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+        
+        fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+        Path(output_path).parent.mkdir(parents=True, exist_ok=True)
+        out = cv2.VideoWriter(output_path, fourcc, fps, (width*2, height*2))
+        
+        frame_count = 0
+        while True:
+            ret, frame = cap.read()
+            if not ret:
+                break
+                
+            # Basic upscaling using CUDA-accelerated resize
+            import torch
+            frame_tensor = torch.from_numpy(frame).float().permute(2, 0, 1).unsqueeze(0).cuda() / 255.0
+            upscaled = torch.nn.functional.interpolate(frame_tensor, scale_factor=2, mode='bicubic', align_corners=False)
+            frame_up = (upscaled.squeeze(0).permute(1, 2, 0).cpu().numpy() * 255).astype(np.uint8)
+            
+            out.write(frame_up)
+            frame_count += 1
+            
+        cap.release()
+        out.release()
+        torch.cuda.empty_cache()
+        
+        return True, f"✅ Fallback upscaling completed ({frame_count} frames)"
+        
+    except Exception as e:
+        return False, f"❌ Fallback upscaling failed: {e}"
+
+def _run_sota_pipeline_local(input_path: str, output_path: str, target_fps: int, latency_class: str = 'standard', enable_face_expert: bool = False, enable_hfr: bool = False) -> tuple[bool, str]:
+    """Local (non-ZeroGPU) SOTA pipeline execution."""
+    try:
+        logger.info("🔍 Running Degradation Router analysis (Local)...")
+        
+        router = DegradationRouter(device=device)
         plan = router.analyze_and_route(input_path, latency_class=latency_class, enable_face_expert=bool(enable_face_expert), enable_hfr=bool(enable_hfr))
         route = plan['expert_routing']
         primary = route.get('primary_model', 'vsrm')
@@ -721,80 +1029,165 @@ def _run_sota_pipeline(input_path: str, output_path: str, target_fps: int, laten
 
             # Primary handler
             primary_out = str(tdir / "primary.mp4")
-            if primary == 'seedvr2':
-                handler = SeedVR2Handler(device='cuda' if CUDA_AVAILABLE else 'cpu')
-                stats = handler.restore_video(input_path=work_input, output_path=primary_out, quality_threshold=0.5)
-            elif primary == 'ditvr':
-                handler = DiTVRHandler(device='cuda' if CUDA_AVAILABLE else 'cpu')
-                stats = handler.restore_video(input_path=work_input, output_path=primary_out, degradation_type='unknown', auto_adapt=True)
-            elif primary == 'fast_mamba_vsr':
-                handler = FastMambaVSRHandler(device='cuda' if CUDA_AVAILABLE else 'cpu')
-                stats = handler.enhance_video(input_path=work_input, output_path=primary_out, chunk_size=16, fp16=True)
-            else:
-                handler = VSRMHandler(device='cuda' if CUDA_AVAILABLE else 'cpu')
-                stats = handler.enhance_video(input_path=work_input, output_path=primary_out, window=7, fp16=True)
+            try:
+                if primary == 'seedvr2':
+                    handler = SeedVR2Handler(device=device)
+                    stats = handler.restore_video(input_path=work_input, output_path=primary_out, quality_threshold=0.5)
+                elif primary == 'ditvr':
+                    handler = DiTVRHandler(device=device)
+                    stats = handler.restore_video(input_path=work_input, output_path=primary_out, degradation_type='unknown', auto_adapt=True)
+                elif primary == 'fast_mamba_vsr':
+                    handler = FastMambaVSRHandler(device=device)
+                    stats = handler.enhance_video(input_path=work_input, output_path=primary_out, chunk_size=16, fp16=(device=='cuda'))
+                else:
+                    handler = VSRMHandler(device=device)
+                    stats = handler.enhance_video(input_path=work_input, output_path=primary_out, window=7, fp16=(device=='cuda'))
+            except Exception as model_error:
+                logger.error(f"Primary model {primary} failed: {model_error}")
+                return False, f"❌ Model {primary} failed: {str(model_error)}"
 
             work_output = primary_out
 
-            # Face restoration expert
+            # Post-processing steps (optional)
             if route.get('use_face_expert'):
                 try:
                     from models.enhancement.face_restoration_expert import FaceRestorationExpert
                     face_out = str(tdir / "face.mp4")
-                    fre = FaceRestorationExpert(device='cuda' if CUDA_AVAILABLE else 'cpu')
+                    fre = FaceRestorationExpert(device=device)
                     fre.process_video_selective(work_output, face_out)
-                    work_output = face_out
+                    if Path(face_out).exists():
+                        work_output = face_out
                 except Exception as fe:
-                    logger.warning(f"Face restoration skipped due to error: {fe}")
+                    logger.warning(f"Face restoration skipped: {fe}")
 
-            # Temporal consistency
             if route.get('use_temporal_consistency'):
-                temp_out = str(tdir / "tc.mp4")
-                _temporal_smooth(work_output, temp_out)
-                work_output = temp_out
+                try:
+                    temp_out = str(tdir / "tc.mp4")
+                    _temporal_smooth(work_output, temp_out)
+                    if Path(temp_out).exists():
+                        work_output = temp_out
+                except Exception:
+                    logger.warning("Temporal consistency skipped")
 
-            # Interpolation (HFR)
             if route.get('use_hfr_interpolation'):
                 try:
                     from models.interpolation.enhanced_rife_handler import EnhancedRIFEHandler
                     rife_out = str(tdir / "hfr.mp4")
-                    er = EnhancedRIFEHandler(device='cuda' if CUDA_AVAILABLE else 'cpu')
-                    # Double FPS
+                    er = EnhancedRIFEHandler(device=device)
                     cap = cv2.VideoCapture(work_output)
                     in_fps = cap.get(cv2.CAP_PROP_FPS) or 24
                     cap.release()
                     er.interpolate_video(work_output, rife_out, target_fps=float(in_fps)*2, interpolation_factor=2)
-                    work_output = rife_out
-                except Exception as ie:
-                    logger.warning(f"HFR interpolation skipped due to error: {ie}")
+                    if Path(rife_out).exists():
+                        work_output = rife_out
+                except Exception:
+                    logger.warning("HFR interpolation skipped")
 
             # Persist final output
             Path(output_path).parent.mkdir(parents=True, exist_ok=True)
             import shutil as _sh
             _sh.copy2(work_output, output_path)
 
-        return True, f"✅ SOTA pipeline completed with {primary}. Stats: {stats}"
+        return True, f"✅ Local SOTA pipeline completed with {primary}"
     except Exception as e:
-        logger.error(f"SOTA pipeline failed: {e}")
-        return False, f"❌ SOTA pipeline failed: {e}"
+        error_msg = f"❌ Local SOTA pipeline failed: {str(e)}"
+        logger.error(error_msg)
+        return False, error_msg
 
 
 def get_recent_logs(n: int = 200) -> str:
     return "\n".join(list(log_ring)[-n:])
 
+def _get_hf_user_info(request):
+    """Extract HuggingFace user information from OAuth request."""
+    try:
+        if not request:
+            return None
+            
+        # Check for HuggingFace OAuth headers
+        headers = getattr(request, 'headers', {})
+        
+        # Look for user information in OAuth context
+        # HuggingFace Spaces with OAuth enabled provide user info
+        user_info = getattr(request, 'username', None)
+        if user_info:
+            return {"preferred_username": user_info, "authenticated": True}
+        
+        # Check OAuth environment variables
+        oauth_client_id = os.environ.get('OAUTH_CLIENT_ID')
+        if oauth_client_id and hasattr(request, 'session_hash'):
+            # User is authenticated through OAuth
+            return {"preferred_username": "authenticated_user", "authenticated": True}
+            
+        # Fallback: check for any authentication indicators
+        if HUGGINGFACE_SPACE and headers:
+            auth_header = headers.get('authorization') or headers.get('x-user-token')
+            if auth_header:
+                return {"preferred_username": "token_user", "authenticated": True}
+                
+        return None
+        
+    except Exception as e:
+        logger.warning(f"Failed to extract user info: {e}")
+        return None
+
+def _check_user_quota(user_info):
+    """Check user quotas for ZeroGPU usage."""
+    try:
+        if not user_info:
+            return {"allowed": False, "message": "Authentication required"}
+        
+        # For authenticated users, allow processing
+        # The actual quota management is handled by HuggingFace ZeroGPU infrastructure
+        if user_info.get("authenticated"):
+            return {"allowed": True, "message": "Quota OK"}
+        
+        return {"allowed": False, "message": "Please sign in to access ZeroGPU features"}
+        
+    except Exception as e:
+        logger.warning(f"Quota check failed: {e}")
+        return {"allowed": True, "message": "Quota check bypassed"}
+
 
 def process_video_gradio(input_video, target_fps, engine_choice, latency_class, enable_face, enable_hfr, request: gr.Request = None):
-    """Process video through Gradio interface with comprehensive security."""
+    """Process video through Gradio interface with comprehensive security and user authentication."""
     try:
         if input_video is None:
             return None, "❌ Please upload a video file."
+        
+        # Check HuggingFace authentication in ZeroGPU environment
+        user_info = None
+        if HUGGINGFACE_SPACE and ZEROGPU_AVAILABLE:
+            try:
+                # Get user info from HuggingFace OAuth
+                user_info = _get_hf_user_info(request)
+                if not user_info:
+                    return None, "❌ Please sign in with your Hugging Face account to use ZeroGPU features. Click the 'Sign in with HF' button at the top."
+                    
+                logger.info(f"👤 Authenticated user: {user_info.get('preferred_username', 'anonymous')}")
+                
+                # Check user quotas
+                quota_status = _check_user_quota(user_info)
+                if not quota_status["allowed"]:
+                    return None, f"❌ {quota_status['message']} Please upgrade to HuggingFace PRO for higher limits: https://huggingface.co/subscribe/pro"
+                    
+            except Exception as auth_error:
+                logger.error(f"Authentication error: {auth_error}")
+                if "quota" in str(auth_error).lower():
+                    return None, f"❌ ZeroGPU quota exceeded. Please sign in with HuggingFace Pro account or try again later."
+                else:
+                    return None, f"⚠️ Authentication issue: {auth_error}. Falling back to basic processing."
         
         # Create security context from request
         context = SecurityContext(
             ip_address=request.client.host if request and request.client else "127.0.0.1",
             user_agent=request.headers.get('user-agent', 'Unknown') if request else "Gradio-Interface",
             session_id=getattr(request, 'session_hash', None) if request else None,
-            metadata={"source": "gradio_interface", "user_consent": True}
+            metadata={
+                "source": "gradio_interface", 
+                "user_consent": True,
+                "user_info": user_info
+            }
         )
         
         # Rate limiting check

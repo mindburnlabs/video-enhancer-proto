@@ -8,6 +8,11 @@ suggested_storage: small
 python_version: 3.10
 pinned: false
 license: mit
+hf_oauth: true
+startup_duration_timeout: "10m"
+custom_headers:
+  cross-origin-embedder-policy: require-corp
+  cross-origin-opener-policy: same-origin
 colorFrom: blue
 colorTo: purple
 emoji: 🎬

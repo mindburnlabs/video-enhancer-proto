@@ -1,0 +1,56 @@
+{
+  "models_checked": [
+    "models/analysis",
+    "models/backbones/diffusion",
+    "models/backbones/mamba",
+    "models/backbones/rvrt",
+    "models/backbones/transformer",
+    "models/enhancement/zeroshot",
+    "models/enhancement/vsr",
+    "models/enhancement/frame",
+    "models/interpolation"
+  ],
+  "weights_found": [
+    "models/weights/SeedVR2-3B/ema_vae.pth",
+    "models/weights/SeedVR2-3B/seedvr2_ema_3b.pth",
+    "models/weights/SeedVR2-3B/neg_emb.pt",
+    "models/weights/SeedVR2-3B/pos_emb.pt"
+  ],
+  "weights_missing": [
+    "models/weights/SeedVR2-3B/pytorch_model.bin",
+    "models/weights/DiTVR/model.pth",
+    "models/weights/FastMambaVSR/checkpoint.pth",
+    "models/weights/VSRM/model.safetensors"
+  ],
+  "dependencies_ok": [],
+  "dependencies_missing": [
+    {
+      "name": "PyTorch",
+      "error": "No module named 'torch'"
+    },
+    {
+      "name": "OpenCV",
+      "error": "No module named 'cv2'"
+    },
+    {
+      "name": "NumPy",
+      "error": "No module named 'numpy'"
+    },
+    {
+      "name": "Pillow",
+      "error": "No module named 'PIL'"
+    },
+    {
+      "name": "Gradio",
+      "error": "No module named 'gradio'"
+    }
+  ],
+  "errors": [
+    "Import failed: models.analysis.degradation_router.DegradationRouter - No module named 'torch'",
+    "Import failed: models.enhancement.zeroshot.seedvr2_handler.SeedVR2Handler - No module named 'torch'",
+    "Import failed: models.enhancement.zeroshot.ditvr_handler.DiTVRHandler - No module named 'torch'",
+    "Import failed: models.enhancement.vsr.vsrm_handler.VSRMHandler - No module named 'torch'",
+    "Import failed: models.enhancement.vsr.fast_mamba_vsr_handler.FastMambaVSRHandler - No module named 'torch'",
+    "Import failed: models.interpolation.enhanced_rife_handler.EnhancedRIFEHandler - No module named 'torch'"
+  ]
+}
