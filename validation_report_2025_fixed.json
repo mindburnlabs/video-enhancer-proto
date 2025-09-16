@@ -1,0 +1,139 @@
+
+# 🧪 SOTA Video Enhancer Deployment Validation Report
+
+**Overall Status**: FAIL
+**Timestamp**: 2025-09-16T22:59:15.097985
+**Tests Run**: 8
+
+## Test Results Summary
+
+- ❌ **Health Endpoint**: FAIL (0.00s)
+- ❌ **Metrics Endpoint**: FAIL (0.00s)
+- ❌ **Readiness Endpoint**: FAIL (0.00s)
+- ❌ **Gradio Interface**: FAIL (0.00s)
+- ⚠️ **Model Availability**: WARN
+- ℹ️ **Gpu Memory**: SKIP
+- ✅ **File System**: PASS
+- ✅ **Configuration Validation**: PASS
+
+## ⚠️ Warnings
+
+- Model RIFE failed to load: RIFEHandler.__init__() got an unexpected keyword argument 'auto_download'
+- Model Real-ESRGAN failed to load: RealESRGANHandler.__init__() got an unexpected keyword argument 'auto_download'
+
+## ❌ Errors
+
+- Health endpoint failed: HTTPConnectionPool(host='localhost', port=7861): Max retries exceeded with url: /health (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x1051d9550>: Failed to establish a new connection: [Errno 61] Connection refused'))
+- Metrics endpoint failed: HTTPConnectionPool(host='localhost', port=7861): Max retries exceeded with url: /metrics (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x1051d9700>: Failed to establish a new connection: [Errno 61] Connection refused'))
+- Readiness endpoint failed: HTTPConnectionPool(host='localhost', port=7861): Max retries exceeded with url: /ready (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x1051da180>: Failed to establish a new connection: [Errno 61] Connection refused'))
+- Gradio interface failed: HTTPConnectionPool(host='localhost', port=7860): Max retries exceeded with url: / (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x1051da720>: Failed to establish a new connection: [Errno 61] Connection refused'))
+
+## 📊 Detailed Results
+
+```json
+{
+  "timestamp": "2025-09-16T22:59:15.097985",
+  "overall_status": "FAIL",
+  "tests": {
+    "health_endpoint": {
+      "status": "FAIL",
+      "duration": "0.00s",
+      "error": "HTTPConnectionPool(host='localhost', port=7861): Max retries exceeded with url: /health (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x1051d9550>: Failed to establish a new connection: [Errno 61] Connection refused'))"
+    },
+    "metrics_endpoint": {
+      "status": "FAIL",
+      "duration": "0.00s",
+      "error": "HTTPConnectionPool(host='localhost', port=7861): Max retries exceeded with url: /metrics (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x1051d9700>: Failed to establish a new connection: [Errno 61] Connection refused'))"
+    },
+    "readiness_endpoint": {
+      "status": "FAIL",
+      "duration": "0.00s",
+      "error": "HTTPConnectionPool(host='localhost', port=7861): Max retries exceeded with url: /ready (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x1051da180>: Failed to establish a new connection: [Errno 61] Connection refused'))"
+    },
+    "gradio_interface": {
+      "status": "FAIL",
+      "duration": "0.00s",
+      "error": "HTTPConnectionPool(host='localhost', port=7860): Max retries exceeded with url: / (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x1051da720>: Failed to establish a new connection: [Errno 61] Connection refused'))"
+    },
+    "model_availability": {
+      "status": "WARN",
+      "total_models": 5,
+      "available_models": 3,
+      "model_tests": {
+        "SeedVR2-3B": {
+          "status": "AVAILABLE",
+          "parameters": 704421985,
+          "model_loaded": false
+        },
+        "VSRM": {
+          "status": "AVAILABLE",
+          "parameters": 2255346
+        },
+        "FastMambaVSR": {
+          "status": "AVAILABLE",
+          "parameters": 2610009
+        },
+        "RIFE": {
+          "status": "ERROR",
+          "error": "RIFEHandler.__init__() got an unexpected keyword argument 'auto_download'"
+        },
+        "Real-ESRGAN": {
+          "status": "ERROR",
+          "error": "RealESRGANHandler.__init__() got an unexpected keyword argument 'auto_download'"
+        }
+      },
+      "available_list": [
+        "SeedVR2-3B",
+        "VSRM",
+        "FastMambaVSR"
+      ],
+      "failed_list": [
+        "RIFE",
+        "Real-ESRGAN"
+      ]
+    },
+    "gpu_memory": {
+      "status": "SKIP",
+      "reason": "CUDA not available"
+    },
+    "file_system": {
+      "status": "PASS",
+      "permissions_ok": true,
+      "temp_file_ok": true
+    },
+    "configuration_validation": {
+      "status": "PASS",
+      "environment_tests": {
+        "development": {
+          "status": "PASS",
+          "environment": "development",
+          "device": "cuda",
+          "gpu_available": false
+        },
+        "staging": {
+          "status": "PASS",
+          "environment": "staging",
+          "device": "cuda",
+          "gpu_available": false
+        },
+        "production": {
+          "status": "PASS",
+          "environment": "production",
+          "device": "cuda",
+          "gpu_available": false
+        }
+      }
+    }
+  },
+  "warnings": [
+    "Model RIFE failed to load: RIFEHandler.__init__() got an unexpected keyword argument 'auto_download'",
+    "Model Real-ESRGAN failed to load: RealESRGANHandler.__init__() got an unexpected keyword argument 'auto_download'"
+  ],
+  "errors": [
+    "Health endpoint failed: HTTPConnectionPool(host='localhost', port=7861): Max retries exceeded with url: /health (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x1051d9550>: Failed to establish a new connection: [Errno 61] Connection refused'))",
+    "Metrics endpoint failed: HTTPConnectionPool(host='localhost', port=7861): Max retries exceeded with url: /metrics (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x1051d9700>: Failed to establish a new connection: [Errno 61] Connection refused'))",
+    "Readiness endpoint failed: HTTPConnectionPool(host='localhost', port=7861): Max retries exceeded with url: /ready (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x1051da180>: Failed to establish a new connection: [Errno 61] Connection refused'))",
+    "Gradio interface failed: HTTPConnectionPool(host='localhost', port=7860): Max retries exceeded with url: / (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x1051da720>: Failed to establish a new connection: [Errno 61] Connection refused'))"
+  ]
+}
+```

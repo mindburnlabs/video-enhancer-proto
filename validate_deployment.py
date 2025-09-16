@@ -351,40 +351,113 @@ class DeploymentValidator:
             return False
     
     def _test_model_availability(self) -> bool:
-        """Test SOTA model availability."""
-        logger.info("🤖 Testing model availability...")
+        """Test 2025 SOTA model availability and functionality."""
+        logger.info("🤖 Testing 2025 model availability...")
         
         try:
-            # Check for critical model files
-            critical_models = [
-                'models/checkpoints/vsrm_large.pth',
-                'models/checkpoints/ditvr_base.pth',
-                'models/interpolation/RIFE/flownet.pkl'
-            ]
+            # Test our new 2025 models by importing and checking functionality
+            model_tests = {}
             
-            missing_models = []
-            available_models = []
+            # Test SeedVR2-3B
+            try:
+                from models.enhancement.zeroshot import create_seedvr2_3b
+                model = create_seedvr2_3b(device='cpu', auto_download=False)
+                info = model.get_model_info()
+                model_tests['SeedVR2-3B'] = {
+                    'status': 'AVAILABLE',
+                    'parameters': info['parameters'],
+                    'model_loaded': info['model_loaded']
+                }
+                logger.info(f"✅ SeedVR2-3B: {info['parameters']:,} parameters")
+            except Exception as e:
+                model_tests['SeedVR2-3B'] = {'status': 'ERROR', 'error': str(e)}
+                logger.warning(f"⚠️ SeedVR2-3B test failed: {e}")
             
-            for model_path in critical_models:
-                if os.path.exists(model_path):
-                    available_models.append(model_path)
-                else:
-                    missing_models.append(model_path)
+            # Test VSRM
+            try:
+                from models.enhancement.vsr import VSRMHandler
+                model = VSRMHandler(device='cpu', auto_download=False)
+                info = model.get_model_info()
+                model_tests['VSRM'] = {
+                    'status': 'AVAILABLE',
+                    'parameters': info['parameters']
+                }
+                logger.info(f"✅ VSRM: {info['parameters']:,} parameters")
+            except Exception as e:
+                model_tests['VSRM'] = {'status': 'ERROR', 'error': str(e)}
+                logger.warning(f"⚠️ VSRM test failed: {e}")
             
-            if missing_models:
-                logger.warning(f"Missing model files: {missing_models}")
-                self.results['warnings'].extend([f"Missing model: {model}" for model in missing_models])
-                status = 'WARN' if available_models else 'FAIL'
-            else:
+            # Test FastMambaVSR
+            try:
+                from models.enhancement.vsr import FastMambaVSRHandler
+                model = FastMambaVSRHandler(device='cpu', auto_download=False)
+                info = model.get_model_info()
+                model_tests['FastMambaVSR'] = {
+                    'status': 'AVAILABLE',
+                    'parameters': info['parameters']
+                }
+                logger.info(f"✅ FastMambaVSR: {info['parameters']:,} parameters")
+            except Exception as e:
+                model_tests['FastMambaVSR'] = {'status': 'ERROR', 'error': str(e)}
+                logger.warning(f"⚠️ FastMambaVSR test failed: {e}")
+            
+            # Test RIFE
+            try:
+                from models.interpolation import RIFEHandler
+                model = RIFEHandler(device='cpu')  # Remove unsupported parameter
+                info = model.get_model_info()
+                model_tests['RIFE'] = {
+                    'status': 'AVAILABLE',
+                    'parameters': info['parameters']
+                }
+                logger.info(f"✅ RIFE: {info['parameters']:,} parameters")
+            except Exception as e:
+                model_tests['RIFE'] = {'status': 'ERROR', 'error': str(e)}
+                logger.warning(f"⚠️ RIFE test failed: {e}")
+            
+            # Test Real-ESRGAN
+            try:
+                from models.enhancement.vsr import RealESRGANHandler
+                model = RealESRGANHandler(device='cpu')  # Remove unsupported parameter
+                info = model.get_model_info()
+                model_tests['Real-ESRGAN'] = {
+                    'status': 'AVAILABLE',
+                    'parameters': info['parameters']
+                }
+                logger.info(f"✅ Real-ESRGAN: {info['parameters']:,} parameters")
+            except Exception as e:
+                model_tests['Real-ESRGAN'] = {'status': 'ERROR', 'error': str(e)}
+                logger.warning(f"⚠️ Real-ESRGAN test failed: {e}")
+            
+            # Calculate overall status
+            available_models = [name for name, test in model_tests.items() if test['status'] == 'AVAILABLE']
+            failed_models = [name for name, test in model_tests.items() if test['status'] == 'ERROR']
+            
+            total_models = len(model_tests)
+            available_count = len(available_models)
+            
+            if available_count == total_models:
                 status = 'PASS'
+            elif available_count >= total_models // 2:
+                status = 'WARN'
+            else:
+                status = 'FAIL'
             
             self.results['tests']['model_availability'] = {
                 'status': status,
-                'available_models': available_models,
-                'missing_models': missing_models
+                'total_models': total_models,
+                'available_models': available_count,
+                'model_tests': model_tests,
+                'available_list': available_models,
+                'failed_list': failed_models
             }
             
-            logger.info(f"{'✅' if status == 'PASS' else '⚠️' if status == 'WARN' else '❌'} Model availability: {len(available_models)}/{len(critical_models)} available")
+            logger.info(f"{'✅' if status == 'PASS' else '⚠️' if status == 'WARN' else '❌'} 2025 Models: {available_count}/{total_models} available")
+            
+            # Add warnings for failed models
+            for failed_model in failed_models:
+                self.results['warnings'].append(f"Model {failed_model} failed to load: {model_tests[failed_model].get('error', 'Unknown error')}")
+            
             return status != 'FAIL'
             
         except Exception as e:

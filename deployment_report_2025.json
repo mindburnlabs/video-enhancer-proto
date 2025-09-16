@@ -1,0 +1,363 @@
+
+# 🧪 SOTA Video Enhancer Deployment Validation Report
+
+**Overall Status**: FAIL
+**Timestamp**: 2025-09-16T22:55:38.136498
+**Tests Run**: 8
+
+## Test Results Summary
+
+- ❌ **Health Endpoint**: FAIL (0.01s)
+- ❌ **Metrics Endpoint**: FAIL (0.00s)
+- ❌ **Readiness Endpoint**: FAIL (0.00s)
+- ❌ **Gradio Interface**: FAIL (0.00s)
+- ❌ **Model Availability**: FAIL
+- ℹ️ **Gpu Memory**: SKIP
+- ✅ **File System**: PASS
+- ✅ **Configuration Validation**: PASS
+
+## ⚠️ Warnings
+
+- Missing model: models/checkpoints/vsrm_large.pth
+- Missing model: models/checkpoints/ditvr_base.pth
+- Missing model: models/interpolation/RIFE/flownet.pkl
+
+## ❌ Errors
+
+- setup_topaz_killer.py failed: 2025-09-16 22:55:38,186 - INFO - Starting SOTA Video Enhancer setup (Topaz Killer)...
+2025-09-16 22:55:38,186 - INFO - Created directory: models/checkpoints
+2025-09-16 22:55:38,186 - INFO - Created directory: models/interpolation/RIFE
+2025-09-16 22:55:38,186 - INFO - Created directory: data/temp
+2025-09-16 22:55:38,186 - INFO - Created directory: logs
+2025-09-16 22:55:38,186 - INFO - Installing Python dependencies...
+2025-09-16 22:55:38,186 - INFO - Installing: torch>=2.0.0
+2025-09-16 22:55:38,965 - INFO - Installing: torchvision>=0.15.0
+2025-09-16 22:55:39,309 - INFO - Installing: gradio>=4.0.0
+2025-09-16 22:55:39,683 - INFO - Installing: opencv-python>=4.8.0
+2025-09-16 22:55:40,021 - INFO - Installing: numpy>=1.24.0
+2025-09-16 22:55:40,363 - INFO - Installing: Pillow>=10.0.0
+2025-09-16 22:55:40,691 - INFO - Installing: tqdm>=4.65.0
+2025-09-16 22:55:41,018 - INFO - Installing: requests>=2.31.0
+2025-09-16 22:55:41,350 - INFO - Installing: safetensors>=0.4.0
+2025-09-16 22:55:41,681 - INFO - Installing: transformers>=4.35.0
+2025-09-16 22:55:42,022 - INFO - Installing: diffusers>=0.25.0
+2025-09-16 22:55:42,373 - INFO - Installing: accelerate>=0.25.0
+2025-09-16 22:55:42,727 - INFO - Installing: xformers>=0.0.22
+2025-09-16 22:56:09,147 - ERROR - Failed to install dependencies: Command '['/Users/ivan/Code/work/video-enhancer-proto/venv/bin/python', '-m', 'pip', 'install', 'xformers>=0.0.22']' returned non-zero exit status 1.
+2025-09-16 22:56:09,147 - ERROR - Error output:   error: subprocess-exited-with-error
+  
+  × Building wheel for xformers (pyproject.toml) did not run successfully.
+  │ exit code: 1
+  ╰─> [213 lines of output]
+      /private/var/folders/7g/xvnd380n10972whhk0r2020w0000gn/T/pip-build-env-ql6jf4z5/overlay/lib/python3.12/site-packages/torch/_subclasses/functional_tensor.py:279: UserWarning: Failed to initialize NumPy: No module named 'numpy' (Triggered internally at /Users/runner/work/pytorch/pytorch/pytorch/torch/csrc/utils/tensor_numpy.cpp:81.)
+        cpu = _conversion_method_template(device=torch.device("cpu"))
+      /private/var/folders/7g/xvnd380n10972whhk0r2020w0000gn/T/pip-build-env-ql6jf4z5/overlay/lib/python3.12/site-packages/setuptools/dist.py:759: SetuptoolsDeprecationWarning: License classifiers are deprecated.
+      !!
+      
+              ********************************************************************************
+              Please consider removing the following classifiers in favor of a SPDX license expression:
+      
+              License :: OSI Approved :: BSD License
+      
+              See https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#license for details.
+              ********************************************************************************
+      
+      !!
+        self._finalize_license_expression()
+      running bdist_wheel
+      W0916 22:56:07.558000 9950 torch/utils/cpp_extension.py:615] Attempted to use ninja as the BuildExtension backend but we could not find ninja.. Falling back to using the slow distutils backend.
+      running build
+      running build_py
+      creating build/lib.macosx-11.0-arm64-cpython-312/xformers
+      copying xformers/_deprecation_warning.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers
+      copying xformers/attn_bias_utils.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers
+      copying xformers/checkpoint.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers
+      copying xformers/__init__.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers
+      copying xformers/test.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers
+      copying xformers/utils.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers
+      copying xformers/_cpp_lib.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers
+      copying xformers/info.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers
+      creating build/lib.macosx-11.0-arm64-cpython-312/xformers/triton
+      copying xformers/triton/importing.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/triton
+      copying xformers/triton/vararg_kernel.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/triton
+      copying xformers/triton/__init__.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/triton
+      creating build/lib.macosx-11.0-arm64-cpython-312/xformers/flash_attn_3
+      copying xformers/flash_attn_3/__init__.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/flash_attn_3
+      creating build/lib.macosx-11.0-arm64-cpython-312/xformers/components
+      copying xformers/components/residual.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/components
+      copying xformers/components/__init__.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/components
+      copying xformers/components/input_projection.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/components
+      creating build/lib.macosx-11.0-arm64-cpython-312/xformers/benchmarks
+      copying xformers/benchmarks/benchmark_mem_eff_attention.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/benchmarks
+      copying xformers/benchmarks/benchmark_indexing.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/benchmarks
+      copying xformers/benchmarks/benchmark_revnet.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/benchmarks
+      copying xformers/benchmarks/benchmark_swiglu.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/benchmarks
+      copying xformers/benchmarks/benchmark_merge_attentions.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/benchmarks
+      copying xformers/benchmarks/benchmark_tiled_matmul.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/benchmarks
+      copying xformers/benchmarks/__init__.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/benchmarks
+      copying xformers/benchmarks/utils.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/benchmarks
+      copying xformers/benchmarks/benchmark_nystrom_utils.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/benchmarks
+      copying xformers/benchmarks/benchmark_attn_decoding.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/benchmarks
+      copying xformers/benchmarks/benchmark_sequence_parallel_fused.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/benchmarks
+      copying xformers/benchmarks/benchmark_sddmm.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/benchmarks
+      copying xformers/benchmarks/benchmark_sp24.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/benchmarks
+      copying xformers/benchmarks/benchmark_core.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/benchmarks
+      creating build/lib.macosx-11.0-arm64-cpython-312/xformers/ops
+      copying xformers/ops/rmsnorm.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/ops
+      copying xformers/ops/modpar_layers.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/ops
+      copying xformers/ops/swiglu_op.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/ops
+      copying xformers/ops/unbind.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/ops
+      copying xformers/ops/rope_padded.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/ops
+      copying xformers/ops/seqpar.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/ops
+      copying xformers/ops/sequence_parallel_fused_ops.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/ops
+      copying xformers/ops/__init__.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/ops
+      copying xformers/ops/sp24.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/ops
+      copying xformers/ops/tree_attention.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/ops
+      copying xformers/ops/common.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/ops
+      copying xformers/ops/differentiable_collectives.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/ops
+      copying xformers/ops/tiled_matmul.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/ops
+      copying xformers/ops/indexing.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/ops
+      creating build/lib.macosx-11.0-arm64-cpython-312/xformers/profiler
+      copying xformers/profiler/device_limits.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/profiler
+      copying xformers/profiler/find_slowest.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/profiler
+      copying xformers/profiler/__init__.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/profiler
+      copying xformers/profiler/profiler_dcgm_impl.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/profiler
+      copying xformers/profiler/profiler_dcgm.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/profiler
+      copying xformers/profiler/api.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/profiler
+      copying xformers/profiler/profile_analyzer.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/profiler
+      copying xformers/profiler/profiler.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/profiler
+      creating build/lib.macosx-11.0-arm64-cpython-312/xformers/sparse
+      copying xformers/sparse/_csr_ops.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/sparse
+      copying xformers/sparse/__init__.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/sparse
+      copying xformers/sparse/utils.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/sparse
+      copying xformers/sparse/blocksparse_tensor.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/sparse
+      copying xformers/sparse/csr_tensor.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/sparse
+      creating build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn
+      copying xformers/_flash_attn/fused_softmax.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn
+      copying xformers/_flash_attn/flash_blocksparse_attn_interface.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn
+      copying xformers/_flash_attn/flash_blocksparse_attention.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn
+      copying xformers/_flash_attn/bert_padding.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn
+      copying xformers/_flash_attn/__init__.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn
+      copying xformers/_flash_attn/flash_attn_triton_og.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn
+      copying xformers/_flash_attn/flash_attn_triton.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn
+      copying xformers/_flash_attn/flash_attn_interface.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn
+      creating build/lib.macosx-11.0-arm64-cpython-312/xformers/components/attention
+      copying xformers/components/attention/__init__.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/components/attention
+      copying xformers/components/attention/_sputnik_sparse.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/components/attention
+      copying xformers/components/attention/core.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/components/attention
+      copying xformers/components/attention/fourier_mix.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/components/attention
+      copying xformers/components/attention/scaled_dot_product.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/components/attention
+      copying xformers/components/attention/utils.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/components/attention
+      copying xformers/components/attention/attention_mask.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/components/attention
+      copying xformers/components/attention/attention_patterns.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/components/attention
+      copying xformers/components/attention/sparsity_config.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/components/attention
+      copying xformers/components/attention/base.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/components/attention
+      creating build/lib.macosx-11.0-arm64-cpython-312/xformers/benchmarks/LRA
+      copying xformers/benchmarks/LRA/batch_submit.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/benchmarks/LRA
+      copying xformers/benchmarks/LRA/batch_fetch_results.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/benchmarks/LRA
+      copying xformers/benchmarks/LRA/run_with_submitit.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/benchmarks/LRA
+      copying xformers/benchmarks/LRA/__init__.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/benchmarks/LRA
+      copying xformers/benchmarks/LRA/run_tasks.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/benchmarks/LRA
+      copying xformers/benchmarks/LRA/run_grid_search.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/benchmarks/LRA
+      creating build/lib.macosx-11.0-arm64-cpython-312/xformers/benchmarks/LRA/code
+      copying xformers/benchmarks/LRA/code/__init__.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/benchmarks/LRA/code
+      copying xformers/benchmarks/LRA/code/model_wrapper.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/benchmarks/LRA/code
+      copying xformers/benchmarks/LRA/code/dataset.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/benchmarks/LRA/code
+      creating build/lib.macosx-11.0-arm64-cpython-312/xformers/ops/_triton
+      copying xformers/ops/_triton/k_scaled_index_add.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/ops/_triton
+      copying xformers/ops/_triton/__init__.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/ops/_triton
+      copying xformers/ops/_triton/matmul_perf_model.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/ops/_triton
+      copying xformers/ops/_triton/rope_padded_kernels.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/ops/_triton
+      copying xformers/ops/_triton/tiled_matmul_kernels.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/ops/_triton
+      copying xformers/ops/_triton/k_index_select_cat.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/ops/_triton
+      copying xformers/ops/_triton/rmsnorm_kernels.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/ops/_triton
+      creating build/lib.macosx-11.0-arm64-cpython-312/xformers/ops/fmha
+      copying xformers/ops/fmha/flash3.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/ops/fmha
+      copying xformers/ops/fmha/dispatch.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/ops/fmha
+      copying xformers/ops/fmha/__init__.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/ops/fmha
+      copying xformers/ops/fmha/attn_bias.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/ops/fmha
+      copying xformers/ops/fmha/ck.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/ops/fmha
+      copying xformers/ops/fmha/common.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/ops/fmha
+      copying xformers/ops/fmha/torch_attention_compat.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/ops/fmha
+      copying xformers/ops/fmha/flash.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/ops/fmha
+      copying xformers/ops/fmha/cutlass.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/ops/fmha
+      copying xformers/ops/fmha/merge_training.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/ops/fmha
+      copying xformers/ops/fmha/ck_splitk.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/ops/fmha
+      copying xformers/ops/fmha/triton_splitk.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/ops/fmha
+      creating build/lib.macosx-11.0-arm64-cpython-312/xformers/ops/fmha/_triton
+      copying xformers/ops/fmha/_triton/splitk_kernels.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/ops/fmha/_triton
+      copying xformers/ops/fmha/_triton/__init__.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/ops/fmha/_triton
+      creating build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/losses
+      copying xformers/_flash_attn/losses/cross_entropy.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/losses
+      copying xformers/_flash_attn/losses/__init__.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/losses
+      creating build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/layers
+      copying xformers/_flash_attn/layers/__init__.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/layers
+      copying xformers/_flash_attn/layers/patch_embed.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/layers
+      copying xformers/_flash_attn/layers/rotary.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/layers
+      creating build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/flash_attn_triton_amd
+      copying xformers/_flash_attn/flash_attn_triton_amd/bwd_prefill_split.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/flash_attn_triton_amd
+      copying xformers/_flash_attn/flash_attn_triton_amd/fwd_ref.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/flash_attn_triton_amd
+      copying xformers/_flash_attn/flash_attn_triton_amd/fp8.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/flash_attn_triton_amd
+      copying xformers/_flash_attn/flash_attn_triton_amd/fwd_prefill.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/flash_attn_triton_amd
+      copying xformers/_flash_attn/flash_attn_triton_amd/interface_fa.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/flash_attn_triton_amd
+      copying xformers/_flash_attn/flash_attn_triton_amd/__init__.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/flash_attn_triton_amd
+      copying xformers/_flash_attn/flash_attn_triton_amd/bwd_prefill_onekernel.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/flash_attn_triton_amd
+      copying xformers/_flash_attn/flash_attn_triton_amd/test.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/flash_attn_triton_amd
+      copying xformers/_flash_attn/flash_attn_triton_amd/bench.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/flash_attn_triton_amd
+      copying xformers/_flash_attn/flash_attn_triton_amd/bwd_prefill.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/flash_attn_triton_amd
+      copying xformers/_flash_attn/flash_attn_triton_amd/utils.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/flash_attn_triton_amd
+      copying xformers/_flash_attn/flash_attn_triton_amd/train.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/flash_attn_triton_amd
+      copying xformers/_flash_attn/flash_attn_triton_amd/fwd_decode.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/flash_attn_triton_amd
+      copying xformers/_flash_attn/flash_attn_triton_amd/bwd_ref.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/flash_attn_triton_amd
+      copying xformers/_flash_attn/flash_attn_triton_amd/bwd_prefill_fused.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/flash_attn_triton_amd
+      creating build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/utils
+      copying xformers/_flash_attn/utils/pretrained.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/utils
+      copying xformers/_flash_attn/utils/generation.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/utils
+      copying xformers/_flash_attn/utils/library.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/utils
+      copying xformers/_flash_attn/utils/benchmark.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/utils
+      copying xformers/_flash_attn/utils/__init__.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/utils
+      copying xformers/_flash_attn/utils/distributed.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/utils
+      copying xformers/_flash_attn/utils/testing.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/utils
+      copying xformers/_flash_attn/utils/torch.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/utils
+      creating build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/models
+      copying xformers/_flash_attn/models/bigcode.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/models
+      copying xformers/_flash_attn/models/gptj.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/models
+      copying xformers/_flash_attn/models/__init__.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/models
+      copying xformers/_flash_attn/models/opt.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/models
+      copying xformers/_flash_attn/models/llama.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/models
+      copying xformers/_flash_attn/models/vit.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/models
+      copying xformers/_flash_attn/models/btlm.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/models
+      copying xformers/_flash_attn/models/baichuan.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/models
+      copying xformers/_flash_attn/models/bert.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/models
+      copying xformers/_flash_attn/models/falcon.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/models
+      copying xformers/_flash_attn/models/gpt_neox.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/models
+      copying xformers/_flash_attn/models/gpt.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/models
+      creating build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/ops
+      copying xformers/_flash_attn/ops/activations.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/ops
+      copying xformers/_flash_attn/ops/__init__.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/ops
+      copying xformers/_flash_attn/ops/fused_dense.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/ops
+      copying xformers/_flash_attn/ops/rms_norm.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/ops
+      copying xformers/_flash_attn/ops/layer_norm.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/ops
+      creating build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/modules
+      copying xformers/_flash_attn/modules/embedding.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/modules
+      copying xformers/_flash_attn/modules/__init__.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/modules
+      copying xformers/_flash_attn/modules/mlp.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/modules
+      copying xformers/_flash_attn/modules/block.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/modules
+      copying xformers/_flash_attn/modules/mha.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/modules
+      creating build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/ops/triton
+      copying xformers/_flash_attn/ops/triton/cross_entropy.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/ops/triton
+      copying xformers/_flash_attn/ops/triton/linear.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/ops/triton
+      copying xformers/_flash_attn/ops/triton/k_activations.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/ops/triton
+      copying xformers/_flash_attn/ops/triton/__init__.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/ops/triton
+      copying xformers/_flash_attn/ops/triton/mlp.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/ops/triton
+      copying xformers/_flash_attn/ops/triton/rotary.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/ops/triton
+      copying xformers/_flash_attn/ops/triton/layer_norm.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/ops/triton
+      running build_ext
+      building 'xformers._C' extension
+      creating build/temp.macosx-11.0-arm64-cpython-312/xformers/csrc/attention
+      creating build/temp.macosx-11.0-arm64-cpython-312/xformers/csrc/attention/autograd
+      creating build/temp.macosx-11.0-arm64-cpython-312/xformers/csrc/attention/cpu
+      creating build/temp.macosx-11.0-arm64-cpython-312/xformers/csrc/sparse24
+      creating build/temp.macosx-11.0-arm64-cpython-312/xformers/csrc/swiglu
+      c++ -fno-strict-overflow -Wsign-compare -Wunreachable-code -DNDEBUG -g -O3 -Wall -arch arm64 -mmacosx-version-min=11.0 -Wno-nullability-completeness -Wno-expansion-to-defined -Wno-undef-prefix -fPIC -I/private/var/folders/7g/xvnd380n10972whhk0r2020w0000gn/T/pip-install-n5dhsqlr/xformers_2fbea34aec0642e6a6bfe398912fca74/xformers/csrc -I/private/var/folders/7g/xvnd380n10972whhk0r2020w0000gn/T/pip-build-env-ql6jf4z5/overlay/lib/python3.12/site-packages/torch/include -I/private/var/folders/7g/xvnd380n10972whhk0r2020w0000gn/T/pip-build-env-ql6jf4z5/overlay/lib/python3.12/site-packages/torch/include/torch/csrc/api/include -I/Users/ivan/Code/work/video-enhancer-proto/venv/include -I/Users/ivan/.local/share/mise/installs/python/3.12.11/include/python3.12 -c xformers/csrc/attention/attention.cpp -o build/temp.macosx-11.0-arm64-cpython-312/xformers/csrc/attention/attention.o -O3 -std=c++17 -DPy_LIMITED_API=0x03090000 -fopenmp -DTORCH_API_INCLUDE_EXTENSION_H -DPy_LIMITED_API=0x03090000 -DTORCH_EXTENSION_NAME=_C
+      clang++: error: unsupported option '-fopenmp'
+      error: command '/usr/bin/c++' failed with exit code 1
+      [end of output]
+  
+  note: This error originates from a subprocess, and is likely not a problem with pip.
+  ERROR: Failed building wheel for xformers
+
+[notice] A new release of pip is available: 25.0.1 -> 25.2
+[notice] To update, run: pip install --upgrade pip
+ERROR: Failed to build installable wheels for some pyproject.toml based projects (xformers)
+
+2025-09-16 22:56:09,147 - ERROR - Failed to install Python dependencies
+
+- Health endpoint failed: HTTPConnectionPool(host='localhost', port=7861): Max retries exceeded with url: /health (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x1006a36e0>: Failed to establish a new connection: [Errno 61] Connection refused'))
+- Metrics endpoint failed: HTTPConnectionPool(host='localhost', port=7861): Max retries exceeded with url: /metrics (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x100b1e3f0>: Failed to establish a new connection: [Errno 61] Connection refused'))
+- Readiness endpoint failed: HTTPConnectionPool(host='localhost', port=7861): Max retries exceeded with url: /ready (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x100b1ee70>: Failed to establish a new connection: [Errno 61] Connection refused'))
+- Gradio interface failed: HTTPConnectionPool(host='localhost', port=7860): Max retries exceeded with url: / (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x100b1f410>: Failed to establish a new connection: [Errno 61] Connection refused'))
+
+## 📊 Detailed Results
+
+```json
+{
+  "timestamp": "2025-09-16T22:55:38.136498",
+  "overall_status": "FAIL",
+  "tests": {
+    "health_endpoint": {
+      "status": "FAIL",
+      "duration": "0.01s",
+      "error": "HTTPConnectionPool(host='localhost', port=7861): Max retries exceeded with url: /health (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x1006a36e0>: Failed to establish a new connection: [Errno 61] Connection refused'))"
+    },
+    "metrics_endpoint": {
+      "status": "FAIL",
+      "duration": "0.00s",
+      "error": "HTTPConnectionPool(host='localhost', port=7861): Max retries exceeded with url: /metrics (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x100b1e3f0>: Failed to establish a new connection: [Errno 61] Connection refused'))"
+    },
+    "readiness_endpoint": {
+      "status": "FAIL",
+      "duration": "0.00s",
+      "error": "HTTPConnectionPool(host='localhost', port=7861): Max retries exceeded with url: /ready (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x100b1ee70>: Failed to establish a new connection: [Errno 61] Connection refused'))"
+    },
+    "gradio_interface": {
+      "status": "FAIL",
+      "duration": "0.00s",
+      "error": "HTTPConnectionPool(host='localhost', port=7860): Max retries exceeded with url: / (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x100b1f410>: Failed to establish a new connection: [Errno 61] Connection refused'))"
+    },
+    "model_availability": {
+      "status": "FAIL",
+      "available_models": [],
+      "missing_models": [
+        "models/checkpoints/vsrm_large.pth",
+        "models/checkpoints/ditvr_base.pth",
+        "models/interpolation/RIFE/flownet.pkl"
+      ]
+    },
+    "gpu_memory": {
+      "status": "SKIP",
+      "reason": "CUDA not available"
+    },
+    "file_system": {
+      "status": "PASS",
+      "permissions_ok": true,
+      "temp_file_ok": true
+    },
+    "configuration_validation": {
+      "status": "PASS",
+      "environment_tests": {
+        "development": {
+          "status": "PASS",
+          "environment": "development",
+          "device": "cuda",
+          "gpu_available": false
+        },
+        "staging": {
+          "status": "PASS",
+          "environment": "staging",
+          "device": "cuda",
+          "gpu_available": false
+        },
+        "production": {
+          "status": "PASS",
+          "environment": "production",
+          "device": "cuda",
+          "gpu_available": false
+        }
+      }
+    }
+  },
+  "warnings": [
+    "Missing model: models/checkpoints/vsrm_large.pth",
+    "Missing model: models/checkpoints/ditvr_base.pth",
+    "Missing model: models/interpolation/RIFE/flownet.pkl"
+  ],
+  "errors": [
+    "setup_topaz_killer.py failed: 2025-09-16 22:55:38,186 - INFO - Starting SOTA Video Enhancer setup (Topaz Killer)...\n2025-09-16 22:55:38,186 - INFO - Created directory: models/checkpoints\n2025-09-16 22:55:38,186 - INFO - Created directory: models/interpolation/RIFE\n2025-09-16 22:55:38,186 - INFO - Created directory: data/temp\n2025-09-16 22:55:38,186 - INFO - Created directory: logs\n2025-09-16 22:55:38,186 - INFO - Installing Python dependencies...\n2025-09-16 22:55:38,186 - INFO - Installing: torch>=2.0.0\n2025-09-16 22:55:38,965 - INFO - Installing: torchvision>=0.15.0\n2025-09-16 22:55:39,309 - INFO - Installing: gradio>=4.0.0\n2025-09-16 22:55:39,683 - INFO - Installing: opencv-python>=4.8.0\n2025-09-16 22:55:40,021 - INFO - Installing: numpy>=1.24.0\n2025-09-16 22:55:40,363 - INFO - Installing: Pillow>=10.0.0\n2025-09-16 22:55:40,691 - INFO - Installing: tqdm>=4.65.0\n2025-09-16 22:55:41,018 - INFO - Installing: requests>=2.31.0\n2025-09-16 22:55:41,350 - INFO - Installing: safetensors>=0.4.0\n2025-09-16 22:55:41,681 - INFO - Installing: transformers>=4.35.0\n2025-09-16 22:55:42,022 - INFO - Installing: diffusers>=0.25.0\n2025-09-16 22:55:42,373 - INFO - Installing: accelerate>=0.25.0\n2025-09-16 22:55:42,727 - INFO - Installing: xformers>=0.0.22\n2025-09-16 22:56:09,147 - ERROR - Failed to install dependencies: Command '['/Users/ivan/Code/work/video-enhancer-proto/venv/bin/python', '-m', 'pip', 'install', 'xformers>=0.0.22']' returned non-zero exit status 1.\n2025-09-16 22:56:09,147 - ERROR - Error output:   error: subprocess-exited-with-error\n  \n  \u00d7 Building wheel for xformers (pyproject.toml) did not run successfully.\n  \u2502 exit code: 1\n  \u2570\u2500> [213 lines of output]\n      /private/var/folders/7g/xvnd380n10972whhk0r2020w0000gn/T/pip-build-env-ql6jf4z5/overlay/lib/python3.12/site-packages/torch/_subclasses/functional_tensor.py:279: UserWarning: Failed to initialize NumPy: No module named 'numpy' (Triggered internally at /Users/runner/work/pytorch/pytorch/pytorch/torch/csrc/utils/tensor_numpy.cpp:81.)\n        cpu = _conversion_method_template(device=torch.device(\"cpu\"))\n      /private/var/folders/7g/xvnd380n10972whhk0r2020w0000gn/T/pip-build-env-ql6jf4z5/overlay/lib/python3.12/site-packages/setuptools/dist.py:759: SetuptoolsDeprecationWarning: License classifiers are deprecated.\n      !!\n      \n              ********************************************************************************\n              Please consider removing the following classifiers in favor of a SPDX license expression:\n      \n              License :: OSI Approved :: BSD License\n      \n              See https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#license for details.\n              ********************************************************************************\n      \n      !!\n        self._finalize_license_expression()\n      running bdist_wheel\n      W0916 22:56:07.558000 9950 torch/utils/cpp_extension.py:615] Attempted to use ninja as the BuildExtension backend but we could not find ninja.. Falling back to using the slow distutils backend.\n      running build\n      running build_py\n      creating build/lib.macosx-11.0-arm64-cpython-312/xformers\n      copying xformers/_deprecation_warning.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers\n      copying xformers/attn_bias_utils.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers\n      copying xformers/checkpoint.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers\n      copying xformers/__init__.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers\n      copying xformers/test.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers\n      copying xformers/utils.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers\n      copying xformers/_cpp_lib.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers\n      copying xformers/info.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers\n      creating build/lib.macosx-11.0-arm64-cpython-312/xformers/triton\n      copying xformers/triton/importing.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/triton\n      copying xformers/triton/vararg_kernel.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/triton\n      copying xformers/triton/__init__.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/triton\n      creating build/lib.macosx-11.0-arm64-cpython-312/xformers/flash_attn_3\n      copying xformers/flash_attn_3/__init__.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/flash_attn_3\n      creating build/lib.macosx-11.0-arm64-cpython-312/xformers/components\n      copying xformers/components/residual.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/components\n      copying xformers/components/__init__.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/components\n      copying xformers/components/input_projection.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/components\n      creating build/lib.macosx-11.0-arm64-cpython-312/xformers/benchmarks\n      copying xformers/benchmarks/benchmark_mem_eff_attention.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/benchmarks\n      copying xformers/benchmarks/benchmark_indexing.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/benchmarks\n      copying xformers/benchmarks/benchmark_revnet.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/benchmarks\n      copying xformers/benchmarks/benchmark_swiglu.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/benchmarks\n      copying xformers/benchmarks/benchmark_merge_attentions.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/benchmarks\n      copying xformers/benchmarks/benchmark_tiled_matmul.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/benchmarks\n      copying xformers/benchmarks/__init__.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/benchmarks\n      copying xformers/benchmarks/utils.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/benchmarks\n      copying xformers/benchmarks/benchmark_nystrom_utils.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/benchmarks\n      copying xformers/benchmarks/benchmark_attn_decoding.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/benchmarks\n      copying xformers/benchmarks/benchmark_sequence_parallel_fused.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/benchmarks\n      copying xformers/benchmarks/benchmark_sddmm.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/benchmarks\n      copying xformers/benchmarks/benchmark_sp24.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/benchmarks\n      copying xformers/benchmarks/benchmark_core.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/benchmarks\n      creating build/lib.macosx-11.0-arm64-cpython-312/xformers/ops\n      copying xformers/ops/rmsnorm.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/ops\n      copying xformers/ops/modpar_layers.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/ops\n      copying xformers/ops/swiglu_op.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/ops\n      copying xformers/ops/unbind.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/ops\n      copying xformers/ops/rope_padded.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/ops\n      copying xformers/ops/seqpar.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/ops\n      copying xformers/ops/sequence_parallel_fused_ops.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/ops\n      copying xformers/ops/__init__.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/ops\n      copying xformers/ops/sp24.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/ops\n      copying xformers/ops/tree_attention.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/ops\n      copying xformers/ops/common.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/ops\n      copying xformers/ops/differentiable_collectives.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/ops\n      copying xformers/ops/tiled_matmul.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/ops\n      copying xformers/ops/indexing.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/ops\n      creating build/lib.macosx-11.0-arm64-cpython-312/xformers/profiler\n      copying xformers/profiler/device_limits.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/profiler\n      copying xformers/profiler/find_slowest.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/profiler\n      copying xformers/profiler/__init__.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/profiler\n      copying xformers/profiler/profiler_dcgm_impl.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/profiler\n      copying xformers/profiler/profiler_dcgm.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/profiler\n      copying xformers/profiler/api.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/profiler\n      copying xformers/profiler/profile_analyzer.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/profiler\n      copying xformers/profiler/profiler.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/profiler\n      creating build/lib.macosx-11.0-arm64-cpython-312/xformers/sparse\n      copying xformers/sparse/_csr_ops.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/sparse\n      copying xformers/sparse/__init__.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/sparse\n      copying xformers/sparse/utils.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/sparse\n      copying xformers/sparse/blocksparse_tensor.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/sparse\n      copying xformers/sparse/csr_tensor.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/sparse\n      creating build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn\n      copying xformers/_flash_attn/fused_softmax.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn\n      copying xformers/_flash_attn/flash_blocksparse_attn_interface.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn\n      copying xformers/_flash_attn/flash_blocksparse_attention.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn\n      copying xformers/_flash_attn/bert_padding.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn\n      copying xformers/_flash_attn/__init__.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn\n      copying xformers/_flash_attn/flash_attn_triton_og.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn\n      copying xformers/_flash_attn/flash_attn_triton.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn\n      copying xformers/_flash_attn/flash_attn_interface.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn\n      creating build/lib.macosx-11.0-arm64-cpython-312/xformers/components/attention\n      copying xformers/components/attention/__init__.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/components/attention\n      copying xformers/components/attention/_sputnik_sparse.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/components/attention\n      copying xformers/components/attention/core.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/components/attention\n      copying xformers/components/attention/fourier_mix.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/components/attention\n      copying xformers/components/attention/scaled_dot_product.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/components/attention\n      copying xformers/components/attention/utils.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/components/attention\n      copying xformers/components/attention/attention_mask.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/components/attention\n      copying xformers/components/attention/attention_patterns.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/components/attention\n      copying xformers/components/attention/sparsity_config.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/components/attention\n      copying xformers/components/attention/base.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/components/attention\n      creating build/lib.macosx-11.0-arm64-cpython-312/xformers/benchmarks/LRA\n      copying xformers/benchmarks/LRA/batch_submit.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/benchmarks/LRA\n      copying xformers/benchmarks/LRA/batch_fetch_results.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/benchmarks/LRA\n      copying xformers/benchmarks/LRA/run_with_submitit.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/benchmarks/LRA\n      copying xformers/benchmarks/LRA/__init__.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/benchmarks/LRA\n      copying xformers/benchmarks/LRA/run_tasks.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/benchmarks/LRA\n      copying xformers/benchmarks/LRA/run_grid_search.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/benchmarks/LRA\n      creating build/lib.macosx-11.0-arm64-cpython-312/xformers/benchmarks/LRA/code\n      copying xformers/benchmarks/LRA/code/__init__.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/benchmarks/LRA/code\n      copying xformers/benchmarks/LRA/code/model_wrapper.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/benchmarks/LRA/code\n      copying xformers/benchmarks/LRA/code/dataset.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/benchmarks/LRA/code\n      creating build/lib.macosx-11.0-arm64-cpython-312/xformers/ops/_triton\n      copying xformers/ops/_triton/k_scaled_index_add.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/ops/_triton\n      copying xformers/ops/_triton/__init__.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/ops/_triton\n      copying xformers/ops/_triton/matmul_perf_model.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/ops/_triton\n      copying xformers/ops/_triton/rope_padded_kernels.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/ops/_triton\n      copying xformers/ops/_triton/tiled_matmul_kernels.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/ops/_triton\n      copying xformers/ops/_triton/k_index_select_cat.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/ops/_triton\n      copying xformers/ops/_triton/rmsnorm_kernels.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/ops/_triton\n      creating build/lib.macosx-11.0-arm64-cpython-312/xformers/ops/fmha\n      copying xformers/ops/fmha/flash3.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/ops/fmha\n      copying xformers/ops/fmha/dispatch.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/ops/fmha\n      copying xformers/ops/fmha/__init__.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/ops/fmha\n      copying xformers/ops/fmha/attn_bias.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/ops/fmha\n      copying xformers/ops/fmha/ck.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/ops/fmha\n      copying xformers/ops/fmha/common.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/ops/fmha\n      copying xformers/ops/fmha/torch_attention_compat.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/ops/fmha\n      copying xformers/ops/fmha/flash.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/ops/fmha\n      copying xformers/ops/fmha/cutlass.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/ops/fmha\n      copying xformers/ops/fmha/merge_training.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/ops/fmha\n      copying xformers/ops/fmha/ck_splitk.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/ops/fmha\n      copying xformers/ops/fmha/triton_splitk.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/ops/fmha\n      creating build/lib.macosx-11.0-arm64-cpython-312/xformers/ops/fmha/_triton\n      copying xformers/ops/fmha/_triton/splitk_kernels.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/ops/fmha/_triton\n      copying xformers/ops/fmha/_triton/__init__.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/ops/fmha/_triton\n      creating build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/losses\n      copying xformers/_flash_attn/losses/cross_entropy.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/losses\n      copying xformers/_flash_attn/losses/__init__.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/losses\n      creating build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/layers\n      copying xformers/_flash_attn/layers/__init__.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/layers\n      copying xformers/_flash_attn/layers/patch_embed.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/layers\n      copying xformers/_flash_attn/layers/rotary.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/layers\n      creating build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/flash_attn_triton_amd\n      copying xformers/_flash_attn/flash_attn_triton_amd/bwd_prefill_split.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/flash_attn_triton_amd\n      copying xformers/_flash_attn/flash_attn_triton_amd/fwd_ref.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/flash_attn_triton_amd\n      copying xformers/_flash_attn/flash_attn_triton_amd/fp8.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/flash_attn_triton_amd\n      copying xformers/_flash_attn/flash_attn_triton_amd/fwd_prefill.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/flash_attn_triton_amd\n      copying xformers/_flash_attn/flash_attn_triton_amd/interface_fa.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/flash_attn_triton_amd\n      copying xformers/_flash_attn/flash_attn_triton_amd/__init__.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/flash_attn_triton_amd\n      copying xformers/_flash_attn/flash_attn_triton_amd/bwd_prefill_onekernel.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/flash_attn_triton_amd\n      copying xformers/_flash_attn/flash_attn_triton_amd/test.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/flash_attn_triton_amd\n      copying xformers/_flash_attn/flash_attn_triton_amd/bench.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/flash_attn_triton_amd\n      copying xformers/_flash_attn/flash_attn_triton_amd/bwd_prefill.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/flash_attn_triton_amd\n      copying xformers/_flash_attn/flash_attn_triton_amd/utils.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/flash_attn_triton_amd\n      copying xformers/_flash_attn/flash_attn_triton_amd/train.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/flash_attn_triton_amd\n      copying xformers/_flash_attn/flash_attn_triton_amd/fwd_decode.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/flash_attn_triton_amd\n      copying xformers/_flash_attn/flash_attn_triton_amd/bwd_ref.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/flash_attn_triton_amd\n      copying xformers/_flash_attn/flash_attn_triton_amd/bwd_prefill_fused.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/flash_attn_triton_amd\n      creating build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/utils\n      copying xformers/_flash_attn/utils/pretrained.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/utils\n      copying xformers/_flash_attn/utils/generation.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/utils\n      copying xformers/_flash_attn/utils/library.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/utils\n      copying xformers/_flash_attn/utils/benchmark.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/utils\n      copying xformers/_flash_attn/utils/__init__.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/utils\n      copying xformers/_flash_attn/utils/distributed.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/utils\n      copying xformers/_flash_attn/utils/testing.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/utils\n      copying xformers/_flash_attn/utils/torch.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/utils\n      creating build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/models\n      copying xformers/_flash_attn/models/bigcode.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/models\n      copying xformers/_flash_attn/models/gptj.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/models\n      copying xformers/_flash_attn/models/__init__.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/models\n      copying xformers/_flash_attn/models/opt.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/models\n      copying xformers/_flash_attn/models/llama.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/models\n      copying xformers/_flash_attn/models/vit.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/models\n      copying xformers/_flash_attn/models/btlm.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/models\n      copying xformers/_flash_attn/models/baichuan.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/models\n      copying xformers/_flash_attn/models/bert.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/models\n      copying xformers/_flash_attn/models/falcon.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/models\n      copying xformers/_flash_attn/models/gpt_neox.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/models\n      copying xformers/_flash_attn/models/gpt.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/models\n      creating build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/ops\n      copying xformers/_flash_attn/ops/activations.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/ops\n      copying xformers/_flash_attn/ops/__init__.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/ops\n      copying xformers/_flash_attn/ops/fused_dense.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/ops\n      copying xformers/_flash_attn/ops/rms_norm.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/ops\n      copying xformers/_flash_attn/ops/layer_norm.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/ops\n      creating build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/modules\n      copying xformers/_flash_attn/modules/embedding.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/modules\n      copying xformers/_flash_attn/modules/__init__.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/modules\n      copying xformers/_flash_attn/modules/mlp.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/modules\n      copying xformers/_flash_attn/modules/block.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/modules\n      copying xformers/_flash_attn/modules/mha.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/modules\n      creating build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/ops/triton\n      copying xformers/_flash_attn/ops/triton/cross_entropy.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/ops/triton\n      copying xformers/_flash_attn/ops/triton/linear.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/ops/triton\n      copying xformers/_flash_attn/ops/triton/k_activations.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/ops/triton\n      copying xformers/_flash_attn/ops/triton/__init__.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/ops/triton\n      copying xformers/_flash_attn/ops/triton/mlp.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/ops/triton\n      copying xformers/_flash_attn/ops/triton/rotary.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/ops/triton\n      copying xformers/_flash_attn/ops/triton/layer_norm.py -> build/lib.macosx-11.0-arm64-cpython-312/xformers/_flash_attn/ops/triton\n      running build_ext\n      building 'xformers._C' extension\n      creating build/temp.macosx-11.0-arm64-cpython-312/xformers/csrc/attention\n      creating build/temp.macosx-11.0-arm64-cpython-312/xformers/csrc/attention/autograd\n      creating build/temp.macosx-11.0-arm64-cpython-312/xformers/csrc/attention/cpu\n      creating build/temp.macosx-11.0-arm64-cpython-312/xformers/csrc/sparse24\n      creating build/temp.macosx-11.0-arm64-cpython-312/xformers/csrc/swiglu\n      c++ -fno-strict-overflow -Wsign-compare -Wunreachable-code -DNDEBUG -g -O3 -Wall -arch arm64 -mmacosx-version-min=11.0 -Wno-nullability-completeness -Wno-expansion-to-defined -Wno-undef-prefix -fPIC -I/private/var/folders/7g/xvnd380n10972whhk0r2020w0000gn/T/pip-install-n5dhsqlr/xformers_2fbea34aec0642e6a6bfe398912fca74/xformers/csrc -I/private/var/folders/7g/xvnd380n10972whhk0r2020w0000gn/T/pip-build-env-ql6jf4z5/overlay/lib/python3.12/site-packages/torch/include -I/private/var/folders/7g/xvnd380n10972whhk0r2020w0000gn/T/pip-build-env-ql6jf4z5/overlay/lib/python3.12/site-packages/torch/include/torch/csrc/api/include -I/Users/ivan/Code/work/video-enhancer-proto/venv/include -I/Users/ivan/.local/share/mise/installs/python/3.12.11/include/python3.12 -c xformers/csrc/attention/attention.cpp -o build/temp.macosx-11.0-arm64-cpython-312/xformers/csrc/attention/attention.o -O3 -std=c++17 -DPy_LIMITED_API=0x03090000 -fopenmp -DTORCH_API_INCLUDE_EXTENSION_H -DPy_LIMITED_API=0x03090000 -DTORCH_EXTENSION_NAME=_C\n      clang++: error: unsupported option '-fopenmp'\n      error: command '/usr/bin/c++' failed with exit code 1\n      [end of output]\n  \n  note: This error originates from a subprocess, and is likely not a problem with pip.\n  ERROR: Failed building wheel for xformers\n\n[notice] A new release of pip is available: 25.0.1 -> 25.2\n[notice] To update, run: pip install --upgrade pip\nERROR: Failed to build installable wheels for some pyproject.toml based projects (xformers)\n\n2025-09-16 22:56:09,147 - ERROR - Failed to install Python dependencies\n",
+    "Health endpoint failed: HTTPConnectionPool(host='localhost', port=7861): Max retries exceeded with url: /health (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x1006a36e0>: Failed to establish a new connection: [Errno 61] Connection refused'))",
+    "Metrics endpoint failed: HTTPConnectionPool(host='localhost', port=7861): Max retries exceeded with url: /metrics (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x100b1e3f0>: Failed to establish a new connection: [Errno 61] Connection refused'))",
+    "Readiness endpoint failed: HTTPConnectionPool(host='localhost', port=7861): Max retries exceeded with url: /ready (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x100b1ee70>: Failed to establish a new connection: [Errno 61] Connection refused'))",
+    "Gradio interface failed: HTTPConnectionPool(host='localhost', port=7860): Max retries exceeded with url: / (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x100b1f410>: Failed to establish a new connection: [Errno 61] Connection refused'))"
+  ]
+}
+```
