@@ -63,7 +63,30 @@ from utils.file_security import SecurityThreat
 
 # Environment detection FIRST
 HUGGINGFACE_SPACE = os.environ.get('SPACE_ID') is not None
-ZEROGPU_SPACE = os.environ.get('ZERO_GPU') == '1' or os.environ.get('hw') == 'zero-gpu'
+# Enhanced ZeroGPU+ detection - covers multiple possible configurations
+ZEROGPU_SPACE = (
+    os.environ.get('ZERO_GPU') == '1' or 
+    os.environ.get('hw') == 'zero-gpu' or 
+    os.environ.get('hw') == 'zerogpu' or
+    os.environ.get('SPACE_HARDWARE') == 'zero-gpu' or
+    os.environ.get('SPACE_HARDWARE') == 'zerogpu' or
+    'zero' in str(os.environ.get('hw', '')).lower() or
+    'gpu' in str(os.environ.get('SPACE_HARDWARE', '')).lower()
+)
+
+# Debug environment variables for troubleshooting
+logger = logging.getLogger(__name__)
+if HUGGINGFACE_SPACE:
+    env_debug = {
+        'SPACE_ID': os.environ.get('SPACE_ID'),
+        'ZERO_GPU': os.environ.get('ZERO_GPU'),
+        'hw': os.environ.get('hw'),
+        'SPACE_HARDWARE': os.environ.get('SPACE_HARDWARE'),
+        'CUDA_VISIBLE_DEVICES': os.environ.get('CUDA_VISIBLE_DEVICES'),
+        'HF_TOKEN': 'SET' if os.environ.get('HF_TOKEN') else 'NOT_SET'
+    }
+    logger.info(f"🔍 HF Space Environment Debug: {env_debug}")
+    logger.info(f"🔍 ZeroGPU Detection: HUGGINGFACE_SPACE={HUGGINGFACE_SPACE}, ZEROGPU_SPACE={ZEROGPU_SPACE}")
 
 # ZeroGPU import - ONLY in HF Spaces environment
 try:
@@ -1149,7 +1172,16 @@ def _check_user_quota(user_info):
         return {"allowed": True, "message": "Quota check bypassed"}
 
 
-def process_video_gradio(input_video, target_fps, engine_choice, latency_class, enable_face, enable_hfr, request: gr.Request = None):
+# ZeroGPU decorator for main processing function
+if ZEROGPU_AVAILABLE and spaces:
+    @spaces.GPU(duration=120)  # 2 minutes default duration
+    def process_video_gradio(input_video, target_fps, engine_choice, latency_class, enable_face, enable_hfr, request: gr.Request = None):
+        return _process_video_gradio_impl(input_video, target_fps, engine_choice, latency_class, enable_face, enable_hfr, request)
+else:
+    def process_video_gradio(input_video, target_fps, engine_choice, latency_class, enable_face, enable_hfr, request: gr.Request = None):
+        return _process_video_gradio_impl(input_video, target_fps, engine_choice, latency_class, enable_face, enable_hfr, request)
+
+def _process_video_gradio_impl(input_video, target_fps, engine_choice, latency_class, enable_face, enable_hfr, request: gr.Request = None):
     """Process video through Gradio interface with comprehensive security and user authentication."""
     try:
         if input_video is None:
@@ -1391,15 +1423,24 @@ def get_system_info():
     import psutil
     
     gpu_info = "Unknown"
+    zerogpu_status = "Not Available"
+    
     if ZEROGPU_AVAILABLE and HUGGINGFACE_SPACE:
         gpu_info = "NVIDIA H200 (ZeroGPU Dynamic)"
+        zerogpu_status = "✅ Enabled and Available"
+    elif HUGGINGFACE_SPACE:
+        gpu_info = "HuggingFace Space - CPU Mode"
+        zerogpu_status = "⚠️ In HF Space but ZeroGPU not detected"
     elif CUDA_AVAILABLE:
         try:
             gpu_info = torch.cuda.get_device_name(0)
+            zerogpu_status = "Local CUDA"
         except:
             gpu_info = "CUDA Available"
+            zerogpu_status = "Local CUDA"
     else:
         gpu_info = "CPU Only"
+        zerogpu_status = "Not Available"
     
     # Get security status
     security_status = app_security_manager.get_security_status()
@@ -1407,9 +1448,10 @@ def get_system_info():
     
     info = [
         f"🎯 **ZeroGPU Video Enhancer**",
-        f"• Acceleration: {'ZeroGPU Enabled' if ZEROGPU_AVAILABLE else 'CPU Fallback'}",
+        f"• ZeroGPU Status: {zerogpu_status}",
         f"• Hardware: {gpu_info}",
         f"• VRAM Available: {'70GB (H200)' if ZEROGPU_AVAILABLE and HUGGINGFACE_SPACE else 'N/A'}",
+        f"• HF Space: {'Yes' if HUGGINGFACE_SPACE else 'No'}",
         f"• Python: {sys.version.split()[0]}",
         f"• PyTorch: {torch.__version__ if 'torch' in globals() else 'Not available'}",
         f"• Gradio: {gr.__version__ if hasattr(gr, '__version__') else '4.44+'}",
@@ -2060,9 +2102,16 @@ if __name__ == "__main__":
     logger.info("🚀 Starting SOTA Video Enhancer...")
     
     # Launch Gradio app
-    app.launch(
-        server_name="0.0.0.0",
-        server_port=7860,
-        share=False,
-        show_error=True
-    )
+    launch_kwargs = {
+        "server_name": "0.0.0.0",
+        "server_port": 7860,
+        "share": False,
+        "show_error": True
+    }
+    
+    # Enable OAuth for HuggingFace Spaces with ZeroGPU+
+    if HUGGINGFACE_SPACE:
+        launch_kwargs["auth"] = "huggingface"  # Enable HF OAuth
+        logger.info("🔐 HuggingFace OAuth authentication enabled for ZeroGPU+ access")
+    
+    app.launch(**launch_kwargs)
